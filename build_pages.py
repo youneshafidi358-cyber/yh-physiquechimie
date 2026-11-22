@@ -397,7 +397,7 @@ def build():
             cbody = sim_html
         pl = [("#cours", "📖 Cours", cbody), ("#resume", "🧠 Résumé", rz), ("#exercices", "✍️ Exercices corrigés", exh or L["unite"].startswith("Contrôles")), ("#quiz", "✅ Quiz", qz), ("#docs-h", "📄 PDF", True), ("#videos", "🎬 Vidéos", VIDEOS_LECON.get((niv, L["unite"])) and not CTRL.get(f"{niv}|{L['unite']}"))]
         pills = '<nav class="pills sticky-pills">' + "".join(f'<a href="{h}">{t}</a>' for h, t, ok in pl if ok) + '</nav>'
-        cours_block = (f'''<h2 class="sec" id="cours">📖 Le cours</h2><div class="coursewrap">{f'<nav class="ctoc" aria-label="Sommaire du cours"><b>Sommaire</b>{toc}</nav>' if toc else '<div></div>'}<div class="cbody">{cbody}</div></div>''') if cbody else ""
+        cours_block = (f'''<h2 class="sec" id="cours">📖 Le cours</h2><div class="coursewrap">{f'<nav class="ctoc" aria-label="Sommaire du cours"><b>Sommaire</b>{toc}</nav>' if toc else '<div></div>'}<div class="cbody cahier">{cbody}</div></div>''') if cbody else ""
         lab_js = ("<script>(function(){" + SIM_COMMON_JS + smo["js"] + "})();</script>") if smo else ""
         if L["unite"].startswith("Contrôles"):
             resume = "Les devoirs surveillés du semestre 1 avec leurs corrigés détaillés, exercice par exercice, pour s'entraîner dans les conditions du contrôle."

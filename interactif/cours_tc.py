@@ -4,18 +4,22 @@ from cours_lib import *
 GRAV = [
  ("I", "Écriture scientifique et ordre de grandeur",
   B("def", "$$X = a \\times 10^{n} \\quad \\text{avec } 1 \\le a < 10 \\text{ et } n \\in \\mathbb{Z}$$ Ordre de grandeur : $10^{n}$ si $a < 5$ ; $10^{n+1}$ si $a \\ge 5$.")
+  + EC("On écrit le nombre avec un seul chiffre avant la virgule, puis on garde seulement la puissance de 10 la plus proche : c'est l'ordre de grandeur.")
   + TAB(["T", "G", "M", "k", "m", "µ", "n", "p", "f"], [["$10^{12}$", "$10^{9}$", "$10^{6}$", "$10^{3}$", "$10^{-3}$", "$10^{-6}$", "$10^{-9}$", "$10^{-12}$", "$10^{-15}$"]])
   + APP(QCM("Ordre de grandeur de 650 km :", ["$10^{5}$ m", "$10^{6}$ m", "$10^{2}$ m"], 1, "$650\\ \\text{km} = 6{,}5 \\times 10^{5}\\ \\text{m}$ et $6{,}5 \\ge 5$ donc $10^{6}$ m."),
         QCM("Ordre de grandeur de 5 µm :", ["$10^{-6}$ m", "$10^{-5}$ m"], 1, "$5 \\times 10^{-6}$ m avec $a = 5 \\ge 5$ donc $10^{-5}$ m."))),
  ("II", "Loi de la gravitation universelle",
-  B("ret", "Deux corps A et B s'attirent mutuellement :$$F_{A/B} = F_{B/A} = G\\,\\frac{m_A\\,m_B}{d^{2}}$$ $G = 6{,}67 \\times 10^{-11}\\ \\text{N·m}^2\\text{·kg}^{-2}$ ; $m$ en kg, $d$ en m (distance entre les centres), $F$ en N.<br>Même droite d'action, sens opposés : $\\vec F_{A/B} = -\\vec F_{B/A}$.")
+  B("ret", "Deux corps A et B s'attirent mutuellement :$$F_{A/B} = F_{B/A} = G\\,\\frac{m_A\\,m_B}{d^{2}}$$ $G = 6{,}67 \\times 10^{-11}\\ \\text{N}\\cdot\\text{m}^2\\cdot\\text{kg}^{-2}$ ; $m$ en kg, $d$ en m (distance entre les centres), $F$ en N.<br>Même droite d'action, sens opposés : $\\vec F_{A/B} = -\\vec F_{B/A}$.")
+  + EC("Plus les masses sont grandes, plus l'attraction est forte. Plus les corps sont éloignés, plus elle est faible : si la distance double, la force est divisée par 4.")
   + B("ret", "Terre – corps à l'altitude $h$ :$$F = G\\,\\frac{M_T\\,m}{(R_T + h)^{2}}$$")
+  + EC("Pour un objet au-dessus de la Terre, la distance est mesurée depuis le centre de la Terre : rayon de la Terre + altitude.")
   + SIM
   + B("att", "On utilise $d = R_T + h$ (et pas $h$), et toutes les distances en mètres.")
   + APP(QCM("Si la distance entre deux corps double, la force de gravitation est :", ["divisée par 2", "divisée par 4", "multipliée par 2"], 1, "$F$ est proportionnelle à $\\dfrac{1}{d^2}$ : $(2d)^2 = 4d^2$."))),
  ("III", "Le poids d'un corps",
   B("def", "Le <b>poids</b> $\\vec P$ : force exercée par la Terre ; point d'application G, direction verticale, sens vers le bas.$$P = m\\,g$$")
   + B("ret", "$$g_0 = G\\,\\frac{M_T}{R_T^{2}} \\approx 9{,}8\\ \\text{N/kg} \\qquad g_h = g_0\\left(\\frac{R_T}{R_T + h}\\right)^{2}$$ Quand $h$ augmente, le poids diminue ; la masse ne change pas.")
+  + EC("La masse (en kg) est la quantité de matière : elle ne change jamais. Le poids (en N) dépend de l'endroit : il diminue quand on s'éloigne de la Terre.")
   + TAB(["Données", ""], [["$M_T$", "$5{,}98 \\times 10^{24}\\ \\text{kg}$"], ["$R_T$", "$6380\\ \\text{km} = 6{,}38 \\times 10^{6}\\ \\text{m}$"]])
   + APP(Q("Satellite $m = 4{,}5 \\times 10^{3}$ kg au sol ($g_0 = 9{,}8$ N/kg) : poids ?", "$P_0 = 4{,}5 \\times 10^{3} \\times 9{,}8 \\approx 4{,}41 \\times 10^{4}\\ \\text{N}$."),
         QCM("À l'altitude $h = 2R_T$, le poids devient :", ["$P_0/2$", "$P_0/4$", "$P_0/9$"], 2, "$R_T + h = 3R_T$, donc $g_h = g_0/9$."))),
@@ -31,12 +35,14 @@ MECA = [
  ("II", "La force et la réaction d'un support",
   B("def", "Une force $\\vec F$ : point d'application, droite d'action, sens, intensité en newton (N), mesurée au dynamomètre.")
   + B("ret", "$$\\vec R = \\vec R_N + \\vec R_T \\qquad R = \\sqrt{R_N^{2} + R_T^{2}} \\qquad k = \\tan\\varphi = \\frac{R_T}{R_N}$$ Sans frottement : $R_T = 0$, $\\vec R$ perpendiculaire au plan.")
+  + EC("La réaction du support a deux parties : une qui empêche le solide de traverser le support (R<sub>N</sub>) et une qui freine le glissement (R<sub>T</sub>, le frottement).")
   + SIM
   + APP(Q("$R_N = 3$ N et $R_T = 4$ N : calculer $R$, $k$ et $\\varphi$.", "$R = \\sqrt{9 + 16} = 5\\ \\text{N}$ ; $k = \\dfrac{4}{3} \\approx 1{,}33$ ; $\\varphi \\approx 53^\\circ$."),
         VF("Sans frottement, la réaction est perpendiculaire au plan de contact.", True, "$R_T = 0$ donc $\\vec R = \\vec R_N$."))),
  ("III", "Force pressante et pression",
   B("def", "Force pressante : force répartie exercée par un fluide sur une surface, <b>perpendiculaire</b> à la surface.")
   + B("ret", "$$P = \\frac{F}{S}$$ $P$ en Pa, $F$ en N, $S$ en m². &nbsp; $1\\ \\text{hPa} = 10^{2}\\ \\text{Pa}$ ; $1\\ \\text{bar} = 10^{5}\\ \\text{Pa}$ ; $1\\ \\text{cm}^2 = 10^{-4}\\ \\text{m}^2$")
+  + EC("Même force sur une petite surface = grande pression : c'est pourquoi un couteau aiguisé coupe mieux, et un skieur ne s'enfonce pas dans la neige.")
   + B("def", "<b>Manomètre</b> : pression d'un gaz enfermé ; <b>baromètre</b> : pression atmosphérique.")
   + APP(Q("$F = 375$ N sur $S = 25\\ \\text{cm}^2$ : pression ?", "$P = \\dfrac{375}{25 \\times 10^{-4}} = 1{,}5 \\times 10^{5}\\ \\text{Pa}$."),
         QCM("Pour une même force, si la surface augmente, la pression :", ["augmente", "diminue"], 1, "$P = F/S$ : S plus grande donne P plus petite."))),
@@ -86,6 +92,7 @@ EXT = [
   + B("def", "La <b>CCM</b> sépare et identifie les espèces d'un mélange. L'<b>éluant</b> (phase mobile) monte par capillarité sur la plaque (phase fixe).")
   + B("ret", UL("Une seule tache → corps pur ; plusieurs taches → mélange.", "Deux taches à la même hauteur → même espèce chimique.")
       + "$$R_f = \\frac{h}{H} \\qquad (0 < R_f < 1,\\ \\text{sans unité})$$")
+  + EC("On mesure depuis la ligne de dépôt : h jusqu'au centre de la tache, H jusqu'au front de l'éluant. Deux taches avec le même R<sub>f</sub> = la même espèce.")
   + APP(Q("Une tache monte de $h = 3$ cm et le front de l'éluant de $H = 6$ cm. $R_f$ ?", "$R_f = \\dfrac{3}{6} = 0{,}5$."),
         VF("Un dépôt qui donne trois taches est un corps pur.", False, "Plusieurs taches : c'est un mélange."))),
  ("V", "Caractéristiques physiques",

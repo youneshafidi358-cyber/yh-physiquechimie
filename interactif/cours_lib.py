@@ -87,3 +87,8 @@ def VF(q, vrai, expl=""):
 
 def APP(*items, title="Applications interactives"):
     return B("app", "".join(items), title)
+
+
+def EC(txt):
+    """Petite phrase « en clair » qui explique une relation ou une définition."""
+    return f'<p class="enclair">{txt}</p>'

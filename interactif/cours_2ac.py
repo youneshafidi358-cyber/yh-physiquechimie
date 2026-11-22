@@ -11,10 +11,12 @@ AIR = [
  ("II", "L'air est compressible et expansible",
   B("ret", "L'air n'a pas de volume propre : il est <b>compressible</b> et <b>expansible</b>. À température constante :"
       + UL("volume $\\downarrow$ &nbsp;⇒&nbsp; pression $\\uparrow$ (compression)", "volume $\\uparrow$ &nbsp;⇒&nbsp; pression $\\downarrow$ (détente)"))
+  + EC("Dans une seringue bouchée, on peut serrer l'air : ses molécules se rapprochent, elles cognent plus souvent les parois, donc la pression monte.")
   + SIM
   + APP(VF("Quand on pousse le piston d'une seringue bouchée, la pression de l'air diminue.", False, "Le volume diminue, donc la pression augmente."))),
  ("III", "L'air a une masse",
   B("ret", "L'air est pesant. Dans les conditions habituelles (20 °C, 1013 hPa) : <b>1 L d'air a une masse d'environ 1,3 g</b>.")
+  + EC("On pèse un ballon, on retire (ou on ajoute) de l'air, on pèse à nouveau : la différence de masse divisée par le volume donne la masse d'un litre.")
   + B("meth", "Masse d'air retirée (ou ajoutée) : $m = m_1 - m_2$ &nbsp; puis &nbsp; masse de 1 L : $\\dfrac{m}{V}$")
   + APP(Q("Un ballon pèse 445,0 g ; après avoir retiré 1 L d'air, il pèse 443,7 g. Masse de 1 L d'air ?", "$m = 445{,}0 - 443{,}7 = 1{,}3\\ \\text{g}$."),
         Q("Une bouteille rigide pèse 250,0 g ; on y ajoute 5 L d'air : 256,5 g. Masse de 1 L d'air ?", "$\\dfrac{256{,}5 - 250{,}0}{5} = \\dfrac{6{,}5}{5} = 1{,}3\\ \\text{g}$."))),
@@ -37,6 +39,7 @@ MOLA = [
  ("II", "Les molécules",
   B("def", "Une <b>molécule</b> est un ensemble d'atomes liés entre eux.")
   + B("meth", "Formule : on écrit les symboles des atomes et, en <b>indice</b> en bas à droite, le nombre d'atomes de chaque sorte (1 ne s'écrit pas). Ex. : CO<sub>2</sub> = 1 C + 2 O.")
+  + EC("Le petit chiffre en bas à droite compte les atomes du symbole juste avant lui. Pas de chiffre = 1 atome.")
   + TAB(["Modèle", "Formule", "Nom", "Atomes"], [[MOL("O2"), "O<sub>2</sub>", "dioxygène", "2"], [MOL("N2"), "N<sub>2</sub>", "diazote", "2"], [MOL("H2"), "H<sub>2</sub>", "dihydrogène", "2"],
       [MOL("CO2"), "CO<sub>2</sub>", "dioxyde de carbone", "3"], [MOL("H2O"), "H<sub>2</sub>O", "eau", "3"], [MOL("CH4"), "CH<sub>4</sub>", "méthane", "5"], [MOL("CO"), "CO", "monoxyde de carbone", "2"]], "mols")
   + SIM

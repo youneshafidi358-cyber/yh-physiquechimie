@@ -21,27 +21,45 @@ def _slug(s):
     s = unicodedata.normalize("NFD", s).encode("ascii", "ignore").decode().lower()
     return re.sub(r"[^a-z0-9]+", "-", s).strip("-")
 
+def _sid(t):
+    return "c-" + _slug(t)[:40]
+
 def render(unite, sim_html=""):
     """Renvoie (sommaire, corps) ou ('','') si pas de cours."""
     if unite not in COURS:
         return "", ""
     secs, trad = COURS[unite]
     toc, body, placed = [], [], False
-    for num, title, html in secs:
+    N = len(secs)
+    for k, (num, title, html) in enumerate(secs, 1):
         sid = "c-" + _slug(title)[:40]
         lab = f"{num}. {title}" if num else title
-        toc.append(f'<li><a href="#{sid}">{E(lab)}</a></li>')
+        toc.append(f'<li><a href="#{sid}" data-p="{k}"><span class="pg">p.{k}</span> {E(lab)}</a></li>')
         if "%%SIM%%" in html:
             html = html.replace("%%SIM%%", sim_html, 1); placed = True
-        body.append(f'<section class="csec" id="{sid}"><h3 class="cs"><span>{E(num)}</span>{E(title)}</h3>{html}</section>')
-    if sim_html and not placed:
-        body.append(sim_html)
-    if False and trad:
-        toc.append('<li><a href="#c-traduction">Traduction</a></li>')
-        body.append(f'<section class="csec" id="c-traduction"><h3 class="cs"><span>🌐</span>Traduction <span lang="ar" dir="rtl" style="background:none;color:inherit;margin:0 6px;min-width:0">الترجمة</span></h3>{TRAD(trad)}</section>')
+        if k == N and sim_html and not placed:
+            html += sim_html; placed = True
+        nav = ('<nav class="pnav" aria-label="Pages du cours">'
+               + (f'<a class="pprev" href="#{_sid(secs[k-2][1])}" data-p="{k-1}">← Page {k-1}</a>' if k > 1 else '<span></span>')
+               + f'<span class="pnum">Page {k} / {N}</span>'
+               + (f'<a class="pnext" href="#{_sid(secs[k][1])}" data-p="{k+1}">Page {k+1} : {E(secs[k][1])} →</a>' if k < N else '<a class="pnext" href="#resume">Résumé et exercices →</a>')
+               + '</nav>')
+        body.append(f'<section class="csec page" id="{sid}" data-p="{k}"><div class="phead">Page {k} / {N}</div><h3 class="cs"><span>{E(num)}</span>{E(title)}</h3>{html}{nav}</section>')
     return "<ol>" + "".join(toc) + "</ol>", "".join(body)
 
 CSS = r"""
+.cbody.cahier{position:relative;background-image:linear-gradient(90deg,transparent 46px,#f2b8b8 46px,#f2b8b8 48px,transparent 48px),repeating-linear-gradient(#fff 0 31px,#dfe8f5 31px 32px);padding-left:66px!important;box-shadow:0 2px 0 #e8e2d4,0 4px 14px rgba(20,33,61,.06)}
+.cahier .page{display:block}.js-cahier .cahier .page{display:none}.js-cahier .cahier .page.on{display:block;animation:pgin .25s ease}
+@keyframes pgin{from{opacity:0;transform:translateX(12px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.js-cahier .cahier .page.on{animation:none}}
+.phead{font-size:12.5px;font-weight:700;color:#8a93a8;text-align:right;margin-top:10px;letter-spacing:.04em;text-transform:uppercase}
+.pnav{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:22px 0 6px;padding-top:12px;border-top:2px dashed #e3e8f1;flex-wrap:wrap}
+.pnav a{display:inline-flex;align-items:center;min-height:44px;padding:8px 14px;border-radius:12px;font-weight:700;text-decoration:none;font-size:14.5px}
+.pprev{background:#f1f4f9;color:#123c8c}.pnext{background:#123c8c;color:#fff}.pnum{font-size:13px;color:#565f74;font-weight:600}
+.ctoc .pg{display:inline-block;min-width:30px;font-size:11.5px;font-weight:800;color:#b42318}
+.enclair{display:flex;gap:8px;align-items:flex-start;margin:8px 0 12px;padding:8px 12px;background:#fffbe9;border-left:4px solid #e0b100;border-radius:8px;font-size:15.5px}
+.enclair::before{content:"💬";flex:none}
+@media (max-width:900px){.cbody.cahier{background-image:linear-gradient(90deg,transparent 18px,#f2b8b8 18px,#f2b8b8 20px,transparent 20px),repeating-linear-gradient(#fff 0 31px,#dfe8f5 31px 32px);padding-left:30px!important}.pnav a{flex:1 1 100%;justify-content:center}.pnum{order:-1;width:100%;text-align:center}}
 .wrap{max-width:1400px}
 .coursewrap{display:grid;grid-template-columns:230px minmax(0,1fr);gap:20px;align-items:start}
 .ctoc{position:sticky;top:76px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 12px 8px;font-size:14px;max-height:calc(100vh - 100px);overflow:auto}
@@ -49,7 +67,7 @@ CSS = r"""
 .ctoc ol{margin:0;padding-left:0;list-style:none}.ctoc li{margin:0 0 4px}
 .ctoc a{display:block;padding:6px 8px;border-radius:8px;color:#334;text-decoration:none;line-height:1.3}
 .ctoc a:hover,.ctoc a.on{background:#eef3fc;color:#123c8c;font-weight:600}
-.cbody{min-width:0;overflow-wrap:break-word;background:#fff;border:1px solid var(--line);border-radius:16px;padding:8px 22px 18px;line-height:1.65;font-size:16.5px}
+.cbody{min-width:0;overflow-wrap:break-word;background-color:#fff;border:1px solid var(--line);border-radius:16px;padding:8px 22px 18px;line-height:1.65;font-size:16.5px}
 .csec{padding-top:6px;scroll-margin-top:80px}
 .cs{display:flex;align-items:center;gap:10px;font-size:21px;color:#0f2350;margin:22px 0 12px;padding-bottom:8px;border-bottom:2px solid #e8edf6}
 .cs>span:first-child{background:#0f2350;color:#fff;border-radius:8px;padding:2px 10px;font-size:16px;min-width:22px;text-align:center}
@@ -103,9 +121,16 @@ JS = r"""
 <script defer src="/js/katex/katex.min.js"></script>
 <script defer src="/js/katex/auto-render.min.js" onload="renderMathInElement(document.querySelector('.cbody')||document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false});document.querySelectorAll('.katex-display').forEach(e=>{if(e.scrollWidth>e.clientWidth){e.tabIndex=0}})"></script>
 <script>
+(()=>{const cb=document.querySelector('.cbody.cahier');if(!cb)return;document.documentElement.classList.add('js-cahier');
+const ps=[...cb.querySelectorAll('.page')];const tl=[...document.querySelectorAll('.ctoc a')];
+function go(n,scroll){n=Math.max(1,Math.min(ps.length,n));ps.forEach(p=>p.classList.toggle('on',+p.dataset.p===n));tl.forEach(a=>a.classList.toggle('on',+a.dataset.p===n));
+ if(scroll){const t=document.getElementById('cours');if(t)t.scrollIntoView({behavior:'smooth',block:'start'});}
+ history.replaceState(null,'','#'+ps[n-1].id);window.dispatchEvent(new Event('resize'));}
+document.addEventListener('click',e=>{const a=e.target.closest('a[data-p]');if(!a||!cb.contains(a)&&!a.closest('.ctoc'))return;e.preventDefault();go(+a.dataset.p,true);});
+const h=location.hash.slice(1);const i=ps.findIndex(p=>p.id===h);let start=i>=0?i+1:1;
+const lab=document.getElementById('lab');if(h==='lab'&&lab){const pp=lab.closest('.page');if(pp)start=+pp.dataset.p;}
+go(start,false);if(h==='lab'&&lab)setTimeout(()=>lab.scrollIntoView(),50);
+document.addEventListener('keydown',e=>{if(e.target.closest('input,textarea,select'))return;const c=ps.findIndex(p=>p.classList.contains('on'))+1;if(e.key==='ArrowRight')go(c+1,true);if(e.key==='ArrowLeft')go(c-1,true);});})();
 document.addEventListener('click',e=>{const o=e.target.closest('.qcm-o button');if(o){const q=o.closest('.qcm');q.querySelectorAll('button').forEach(x=>{x.classList.remove('good','bad');if(x.dataset.ok=='1'&&o.dataset.ok=='1')x.classList.add('good')});o.classList.add(o.dataset.ok=='1'?'good':'bad');const ex=q.querySelector('.qcm-e');if(o.dataset.ok=='1'){ex.hidden=false}else{ex.hidden=true}return;}
 const b=e.target.closest('.qa-btn');if(!b)return;const a=b.nextElementSibling;const op=a.hidden;a.hidden=!op;b.setAttribute('aria-expanded',op);b.textContent=op?'Masquer la réponse':'Voir la réponse';});
-(()=>{const ls=[...document.querySelectorAll('.ctoc a')];if(!ls.length||!('IntersectionObserver' in window))return;
-const io=new IntersectionObserver(es=>{es.forEach(x=>{if(x.isIntersecting){ls.forEach(a=>a.classList.toggle('on',a.getAttribute('href')=='#'+x.target.id));}})},{rootMargin:'-30% 0px -60% 0px'});
-document.querySelectorAll('.csec').forEach(s=>io.observe(s));})();
 </script>"""

@@ -27,6 +27,7 @@ IONS = [
   + B("def", "Un atome est formé d'un <b>noyau</b> (au centre, presque toute la masse, charges <b>positives</b>) et d'<b>électrons</b> e<sup>−</sup> (charge <b>négative</b>, masse négligeable) qui forment un <b>nuage électronique</b>.")
   + B("def", "Le <b>numéro atomique Z</b> est le nombre de charges positives du noyau. Charge élémentaire : $e = 1{,}6 \\times 10^{-19}\\ \\text{C}$.")
   + B("ret", "$$q_{noyau} = +Z\\,e \\qquad q_{électrons} = -Z\\,e \\qquad q_{atome} = +Z\\,e - Z\\,e = 0$$ L'atome est <b>électriquement neutre</b> : nombre d'électrons = Z.")
+  + EC("Le noyau porte autant de charges + que les électrons portent de charges − : elles s'annulent, l'atome n'est pas chargé.")
   + APP(Q("Le soufre a Z = 16. Nombre d'électrons, charge du noyau et charge de l'atome ?", "16 électrons ; $q_n = +16\\,e$ ; $q_a = 0$."),
         VF("Le noyau contient presque toute la masse de l'atome.", True, "Les électrons ont une masse négligeable."))),
  ("II", "Les ions",
@@ -34,6 +35,7 @@ IONS = [
       + UL("<b>Cation</b> : ion positif (électrons perdus). Ex. : Na<sup>+</sup>, Cu<sup>2+</sup>.", "<b>Anion</b> : ion négatif (électrons gagnés). Ex. : Cl<sup>−</sup>, S<sup>2−</sup>."))
   + B("rule", "Formule : symbole (ou formule) + en haut à droite le nombre d'électrons gagnés (−) ou perdus (+). <b>Monoatomique</b> : un seul atome (Fe<sup>3+</sup>) ; <b>polyatomique</b> : plusieurs atomes (SO<sub>4</sub><sup>2−</sup>, NH<sub>4</sub><sup>+</sup>, OH<sup>−</sup>).")
   + B("att", "Quand un atome devient un ion, <b>seul le nombre d'électrons change</b> : la charge du noyau reste $+Z\\,e$.")
+  + EC("Perdre des électrons (négatifs) rend l'ion positif ; en gagner le rend négatif. Le chiffre en haut à droite indique combien d'électrons.")
   + SIM
   + APP(QCM("L'ion Na<sup>+</sup> provient d'un atome qui a :", ["gagné 1 électron", "perdu 1 électron"], 1, "Perdre un électron (négatif) donne une charge +."),
         QCM("OH<sup>−</sup> est un ion :", ["monoatomique", "polyatomique"], 1, "Il contient deux atomes (O et H)."),
