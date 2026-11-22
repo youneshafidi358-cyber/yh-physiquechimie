@@ -117,6 +117,9 @@
     });
   }
   fetch("/api/note").then(function (r) { return r.json(); }).then(function (d) {
+    if (d && d.nombre) return d;
+    return fetch(URL_SCRIPT + "?note=1").then(function (r) { return r.json(); });
+  }).then(function (d) {
     if (!d || !d.nombre) return;
     var m = String(d.moyenne).replace(".", ","), txt = d.nombre + " avis";
     if (badge) { badge.innerHTML = '★ ' + m + '/5 <small>(' + txt + ')</small> <span class="t">· Noter</span>'; badge.setAttribute("aria-label", "Note du site " + m + " sur 5, " + txt + ". Noter le site"); }
