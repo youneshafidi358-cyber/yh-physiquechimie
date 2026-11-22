@@ -1,0 +1,7 @@
+{
+  // Site statique YH Physique-Chimie (Cloudflare Workers + assets)
+  "name": "yh-physiquechimie",
+  "compatibility_date": "2026-11-01",
+  "build": { "command": "python3 build_pages.py static" },
+  "assets": { "directory": "./static", "not_found_handling": "404-page", "html_handling": "auto-trailing-slash" }
+}
