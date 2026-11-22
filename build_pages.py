@@ -277,9 +277,15 @@ def lesson_cards(niv, lessons, full=None):
 
 def level_hub(niv, lv):
     col = LCOLS.get(niv, "#1f4e9c")
-    lessons = [l for l in lv if not (l["unite"].startswith("Contrôles") or l["unite"].startswith("Révision"))]
+    lessons = [l for l in lv if not (l["unite"].startswith("Contrôles") or l["unite"].startswith("Révision") or l["unite"].startswith("Examens"))]
     exos = [l for l in lv if IX.exercices_html(niv, l["unite"]) or any(i["type"] == "exo" for i in l["items"])]
-    exos = [l for l in exos if not l["unite"].startswith("Contrôles")]
+    exos = [l for l in exos if not (l["unite"].startswith("Contrôles") or l["unite"].startswith("Examens"))]
+    exams = {}
+    for l in lv:
+        if l["unite"].startswith("Examens"):
+            for it in l["items"]:
+                m = re.search(r"(\d{4}).*?[Ss]ujet\s+(\w)", it["titre"])
+                if m: exams.setdefault((m.group(1), m.group(2)), {})["corr" if it["type"] in ("corrige", "corr") else "sujet"] = it
     ds = []
     for l in lv:
         if l["unite"].startswith("Contrôles"):
@@ -305,6 +311,13 @@ def level_hub(niv, lv):
             p_ds += card(f"DS{n}", f"Devoir surveillé n°{n}", f"{len(vs)} versions : {letters}", "Chaque version corrigée en détail, exercice par exercice", "Choisir la version →", f"#ds{n}", f' data-sub="dsg{n}"')
             vcards = "".join(card(f"Version {L}", E(t), f"DS{n}", E(f), "Voir la correction →", h) for L, t, h, f in vs)
             subs += f'''<section class="subp" id="dsg{n}" hidden><h3 class="sec" style="font-size:19px">📁 DS{n} – choisis ta version</h3><div class="lcards">{vcards}</div></section>'''
+    if exams:
+        ecards = ""
+        for (an, L), d in sorted(exams.items(), key=lambda x: (x[0][0], x[0][1]), reverse=False):
+            if "sujet" in d: ecards += card(f"Sujet {L}", f"Examen local {an} – sujet {L}", "Énoncé", "Session janvier · 1 heure · chimie", "Voir le sujet →", "/?doc=" + d["sujet"]["url"])
+            if "corr" in d: ecards += card(f"Corrigé {L}", f"Corrigé détaillé – sujet {L}", f"Examen local {an}", "Méthodes · réponses encadrées · erreurs fréquentes", "Voir le corrigé →", "/?doc=" + d["corr"]["url"])
+        p_ds += card("🎓", "Examens locaux", f"{len(exams)} examen{'s' if len(exams) > 1 else ''} corrigé{'s' if len(exams) > 1 else ''}", "Sujets d'examens normalisés locaux + corrigés détaillés", "Ouvrir →", "#examens", ' data-sub="exloc"')
+        subs += f'''<section class="subp" id="exloc" hidden><h3 class="sec" style="font-size:19px">🎓 Examens locaux – sujets et corrigés</h3><div class="lcards">{ecards}</div></section>'''
     p_ds += "</div>" + subs + '<div class="lcards" hidden>'
     cats = [("cours", "📖", "Cours", f"{len(lessons)} leçon{'s' if len(lessons) > 1 else ''}", p_cours),
             ("exercices", "✍️", "Exercices", f"{len(exos)} série{'s' if len(exos) > 1 else ''} corrigée{'s' if len(exos) > 1 else ''}", p_exos),
