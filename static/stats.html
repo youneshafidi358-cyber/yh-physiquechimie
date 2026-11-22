@@ -100,9 +100,12 @@ function bars(list, total, color){
 }
 const LABEL_SRC = {facebook:"Facebook",whatsapp:"WhatsApp",google:"Google",direct:"Lien direct / favori",instagram:"Instagram",youtube:"YouTube"};
 
-const villeAvis = r => (r.type && String(r.type).startsWith("/")) ? "" : (r.canal||"");
+/* Ville connue d'un visiteur (vid) : d'après n'importe laquelle de ses visites récentes. Permet de retrouver la ville des anciennes visites et des anciens avis des visiteurs qui reviennent. */
+function vidVilles(){ const m={}; ROWS.forEach(r=>{ if(r.ev==="visite"&&r.canal&&r.vid) m[r.vid]={v:r.canal,reg:r.type||""}; else if(r.ev==="avis"&&r.canal&&!(r.type&&String(r.type).startsWith("/"))&&r.vid&&!m[r.vid]) m[r.vid]={v:r.canal,reg:r.type||""}; }); return m; }
+const villeAvis = r => { const own=(r.type && String(r.type).startsWith("/")) ? "" : (r.canal||""); if(own) return own; const k=vidVilles()[r.vid]; return k?k.v:""; };
 function villesHtml(rows){
-  const vis=rows.filter(r=>r.ev==="visite");
+  const VV=vidVilles();
+  const vis=rows.filter(r=>r.ev==="visite").map(r=>r.canal?r:(VV[r.vid]?Object.assign({},r,{canal:VV[r.vid].v,type:VV[r.vid].reg}):r));
   const avecV=vis.filter(r=>r.canal);
   if(!avecV.length) return '<div class="empty">Pas encore de données : la ville est enregistrée à partir de maintenant, à chaque nouvelle visite.</div>';
   const m={}; avecV.forEach(r=>{ const k=r.canal; const x=m[k]||(m[k]={reg:r.type||"",n:0,v:new Set()}); x.n++; x.v.add(r.vid); });
@@ -110,7 +113,7 @@ function villesHtml(rows){
   const tot=avecV.length;
   return '<table><tr><th>#</th><th>Ville</th><th>Région</th><th style="text-align:right">Visiteurs</th><th style="text-align:right">Visites</th><th style="text-align:right">Part</th></tr>'+
     l.map(([k,x],i)=>`<tr><td>${i+1}</td><td><b>${esc(k)}</b></td><td style="color:#565f74">${esc(x.reg)}</td><td class="n">${x.v.size}</td><td class="n">${x.n}</td><td class="n">${Math.round(x.n*100/tot)} %</td></tr>`).join("")+'</table>'+
-    (vis.length>avecV.length?`<div style="color:#565f74;font-size:12.5px;margin-top:6px">${vis.length-avecV.length} visite(s) sans ville (anciennes visites ou position inconnue).</div>`:'');
+    (vis.length>avecV.length?`<div style="color:#565f74;font-size:12.5px;margin-top:6px">${vis.length-avecV.length} visite(s) sans ville (visiteurs pas encore revenus depuis l'ajout des villes, ou position inconnue).</div>`:'');
 }
 function avisVillesHtml(rows){
   const last={}; rows.filter(r=>r.ev==="avis"&&+r.niveau>=1&&+r.niveau<=5).forEach(r=>{ last[r.vid]=r; });
