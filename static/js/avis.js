@@ -37,7 +37,7 @@
 
   function send(stars, comment) {
     var body = JSON.stringify({ ev: "avis", vid: vid, src: "site", dev: /Mobi|Android|iPhone/i.test(navigator.userAgent) ? "téléphone" : "ordinateur",
-      br: "", niveau: String(stars), titre: (comment || "").slice(0, 600), type: location.pathname, canal: document.title.slice(0, 120), nouveau: 0 });
+      br: "", niveau: String(stars), titre: (comment || "").slice(0, 150), type: location.pathname, canal: document.title.slice(0, 120), nouveau: 0 });
     try { if (navigator.sendBeacon && navigator.sendBeacon(URL_SCRIPT, new Blob([body], { type: "text/plain;charset=utf-8" }))) return; } catch (e) {}
     try { fetch(URL_SCRIPT, { method: "POST", mode: "no-cors", body: body, headers: { "Content-Type": "text/plain;charset=utf-8" }, keepalive: true }); } catch (e) {}
   }
@@ -54,7 +54,7 @@
       [1, 2, 3, 4, 5].map(function (n) { return '<input type="radio" name="avn" id="av' + n + '" value="' + n + '"><label for="av' + n + '" title="' + n + ' étoile' + (n > 1 ? "s" : "") + '" aria-label="' + n + ' étoile' + (n > 1 ? "s" : "") + ' : ' + LABELS[n] + '">★</label>'; }).join("") +
       '</fieldset><div class="av-lab" aria-live="polite"></div>' +
       '<label for="avC" style="font-weight:600;font-size:14px">Un commentaire ? (facultatif)</label>' +
-      '<textarea id="avC" maxlength="600" placeholder="Ce que tu aimes, ce qu\'il faut améliorer, une leçon que tu veux…"></textarea>' +
+      '<textarea id="avC" maxlength="150" placeholder="Ce que tu aimes, ce qu\'il faut améliorer, une leçon que tu veux…"></textarea>' +
       '<div class="av-row"><button type="button" class="av-later">' + (auto ? "Plus tard" : "Annuler") + '</button><button type="button" class="av-send" disabled>Envoyer</button></div>' +
       '<div class="av-small">Ne mets pas ton nom ni ton numéro : l\'avis est anonyme.</div></div>';
     document.body.appendChild(back);
