@@ -666,4 +666,23 @@ VIDEOS_LECON = {
         ("Situation-problème – Les trois bouteilles", "Correction_DS1_TCSF_Situation_probleme.mp4")],
 }
 USED_LEVELS = []
+
+def version_js():
+    """Ajoute ?v=<empreinte> aux scripts du site : chaque mise en ligne force les navigateurs à prendre la nouvelle version."""
+    import hashlib
+    ver = {}
+    for n in ("avis", "soutien", "suivre"):
+        f = os.path.join(SITE, "js", n + ".js")
+        if os.path.exists(f): ver[n] = hashlib.md5(open(f, "rb").read()).hexdigest()[:8]
+    pat = re.compile(r'src="/js/(avis|soutien|suivre)\.js(?:\?v=\w+)?"')
+    k = 0
+    for root, _, files in os.walk(SITE):
+        for fn in files:
+            if not fn.endswith(".html"): continue
+            fp = os.path.join(root, fn); t = open(fp, encoding="utf-8").read()
+            t2 = pat.sub(lambda m: f'src="/js/{m.group(1)}.js?v={ver.get(m.group(1), "1")}"', t)
+            if t2 != t: open(fp, "w", encoding="utf-8").write(t2); k += 1
+    print(k, "pages : scripts versionnés")
+
 build()
+version_js()
