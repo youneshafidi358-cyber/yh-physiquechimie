@@ -123,6 +123,22 @@
     if (info) info.textContent = "Moyenne : " + m + "/5 · " + txt;
   }).catch(function () {});
 
+  /* Temps passé sur une leçon (temps actif, onglet visible) */
+  if (/^\/lecons\//.test(location.pathname)) {
+    var ms = 0, since = document.hidden ? 0 : Date.now(), sent = false;
+    var pause = function () { if (since) { ms += Date.now() - since; since = 0; } };
+    document.addEventListener("visibilitychange", function () { if (document.hidden) pause(); else if (!since) since = Date.now(); });
+    window.addEventListener("pagehide", function () {
+      if (sent) return; pause(); sent = true;
+      var sec = Math.min(10800, Math.round(ms / 1000)); if (sec < 3) return;
+      var cr = document.querySelector(".crumbs a[href^='/niveau/']"), h1 = document.querySelector("h1");
+      var body = JSON.stringify({ ev: "duree_document", vid: vid, src: "site", dev: /Mobi|Android|iPhone/i.test(navigator.userAgent) ? "téléphone" : "ordinateur",
+        br: "", niveau: cr ? cr.textContent.split(" –")[0] : "", titre: "Leçon : " + (h1 ? h1.textContent.trim() : document.title).slice(0, 110), type: "Cours interactif", canal: String(sec), nouveau: 0 });
+      try { if (navigator.sendBeacon && navigator.sendBeacon(URL_SCRIPT, new Blob([body], { type: "text/plain;charset=utf-8" }))) return; } catch (e) {}
+      try { fetch(URL_SCRIPT, { method: "POST", mode: "no-cors", body: body, headers: { "Content-Type": "text/plain;charset=utf-8" }, keepalive: true }); } catch (e) {}
+    });
+  }
+
   /* Invitation automatique : une seule fois par visiteur, après 3 pages vues ou 75 s sur une page,
      puis de nouveau 7 jours après « Plus tard ». */
   if (!done) {

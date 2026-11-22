@@ -667,8 +667,21 @@ function askDelete(it, btn){
 /* ---------- Lecteur protégé ---------- */
 let blobUrl = null, renderToken = 0;
 function wm(){ const w=document.createElement("div"); w.className="wm"; const s=document.createElement("span"); s.textContent=WATERMARK; w.appendChild(s); return w; }
+/* Durée de lecture : temps actif (onglet visible) entre l'ouverture et la fermeture du document */
+let DUR = null;
+function durPause(){ if(DUR && DUR.since){ DUR.ms += Date.now()-DUR.since; DUR.since=0; } }
+function durResume(){ if(DUR && !DUR.since) DUR.since = Date.now(); }
+function durFlush(){
+  if(!DUR) return; durPause();
+  const sec = Math.min(10800, Math.round(DUR.ms/1000));
+  if(sec>=3) try{ STATS.send("duree_document", {titre:DUR.it.titre, niveau:LEVEL_NAME(DUR.it.niveau), type:TYPES[DUR.it.type]||DUR.it.type, canal:String(sec)}); }catch(e){}
+  DUR = null;
+}
+document.addEventListener("visibilitychange", ()=>{ document.hidden ? durPause() : durResume(); });
+window.addEventListener("pagehide", durFlush);
 async function openViewer(it){
   const token = ++renderToken;
+  durFlush(); DUR = {it, ms:0, since:Date.now()};
   track('ouverture_document', {titre: it.titre, niveau: LEVEL_NAME(it.niveau), type_document: TYPES[it.type]||it.type, lecon: it.unite||''});
   $("#vTitle").textContent = it.titre;
   const body = $("#vBody"); body.innerHTML = '<div class="vload">Chargement…</div>';
@@ -729,7 +742,7 @@ async function openViewer(it){
   }
 }
 function closeViewer(){
-  renderToken++;
+  renderToken++; durFlush();
   $("#viewer").classList.remove("open"); document.body.style.overflow="";
   $("#vBody").innerHTML = "";
   if(blobUrl){ URL.revokeObjectURL(blobUrl); blobUrl=null; }
