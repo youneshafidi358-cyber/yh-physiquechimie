@@ -748,7 +748,12 @@ function closeViewer(){
   $("#vBody").innerHTML = "";
   if(blobUrl){ URL.revokeObjectURL(blobUrl); blobUrl=null; }
 }
-$("#vClose").onclick = closeViewer;
+$("#vClose").onclick = ()=>{
+  closeViewer();
+  /* Ouvert depuis une page du site (ex. Examens 3AC) : on revient à cette page */
+  try{ if(new URLSearchParams(location.search).get("doc") && document.referrer && new URL(document.referrer).origin===location.origin && history.length>1){ history.back(); return; } }catch(e){}
+  if(new URLSearchParams(location.search).get("doc")) history.replaceState(null,"","/");
+};
 document.addEventListener("keydown", e=>{
   if(e.key==="Escape" && $("#viewer").classList.contains("open")) closeViewer();
   const k = e.key.toLowerCase();
@@ -813,8 +818,25 @@ function fromSheet(text){
   });
   return out;
 }
+function docItem(doc, list){
+  let it = (list||[]).find(x=>x.url===doc || x.url==="/"+doc || "/"+x.url===doc);
+  if(!it && /^\/?(cours|videos)\/[\w.\-%() ]+\.(pdf|mp4)$/i.test(doc)){
+    const name = decodeURIComponent(doc.split("/").pop()).replace(/\.(pdf|mp4)$/i,"").replace(/_/g," ");
+    it = {titre:name, url:doc.replace(/^\//,""), type: /\.mp4$/i.test(doc) ? "video" : "cours", niveau:"", unite:""};
+  }
+  return it;
+}
 async function start(){
   readHash(); renderLevels(); renderList();
+  /* Lien direct vers un document (?doc=…) : on l'ouvre tout de suite, sans attendre le chargement de la liste */
+  const doc0 = new URLSearchParams(location.search).get("doc");
+  let docOpened = false;
+  if(doc0){
+    let cat0 = [];
+    try{ cat0 = await (await fetch("/catalogue.json")).json(); }catch(e){}
+    const it0 = docItem(doc0, cat0);
+    if(it0){ openViewer(it0); docOpened = true; }
+  }
   try{ LESSON_PAGES = await (await fetch("/lecons/index.json",{cache:"no-cache"})).json(); }catch(e){}
   try{
     if(SHEET_CSV_URL){
@@ -834,14 +856,7 @@ async function start(){
   }catch(e){ state.error = "Le contenu n'est pas accessible pour le moment."; }
   renderLevels(); renderList();
   const doc = new URLSearchParams(location.search).get("doc");
-  if(doc){
-    let it = state.items.find(x=>x.url===doc || x.url==="/"+doc || "/"+x.url===doc);
-    if(!it && /^\/?(cours|videos)\/[\w.\-%() ]+\.(pdf|mp4)$/i.test(doc)){
-      const name = decodeURIComponent(doc.split("/").pop()).replace(/\.(pdf|mp4)$/i,"").replace(/_/g," ");
-      it = {titre:name, url:doc.replace(/^\//,""), type: /\.mp4$/i.test(doc) ? "video" : "cours", niveau:"", unite:""};
-    }
-    if(it){ openViewer(it); }
-  }
+  if(doc && !docOpened){ const it = docItem(doc, state.items); if(it) openViewer(it); }
 }
 function showRes(){ ['contenu','list','resbar'].forEach(i=>{const e=document.getElementById(i); if(e) e.hidden=false;}); }
 function goSearch(q){ showRes(); q=(q||'').trim(); const i=document.getElementById('search'); i.value=q; state.q=q.toLowerCase(); state.level='all'; renderLevels(); renderList();
