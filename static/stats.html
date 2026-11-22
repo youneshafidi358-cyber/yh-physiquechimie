@@ -97,6 +97,16 @@ function bars(list, total, color){
 }
 const LABEL_SRC = {facebook:"Facebook",whatsapp:"WhatsApp",google:"Google",direct:"Lien direct / favori",instagram:"Instagram",youtube:"YouTube"};
 
+function avisHtml(rows){
+  const av=rows.filter(r=>r.ev==="avis"&&+r.niveau>=1&&+r.niveau<=5);
+  if(!av.length) return '<div class="empty">Pas encore d\'avis sur cette période.</div>';
+  const last={}; av.forEach(r=>{ last[r.vid]=r; }); const uniq=Object.values(last);
+  const moy=(uniq.reduce((s,r)=>s+ +r.niveau,0)/uniq.length);
+  const dist=[5,4,3,2,1].map(n=>[n+" ★",uniq.filter(r=>+r.niveau===n).length]);
+  const com=uniq.filter(r=>r.titre).sort((a,b)=>b.t-a.t).slice(0,30);
+  return `<div style="display:flex;gap:24px;flex-wrap:wrap;align-items:center"><div style="text-align:center"><div style="font-size:44px;font-weight:800;color:#0f2350">${moy.toFixed(1).replace(".",",")}</div><div style="color:#f5b400;font-size:22px">${"★".repeat(Math.round(moy))}${"☆".repeat(5-Math.round(moy))}</div><div style="color:#565f74;font-size:13px">${uniq.length} visiteur${uniq.length>1?"s":""}</div></div><div style="flex:1;min-width:220px">${bars(dist,uniq.length,"#f5b400")}</div></div>`+
+   (com.length?'<h3 style="font-size:15px;margin:16px 0 8px">Derniers commentaires</h3>'+com.map(r=>`<div style="border-top:1px solid #e8edf6;padding:8px 0"><b style="color:#f5b400">${"★".repeat(+r.niveau)}</b> <span style="color:#565f74;font-size:12.5px">${new Date(r.t).toLocaleDateString("fr-FR")} · ${esc(r.type||"")}</span><div>${esc(r.titre)}</div></div>`).join(""):'');
+}
 let charts=[];
 function render(){
   const now = Date.now();
@@ -135,6 +145,7 @@ function render(){
           return '<table><tr><th>#</th><th>Document</th><th style="text-align:right">Ouvertures</th><th style="text-align:right">%</th></tr>'+
           l.slice(0,15).map(([k,v],i)=>`<tr><td>${i+1}</td><td>${esc(k)}</td><td class="n">${v}</td><td class="n">${Math.round(v*100/docs.length)} %</td></tr>`).join("")+'</table>'; })()
       }</div>
+      <div class="box full"><h2>⭐ Avis des visiteurs</h2>${avisHtml(rows)}</div>
       <div class="box"><h2>Navigateurs</h2>${bars(count(visits,r=>r.br), visits.length)}</div>
       <div class="box"><h2>Heures de visite</h2><div style="height:200px"><canvas id="cHours"></canvas></div></div>
     </div>

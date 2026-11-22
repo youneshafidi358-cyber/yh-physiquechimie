@@ -219,6 +219,7 @@ def _page(title, desc, canonical, body, jsonld, nav, extra_css, extra_js):
 <script>
 document.addEventListener('click',e=>{{const a=e.target.closest('a[data-ev]');if(!a)return;try{{gtag('event',a.dataset.ev,{{titre:a.dataset.t||'',lecon:document.title}})}}catch(x){{}}}});
 </script>
+<script defer src="/js/avis.js"></script>
 </body>
 </html>"""
 

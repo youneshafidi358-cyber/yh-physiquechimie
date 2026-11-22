@@ -835,5 +835,6 @@ function goSearch(q){ showRes(); q=(q||'').trim(); const i=document.getElementBy
 function setType(t){ showRes(); state.type=t; document.querySelectorAll('#typeSeg button').forEach(x=>x.setAttribute('aria-pressed', x.dataset.t===t)); renderList(); }
 start();
 </script>
+<script defer src="/js/avis.js"></script>
 </body>
 </html>
