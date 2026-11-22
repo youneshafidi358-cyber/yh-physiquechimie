@@ -119,6 +119,7 @@ h2.sec::before{content:"";width:6px;height:20px;border-radius:3px;background:var
 .lc{display:flex;flex-direction:column;gap:6px;text-decoration:none;background:#fff;border:1px solid var(--line);border-radius:18px;padding:20px 16px 16px;min-height:170px;position:relative;overflow:hidden;transition:transform .15s,box-shadow .15s;color:inherit}
 .lc::before{content:"";position:absolute;inset:0 0 auto 0;height:6px;background:var(--c)}
 .lc:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(20,33,61,.12)}
+.exbs{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.exb{flex:1;min-width:120px;text-align:center;padding:10px 12px;border-radius:10px;background:#eef2fb;color:#1f3a8a;font-weight:700;text-decoration:none}.exb.exc{background:var(--c);color:#fff}.exb:hover{filter:brightness(.95)}.exk{cursor:default}
 .cats{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}.cat{min-height:150px}.cat.on,[data-sub].on{box-shadow:0 0 0 3px var(--c);}
 .catp{scroll-margin-top:80px}
 .lc-code{font-family:Fraunces,Georgia,serif;font-size:28px;font-weight:800;color:var(--c);line-height:1}
@@ -311,17 +312,18 @@ def level_hub(niv, lv):
             p_ds += card(f"DS{n}", f"Devoir surveillé n°{n}", f"{len(vs)} versions : {letters}", "Chaque version corrigée en détail, exercice par exercice", "Choisir la version →", f"#ds{n}", f' data-sub="dsg{n}"')
             vcards = "".join(card(f"Version {L}", E(t), f"DS{n}", E(f), "Voir la correction →", h) for L, t, h, f in vs)
             subs += f'''<section class="subp" id="dsg{n}" hidden><h3 class="sec" style="font-size:19px">📁 DS{n} – choisis ta version</h3><div class="lcards">{vcards}</div></section>'''
-    if exams:
-        ecards = ""
-        for (an, L), d in sorted(exams.items(), key=lambda x: (x[0][0], x[0][1]), reverse=False):
-            if "sujet" in d: ecards += card(f"Sujet {L}", f"Examen local {an} – sujet {L}", "Énoncé", "Session janvier · 1 heure · chimie", "Voir le sujet →", "/?doc=" + d["sujet"]["url"])
-            if "corr" in d: ecards += card(f"Corrigé {L}", f"Corrigé détaillé – sujet {L}", f"Examen local {an}", "Méthodes · réponses encadrées · erreurs fréquentes", "Voir le corrigé →", "/?doc=" + d["corr"]["url"])
-        p_ds += card("🎓", "Examens locaux", f"{len(exams)} examen{'s' if len(exams) > 1 else ''} corrigé{'s' if len(exams) > 1 else ''}", "Sujets d'examens normalisés locaux + corrigés détaillés", "Ouvrir →", "#examens", ' data-sub="exloc"')
-        subs += f'''<section class="subp" id="exloc" hidden><h3 class="sec" style="font-size:19px">🎓 Examens locaux – sujets et corrigés</h3><div class="lcards">{ecards}</div></section>'''
+    p_ex = ""
+    for (an, L), d in sorted(exams.items(), key=lambda x: (-int(x[0][0]), x[0][1])):
+        bt = ""
+        if "sujet" in d: bt += f'<a class="exb" href="/?doc={E(d["sujet"]["url"])}">📄 Sujet</a>'
+        if "corr" in d: bt += f'<a class="exb exc" href="/?doc={E(d["corr"]["url"])}">✅ Corrigé détaillé</a>'
+        p_ex += f'''<div class="lc exk" style="--c:{col}"><span class="lc-code">Sujet {L}</span><span class="lc-t">Examen normalisé local {an}</span><span class="lc-m">Session janvier · 1 heure</span><span class="lc-f">Énoncé + corrigé pas à pas</span><span class="exbs">{bt}</span></div>'''
     p_ds += "</div>" + subs + '<div class="lcards" hidden>'
     cats = [("cours", "📖", "Cours", f"{len(lessons)} leçon{'s' if len(lessons) > 1 else ''}", p_cours),
             ("exercices", "✍️", "Exercices", f"{len(exos)} série{'s' if len(exos) > 1 else ''} corrigée{'s' if len(exos) > 1 else ''}", p_exos),
             ("devoirs", "📝", "Devoirs", f"{len(groups)} devoir{'s' if len(groups) > 1 else ''} corrigé{'s' if len(groups) > 1 else ''}" + (f" ({len(ds)} versions)" if len(ds) > len(groups) else ""), p_ds)]
+    if exams:
+        cats.append(("examens", "🎓", "Examens", f"{len(exams)} examen{'s' if len(exams) > 1 else ''} {'locaux' if len(exams) > 1 else 'local'}{'' if len(exams) > 1 else ''} corrigé{'s' if len(exams) > 1 else ''}", p_ex))
     top = "".join(f'''<a class="lc cat" style="--c:{col}" href="#{k}" data-cat="{k}"><span class="lc-code">{ic}</span><span class="lc-t">{t}</span><span class="lc-m">{n}</span><span class="lc-go">{'Ouvrir →' if p else 'Bientôt'}</span></a>''' for k, ic, t, n, p in cats)
     panels = "".join(f'''<section class="catp" id="{k}" hidden><h2 class="sec">{ic} {t} – {LEVELS[niv]['short']}</h2>{'<div class="lcards">' + p + '</div>' if p else '<p class="tip">Bientôt disponible.</p>'}</section>''' for k, ic, t, n, p in cats)
     js = """<script>(function(){const cs=[...document.querySelectorAll('.cat')];function show(k){document.querySelectorAll('.catp').forEach(p=>p.hidden=p.id!==k);cs.forEach(c=>c.classList.toggle('on',c.dataset.cat===k));}
@@ -499,7 +501,7 @@ def build():
   <div class="tags"><span class="tag g">{info['short']} · {info['alt']}</span><span class="tag">{len(lv)} leçons</span><span class="tag">Gratuit · en ligne</span></div>
 </div></section>
 <main class="wrap">
-  <div class="intro"><p>Que veux-tu faire ? Choisis : <b>Cours</b>, <b>Exercices</b> ou <b>Devoirs</b>.</p>
+  <div class="intro"><p>Que veux-tu faire ? Choisis : <b>Cours</b>, <b>Exercices</b>, <b>Devoirs</b>{" ou <b>Examens</b>" if any(l["unite"].startswith("Examens") for l in lv) else ""}.</p>
   <p class="ar" lang="ar" dir="rtl">اختر الدرس لتصفح سلاسل التمارين وتصحيحها.</p></div>
   {hub_html}
   {share_block(url, f"📚 Physique-Chimie {info['short']} – séries et corrigés en ligne :")}
