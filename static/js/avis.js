@@ -40,7 +40,7 @@
   function send(stars, comment) {
     var body = JSON.stringify({ ev: "avis", vid: vid, src: "site", dev: /Mobi|Android|iPhone/i.test(navigator.userAgent) ? "téléphone" : "ordinateur",
       br: "", niveau: String(stars), titre: (comment || "").slice(0, 150), type: GEO.region || "", canal: GEO.ville || "", nouveau: 0 });
-    try { fetch("/api/avis", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ vid: vid, note: stars }), keepalive: true }).then(function () { setTimeout(charger, 300); }).catch(function () {}); } catch (e) {}
+    try { fetch("/api/avis", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ vid: vid, note: stars, c: (comment || "").slice(0, 150) }), keepalive: true }).then(function () { setTimeout(charger, 300); }).catch(function () {}); } catch (e) {}
     try { if (navigator.sendBeacon && navigator.sendBeacon(URL_SCRIPT, new Blob([body], { type: "text/plain;charset=utf-8" }))) return; } catch (e) {}
     try { fetch(URL_SCRIPT, { method: "POST", mode: "no-cors", body: body, headers: { "Content-Type": "text/plain;charset=utf-8" }, keepalive: true }); } catch (e) {}
   }
@@ -129,6 +129,35 @@
   document.head.appendChild(rc);
   var sum = null;
   if (typeof strip !== "undefined" && strip) { sum = document.createElement("div"); sum.className = "av-sum"; sum.setAttribute("aria-live", "polite"); strip.insertAdjacentElement("afterend", sum); }
+  var car = null, carT = null;
+  if (sum) { car = document.createElement("div"); car.className = "av-car"; car.setAttribute("aria-live", "polite"); car.hidden = true; sum.insertAdjacentElement("afterend", car); }
+  var cc = document.createElement("style");
+  cc.textContent = ".av-car{margin-top:10px;max-width:560px;padding:14px 18px 12px;border-radius:14px;background:#fff;color:#0f2350;box-shadow:0 4px 14px rgba(15,35,80,.15);font-family:Inter,system-ui,sans-serif;position:relative;min-height:96px}" +
+    ".av-car .q{font-size:15.5px;line-height:1.5;font-style:italic;transition:opacity .45s}.av-car .q.out{opacity:0}.av-car .s{color:#f5b400;letter-spacing:1px;font-size:15px}" +
+    ".av-car .who{font-size:12.5px;color:#565f74;margin-top:4px}.av-car .dots{display:flex;gap:6px;justify-content:center;margin-top:8px}.av-car .dots button{width:9px;height:9px;border-radius:50%;border:0;background:#d5dbe7;padding:0;cursor:pointer}.av-car .dots button.on{background:#f5b400}" +
+    ".av-car h4{margin:0 0 6px;font-size:13px;color:#565f74;font-weight:700;text-transform:uppercase;letter-spacing:.04em}";
+  document.head.appendChild(cc);
+  function ilya(t) { var j = Math.floor((Date.now() - t) / 864e5); return j <= 0 ? "aujourd'hui" : j === 1 ? "hier" : "il y a " + j + " jours"; }
+  function esc2(x) { return String(x).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  function carrousel(list) {
+    if (!car) return; clearInterval(carT);
+    if (!list || !list.length) { car.hidden = true; return; }
+    car.hidden = false; var i = 0;
+    car.innerHTML = '<h4>💬 Ce que disent les visiteurs</h4><div class="q"></div><div class="dots">' + list.map(function (_, k) { return '<button type="button" aria-label="Avis ' + (k + 1) + '"></button>'; }).join("") + '</div>';
+    var q = car.querySelector(".q"), ds = car.querySelectorAll(".dots button");
+    function show(k) {
+      i = (k + list.length) % list.length; var a = list[i];
+      q.classList.add("out");
+      setTimeout(function () {
+        q.innerHTML = '<span class="s" aria-label="' + a.n + ' étoiles sur 5">' + "★".repeat(a.n) + "☆".repeat(5 - a.n) + '</span><br>« ' + esc2(a.c) + ' »<div class="who">' + (a.v ? "📍 " + esc2(a.v) + " · " : "") + ilya(a.t) + '</div>';
+        q.classList.remove("out");
+      }, 250);
+      ds.forEach(function (d, k2) { d.classList.toggle("on", k2 === i); });
+    }
+    ds.forEach(function (d, k2) { d.onclick = function () { show(k2); clearInterval(carT); carT = setInterval(function () { show(i + 1); }, 5000); }; });
+    show(0); if (list.length > 1) carT = setInterval(function () { show(i + 1); }, 5000);
+    car.onmouseenter = function () { clearInterval(carT); }; car.onmouseleave = function () { if (list.length > 1) { clearInterval(carT); carT = setInterval(function () { show(i + 1); }, 5000); } };
+  }
   function etoiles(m) { var r = Math.round(m), o = ""; for (var i = 1; i <= 5; i++) o += i <= r ? "★" : "☆"; return o; }
   function charger() {
     fetch("/api/avis", { cache: "no-store" }).then(function (r) { return r.json(); }).then(function (d) {
@@ -139,6 +168,7 @@
         else { badge.innerHTML = '★ <span class="t">Noter le site</span>'; }
       }
       if (info) info.textContent = n ? "Moyenne : " + m + "/5 · " + txt : "";
+      carrousel(d.commentaires || []);
       if (!sum) return;
       if (!n) { sum.innerHTML = '<span class="vide">⭐ Aucun avis pour l\'instant : sois le premier à noter le site !</span>'; return; }
       var bars = [5, 4, 3, 2, 1].map(function (k) { var c = +rep[k] || 0, p = Math.round(c * 100 / n);
