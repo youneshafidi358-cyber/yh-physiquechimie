@@ -149,7 +149,7 @@
       i = (k + list.length) % list.length; var a = list[i];
       q.classList.add("out");
       setTimeout(function () {
-        q.innerHTML = '« ' + esc2(a.c) + ' »<div class="who">' + (a.t ? new Date(a.t).toLocaleDateString("fr-FR") : "") + '</div>';
+        q.innerHTML = '<span dir="auto">« ' + esc2(a.c) + ' »</span><div class="who">' + (a.t ? new Date(a.t).toLocaleDateString("fr-FR") : "") + '</div>';
         q.classList.remove("out");
       }, 250);
       ds.forEach(function (d, k2) { d.classList.toggle("on", k2 === i); });
