@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Génère une page par leçon + une page par niveau + sitemap, à partir de catalogue.json.
 Usage : python3 build_pages.py <dossier_site>"""
-import json, sys, re, unicodedata, html, datetime, os
+import glob, json, sys, re, unicodedata, html, datetime, os
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "interactif"))
 import interactive as IX
 import cours as CO
@@ -119,7 +119,7 @@ h2.sec::before{content:"";width:6px;height:20px;border-radius:3px;background:var
 .lc{display:flex;flex-direction:column;gap:6px;text-decoration:none;background:#fff;border:1px solid var(--line);border-radius:18px;padding:20px 16px 16px;min-height:170px;position:relative;overflow:hidden;transition:transform .15s,box-shadow .15s;color:inherit}
 .lc::before{content:"";position:absolute;inset:0 0 auto 0;height:6px;background:var(--c)}
 .lc:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(20,33,61,.12)}
-.exbs{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.exb{flex:1;min-width:120px;text-align:center;padding:10px 12px;border-radius:10px;background:#eef2fb;color:#1f3a8a;font-weight:700;text-decoration:none}.exb.exc{background:var(--c);color:#fff}.exb:hover{filter:brightness(.95)}.exk{cursor:default}
+.exbs{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.exb{flex:1;min-width:120px;text-align:center;padding:10px 12px;border-radius:10px;background:#eef2fb;color:#1f3a8a;font-weight:700;text-decoration:none}.exb.exc{background:var(--c);color:#fff}.exb:hover{filter:brightness(.95)}.exk{cursor:default}.dv{position:fixed;inset:0;z-index:80;background:#0e1424;display:flex;flex-direction:column}.dv[hidden]{display:none}.dv-bar{display:flex;align-items:center;gap:10px;padding:10px 14px;background:#0f2350;color:#fff}.dv-t{flex:1;font-size:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.dv-x{border:0;background:#fff;color:#0f2350;border-radius:10px;width:42px;height:38px;font-size:18px;font-weight:800;cursor:pointer}.dv-pages{flex:1;overflow:auto;padding:12px 8px;-webkit-overflow-scrolling:touch}.dv-p{position:relative;max-width:960px;margin:0 auto 12px;background:#fff;box-shadow:0 4px 18px rgba(0,0,0,.4);aspect-ratio:210/297}.dv-p img{display:block;width:100%;height:100%;object-fit:contain;user-select:none;-webkit-user-drag:none;pointer-events:none}.dv-wm{position:absolute;right:10px;bottom:8px;font:600 11px Inter,sans-serif;color:rgba(15,35,80,.35)}
 .cats{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}.cat{min-height:150px}.cat.on,[data-sub].on{box-shadow:0 0 0 3px var(--c);}
 .catp{scroll-margin-top:80px}
 .lc-code{font-family:Fraunces,Georgia,serif;font-size:28px;font-weight:800;color:var(--c);line-height:1}
@@ -314,9 +314,16 @@ def level_hub(niv, lv):
             subs += f'''<section class="subp" id="dsg{n}" hidden><h3 class="sec" style="font-size:19px">📁 DS{n} – choisis ta version</h3><div class="lcards">{vcards}</div></section>'''
     p_ex = ""
     for (an, L), d in sorted(exams.items(), key=lambda x: (-int(x[0][0]), x[0][1])):
+        def imgs(u):
+            stem = os.path.basename(u)[:-4]
+            fs = sorted(glob.glob(os.path.join(SITE, "docimg", stem + "-*.webp")), key=lambda f: int(re.search(r"-(\d+)\.webp$", f).group(1)))
+            return ",".join("/docimg/" + os.path.basename(f) for f in fs)
+        def btn(it, cls, lab, tt):
+            im = imgs(it["url"])
+            return f'<a class="exb{cls}" href="/?doc={E(it["url"])}"' + (f' data-imgs="{im}" data-t="{E(tt)}"' if im else "") + f'>{lab}</a>'
         bt = ""
-        if "sujet" in d: bt += f'<a class="exb" href="/?doc={E(d["sujet"]["url"])}">📄 Sujet</a>'
-        if "corr" in d: bt += f'<a class="exb exc" href="/?doc={E(d["corr"]["url"])}">✅ Corrigé détaillé</a>'
+        if "sujet" in d: bt += btn(d["sujet"], "", "📄 Sujet", f"Examen local {an} – sujet {L}")
+        if "corr" in d: bt += btn(d["corr"], " exc", "✅ Corrigé détaillé", f"Corrigé détaillé – sujet {L}")
         p_ex += f'''<div class="lc exk" style="--c:{col}"><span class="lc-code">Sujet {L}</span><span class="lc-t">Examen normalisé local {an}</span><span class="lc-m">Session janvier · 1 heure</span><span class="lc-f">Énoncé + corrigé pas à pas</span><span class="exbs">{bt}</span></div>'''
     p_ds += "</div>" + subs + '<div class="lcards" hidden>'
     cats = [("cours", "📖", "Cours", f"{len(lessons)} leçon{'s' if len(lessons) > 1 else ''}", p_cours),
@@ -328,6 +335,22 @@ def level_hub(niv, lv):
     panels = "".join(f'''<section class="catp" id="{k}" hidden><h2 class="sec">{ic} {t} – {LEVELS[niv]['short']}</h2>{'<div class="lcards">' + p + '</div>' if p else '<p class="tip">Bientôt disponible.</p>'}</section>''' for k, ic, t, n, p in cats)
     js = """<script>(function(){const cs=[...document.querySelectorAll('.cat')];function show(k){document.querySelectorAll('.catp').forEach(p=>p.hidden=p.id!==k);cs.forEach(c=>c.classList.toggle('on',c.dataset.cat===k));}
 cs.forEach(c=>c.addEventListener('click',e=>{e.preventDefault();show(c.dataset.cat);history.replaceState(null,'','#'+c.dataset.cat);document.getElementById(c.dataset.cat).scrollIntoView({behavior:'smooth'});}));
+(function(){const bs=[...document.querySelectorAll('[data-imgs]')];if(!bs.length)return;
+const pre=new Set();function warm(b){b.dataset.imgs.split(',').forEach((u,i)=>{if(pre.has(u))return;pre.add(u);const im=new Image();im.decoding='async';if(i<2)im.fetchPriority='high';im.src=u;});}
+document.querySelector('[data-cat=examens]')&&document.querySelector('[data-cat=examens]').addEventListener('click',()=>bs.forEach(warm));
+const ov=document.createElement('div');ov.className='dv';ov.setAttribute('role','dialog');ov.setAttribute('aria-modal','true');ov.hidden=true;
+ov.innerHTML='<div class="dv-bar"><b class="dv-t"></b><button type="button" class="dv-x" aria-label="Fermer">✕</button></div><div class="dv-pages"></div>';document.body.appendChild(ov);
+const pg=ov.querySelector('.dv-pages');let last=null;
+function close(){ov.hidden=true;pg.innerHTML='';document.body.style.overflow='';if(location.hash==='#doc')history.back();if(last)last.focus();}
+ov.querySelector('.dv-x').onclick=close;addEventListener('keydown',e=>{if(e.key==='Escape'&&!ov.hidden)close();});
+addEventListener('popstate',()=>{if(!ov.hidden&&location.hash!=='#doc'){ov.hidden=true;pg.innerHTML='';document.body.style.overflow='';}});
+ov.addEventListener('contextmenu',e=>e.preventDefault());
+bs.forEach(b=>{b.addEventListener('pointerenter',()=>warm(b));b.addEventListener('touchstart',()=>warm(b),{passive:true});
+b.addEventListener('click',e=>{e.preventDefault();last=b;ov.querySelector('.dv-t').textContent=b.dataset.t||'';
+pg.innerHTML=b.dataset.imgs.split(',').map((u,i)=>'<div class="dv-p"><img src="'+u+'" alt="Page '+(i+1)+'" '+(i<2?'fetchpriority="high"':'loading="lazy"')+' draggable="false"><span class="dv-wm">YH Physique-Chimie</span></div>').join('');
+ov.hidden=false;document.body.style.overflow='hidden';pg.scrollTop=0;history.pushState(null,'','#doc');ov.querySelector('.dv-x').focus();
+try{fetch('https://script.google.com/macros/s/AKfycbxta1pz0xrqrIa9RiENIXd_CQwiQpkvcwtm_sWBH15-UfBTCN4clgsdmtc3HXZtXh4I/exec',{method:'POST',mode:'no-cors',body:JSON.stringify({ev:'ouverture_document',vid:localStorage.getItem('yh_vid')||'',src:'site',dev:/Mobi|Android|iPhone/i.test(navigator.userAgent)?'téléphone':'ordinateur',br:'',niveau:document.title.split(' – ')[0].replace('Physique-Chimie ',''),titre:b.dataset.t,type:b.classList.contains('exc')?'Corrigé':'Examen',canal:'',nouveau:0}),headers:{'Content-Type':'text/plain;charset=utf-8'},keepalive:true}).catch(()=>{});}catch(_){}
+});});})();
 document.querySelectorAll('[data-sub]').forEach(c=>c.addEventListener('click',e=>{e.preventDefault();const id=c.dataset.sub;document.querySelectorAll('.subp').forEach(p=>p.hidden=p.id!==id);document.querySelectorAll('[data-sub]').forEach(x=>x.classList.toggle('on',x===c));document.getElementById(id).scrollIntoView({behavior:'smooth'});}));
 const h=location.hash.slice(1);if(['cours','exercices','devoirs'].includes(h))show(h);if(/^ds\\d+$/.test(h)){show('devoirs');const c=document.querySelector('[data-sub="dsg'+h.slice(2)+'"]');if(c)c.click();}})();</script>"""
     return f'<div class="lcards cats">{top}</div>{panels}', js
