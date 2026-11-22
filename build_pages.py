@@ -78,8 +78,8 @@ WA_SVG = '<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><p
 FB_SVG = '<svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M14 8h3V4h-3c-2.8 0-4 1.8-4 4.3V10H7v4h3v8h4v-8h3l1-4h-4V8.6c0-.4.3-.6.6-.6Z"/></svg>'
 
 CSS = """
-:root{--navy:#0f2350;--navy2:#1a3a7c;--ink:#14213d;--ink2:#3d4a66;--muted:#6b7590;--bg:#f6f4ef;--card:#fff;--line:#e4dfd3;
---blue:#1f4e9c;--blue-soft:#e8effb;--gold:#d4a017;--gold-soft:#fbf3dc;--red:#c0392b;--green:#2e7d4f;--wa:#25d366;--fb:#1877f2;--r:14px}
+:root{--navy:#0f2350;--navy2:#1a3a7c;--ink:#14213d;--ink2:#3d4a66;--muted:#565f74;--bg:#f6f4ef;--card:#fff;--line:#e4dfd3;
+--blue:#1f4e9c;--blue-soft:#e8effb;--gold:#d4a017;--gold-soft:#fbf3dc;--red:#c0392b;--green:#2e7d4f;--wa:#25d366;--fb:#1460c9;--r:14px}
 *{box-sizing:border-box}html,body{margin:0}
 body{font-family:Inter,system-ui,sans-serif;color:var(--ink);background:var(--bg);line-height:1.55}
 h1,h2,h3{font-family:Fraunces,Georgia,serif;margin:0;letter-spacing:-.01em}
@@ -248,11 +248,11 @@ def controles_html(niv, unite):
             co = "".join(f'<img loading="lazy" src="/exos/{f}" alt="Correction détaillée – {E(x["lab"])}" draggable="false">' for f in x["co"])
             vid = (f'<figure class="vid" style="margin:10px 0 0"><video controls preload="none" controlslist="nodownload noplaybackrate" disablepictureinpicture oncontextmenu="return false" poster="/logo.jpg" src="/videos/{x["video"]}"></video><figcaption>🎬 Correction en vidéo – {E(x["lab"])}</figcaption></figure>') if x.get("video") else ''
             out.append(f"""<div class="ex"><div class="ex-h"><b>{E(x['lab'])}</b><div class="sp">{'<button type="button" class="rep">Voir la correction</button>' if co else ''}</div></div>
-<div class="ex-b"><div><div class="lbl">Énoncé</div>{en}<div class="wmk"><span>Pr. Youness HAFIDI</span></div></div>
-<div class="cor"><div class="lbl">Correction détaillée</div>{co}{vid}{'<div class="veil">🔒 Essaie d’abord seul…<br>puis touche ici pour voir la correction</div>' if co else ''}<div class="wmk"><span>Pr. Youness HAFIDI</span></div></div></div></div>""")
+<div class="ex-b"><div><div class="lbl">Énoncé</div>{en}<div class="wmk" aria-hidden="true"><span>Pr. Youness HAFIDI</span></div></div>
+<div class="cor"><div class="lbl">Correction détaillée</div>{co}{vid}{'<div class="veil">🔒 Essaie d’abord seul…<br>puis touche ici pour voir la correction</div>' if co else ''}<div class="wmk" aria-hidden="true"><span>Pr. Youness HAFIDI</span></div></div></div></div>""")
     return "\n".join(out)
 
-LCOLS = {"1ac":"#0e7c86","2ac":"#1f4e9c","3ac":"#7a3fa8","tc":"#c0392b","1bac":"#b7791f","2bac":"#2e7d4f"}
+LCOLS = {"1ac":"#0e7c86","2ac":"#1f4e9c","3ac":"#7a3fa8","tc":"#c0392b","1bac":"#8a5a10","2bac":"#2e7d4f"}
 def lesson_cards(niv, lessons, full=None):
     out = []
     num = {}; n = 0
@@ -354,9 +354,21 @@ def build():
         kinds = " et ".join({"exo": "exercices", "corrige": "corrigés", "cours": "cours", "video": "vidéos", "controle": "devoirs surveillés"}[t] for t in types)
         if L["unite"] in CO.COURS:
             kinds = "cours, simulation, " + kinds
-        title = f"{L['unite']} – {lv['short']} ({lv['alt']}) : {kinds} | YH Physique-Chimie"
-        desc = (f"{L['unite']} – {MAT.get(L['mat'],'Physique-Chimie')} {lv['short']} ({lv['long']}) : {kinds} en ligne, gratuits, "
-                f"par Pr. Youness HAFIDI. {resume}")[:300]
+        _u = L["unite"]
+        if _u.startswith("Contrôles"):
+            title = f"Devoirs surveillés {lv['short']} semestre 1 corrigés en détail"
+            desc = f"Devoirs surveillés de physique-chimie {lv['short']} ({lv['long']}) avec corrigé détaillé exercice par exercice" + (" et vidéos" if VIDEOS_LECON.get((niv, _u)) else "") + ". Gratuit, par Pr. Youness HAFIDI."
+        elif _u.startswith("Révision"):
+            title = f"{_u} – {lv['short']} : corrigé détaillé"
+            desc = f"{_u} en physique-chimie {lv['short']} ({lv['long']}) : exercices de préparation avec corrigé détaillé. Gratuit, par Pr. Youness HAFIDI."
+        elif _u in CO.COURS:
+            title = f"{_u} – {lv['short']} : cours et exercices corrigés"
+            desc = f"{_u} ({MAT.get(L['mat'],'Physique-Chimie')}, {lv['long']}) : cours résumé, simulation interactive, exercices corrigés et quiz. Gratuit, par Pr. Youness HAFIDI."
+        else:
+            title = f"{_u} – {lv['short']} : exercices corrigés"
+            desc = f"{_u} ({lv['long']}) : séries d'exercices et corrigés en ligne. Gratuit, par Pr. Youness HAFIDI."
+        if len(title) + 21 <= 70:
+            title += " | YH Physique-Chimie"
         cards = ""
         for it in sorted(L["items"], key=lambda i: (i.get("ordre", 0), rank.get(i["type"], 9)) if L["unite"].startswith("Contrôles") else (rank.get(i["type"], 9), i.get("ordre", 0))):
             from urllib.parse import quote
@@ -438,7 +450,7 @@ def build():
                 {"@type": "ListItem", "position": 2, "name": f"{lv['short']} – {lv['long']}", "item": f"{BASE}/niveau/{niv}/"},
                 {"@type": "ListItem", "position": 3, "name": L["unite"], "item": url}]},
             {"@type": "LearningResource", "name": f"{L['unite']} – {lv['short']}", "description": desc, "url": url,
-             "inLanguage": ["fr", "ar"], "learningResourceType": ["Exercices", "Corrigés"], "isAccessibleForFree": True,
+             "inLanguage": "fr", "learningResourceType": (["Cours", "Simulation", "Exercices", "Corrigés", "Quiz"] if L["unite"] in CO.COURS else ["Exercices", "Corrigés"]), "isAccessibleForFree": True,
              "educationalLevel": lv["long"], "about": MAT.get(L["mat"], "Physique-Chimie"),
              "author": {"@type": "Person", "name": "Youness HAFIDI", "url": f"{BASE}/"}}]}
         d = os.path.join(SITE, "lecons", s)
@@ -449,9 +461,9 @@ def build():
     for niv in USED_LEVELS:
         lv = by_level[niv]; info = LEVELS[niv]
         url = f"{BASE}/niveau/{niv}/"
-        title = f"Physique-Chimie {info['short']} ({info['alt']}) – séries d'exercices et corrigés | YH Physique-Chimie"
-        desc = (f"Toutes les leçons de physique-chimie {info['short']} ({info['long']}) : séries d'exercices et corrigés en ligne, "
-                f"gratuits, par Pr. Youness HAFIDI. " + ", ".join(l["unite"] for l in lv))[:300]
+        title = f"Physique-Chimie {info['short']} : cours, exercices et devoirs corrigés"
+        desc = (f"Physique-chimie {info['short']} ({info['long']}) : cours, simulations, exercices et devoirs corrigés, gratuits. Leçons : "
+                + ", ".join(l["unite"] for l in lv if not l["unite"].startswith(("Contrôles", "Révision"))) + ".")[:300]
         hub_html, hub_js = level_hub(niv, lv)
         li = ""
         for l in lv:
@@ -580,7 +592,7 @@ def build():
             blk += f'<div class="ix-lvl"><span class="ix-h">{info["short"]} – {info["long"]}</span><span class="ix-soon">Bientôt · قريبا</span></div>\n'
     ix = open(os.path.join(SITE, "index.html"), encoding="utf-8").read()
     ix = re.sub(r"<!--NAV-->.*?<!--/NAV-->", lambda m: '<!--NAV--><header class="top"><div class="wrap"><a class="brand" href="/"><img src="/logo.jpg" alt="">YH Physique-Chimie</a>' + nav_html("home") + '</div></header><!--/NAV-->', ix, flags=re.S)
-    COLS = {"1ac":"#0e7c86","2ac":"#1f4e9c","3ac":"#7a3fa8","tc":"#c0392b","1bac":"#b7791f","2bac":"#2e7d4f"}
+    COLS = {"1ac":"#0e7c86","2ac":"#1f4e9c","3ac":"#7a3fa8","tc":"#c0392b","1bac":"#8a5a10","2bac":"#2e7d4f"}
     nv = ""
     for niv in ORDER:
         info = LEVELS[niv]

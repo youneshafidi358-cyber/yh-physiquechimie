@@ -49,7 +49,7 @@ sim("compressibilite-air", "L'air qui nous entoure", "2ac", "Compressibilité et
  "Pousse ou tire le piston de la seringue bouchée : observe les molécules et la pression.",
  """<div class="scene"><svg id="sv" viewBox="0 0 560 300"></svg></div>
 <div class="ctrl">
- <label>Volume de l'air <b id="vV">60 mL</b></label><input id="V" type="range" min="15" max="100" value="60">
+ <label for="V">Volume de l'air <b id="vV">60 mL</b></label><input id="V" type="range" min="15" max="100" value="60">
  <div class="res">Pression : <span class="big" id="vP">1013 hPa</span><br><small id="vT"></small></div>
  <div class="note">💡 Le nombre et la taille des molécules ne changent pas : seule la distance entre elles change.</div>
  <div class="chips"><button class="bt" id="b1">Comprimer</button><button class="bt" id="b2">Détendre</button></div>
@@ -116,7 +116,7 @@ sim("bec-bunsen", "Les combustions", "2ac", "La combustion du butane – bec Bun
  "Ouvre ou ferme la virole : la quantité d'air change la flamme et les produits de la combustion.",
  """<div class="scene"><svg id="sv" viewBox="0 0 560 320"></svg></div>
 <div class="ctrl">
- <label>Ouverture de la virole (arrivée d'air) <b id="vA">80 %</b></label><input id="A" type="range" min="0" max="100" value="80">
+ <label for="A">Ouverture de la virole (arrivée d'air) <b id="vA">80 %</b></label><input id="A" type="range" min="0" max="100" value="80">
  <div class="res" id="rs"></div>
  <div class="chips"><button class="bt" id="tc">Tester avec l'eau de chaux</button><button class="bt" id="tv">Approcher une vitre froide</button><button class="bt" id="ts">Approcher une soucoupe</button></div>
  <div class="note" id="obs">Choisis un test pour identifier les produits.</div>
@@ -152,7 +152,7 @@ sim("identifier-materiaux", "Les matériaux dans la vie quotidienne", "3ac", "En
 <div class="ctrl">
  <div class="chips" id="tests"></div>
  <div class="note" id="obs">Choisis un test.</div>
- <label>Ta réponse</label><select id="rep"></select>
+ <label for="rep">Ta réponse</label><select id="rep"></select>
  <div class="chips"><button class="bt pri" id="val">Valider</button><button class="bt" id="new">Nouvel échantillon</button></div>
  <div class="res" id="rs">Échantillon n°1</div>
 </div>""",
@@ -196,7 +196,7 @@ sim("atome-et-ion", "Les atomes et les ions", "3ac", "De l'atome à l'ion",
  "Choisis un atome, puis ajoute ou retire des électrons : observe les charges et la formule de l'ion.",
  """<div class="scene"><svg id="sv" viewBox="0 0 560 320"></svg></div>
 <div class="ctrl">
- <label>Atome</label><select id="el"></select>
+ <label for="el">Atome</label><select id="el"></select>
  <div class="chips"><button class="bt" id="m">− retirer un électron</button><button class="bt pri" id="p">+ ajouter un électron</button><button class="bt" id="r">Atome neutre</button></div>
  <div class="res" id="rs"></div>
  <div class="note">e = 1,6 × 10⁻¹⁹ C · Le noyau ne change pas : seul le nombre d'électrons varie.</div>
@@ -225,7 +225,7 @@ sim("rouille", "Réaction de quelques matériaux avec l'air", "3ac", "Expérienc
  "Quatre clous en fer sont placés dans des conditions différentes. Fais avancer le temps.",
  """<div class="scene"><svg id="sv" viewBox="0 0 560 300"></svg></div>
 <div class="ctrl">
- <label>Temps écoulé <b id="vJ">0 jour</b></label><input id="J" type="range" min="0" max="30" value="0">
+ <label for="J">Temps écoulé <b id="vJ">0 jour</b></label><input id="J" type="range" min="0" max="30" value="0">
  <div class="res" id="rs"></div>
  <div class="note">Conclusion attendue : il faut du <b>dioxygène</b> ET de l'<b>eau</b> ; le <b>sel</b> accélère la rouille.</div>
 </div>""",
@@ -250,15 +250,15 @@ sim("gravitation", "La gravitation universelle", "tc", "Interaction gravitationn
  """<div class="tabs chips"><button aria-pressed="true" id="t1">Deux corps</button><button aria-pressed="false" id="t2">Poids sur les astres</button></div>
 <div class="labbody"><div class="scene"><svg id="sv" viewBox="0 0 560 300"></svg></div>
 <div class="ctrl" id="c1">
- <label>Masse de A <b id="vA">600 kg</b></label><input id="mA" type="range" min="1" max="2000" value="600">
- <label>Masse de B <b id="vB">150 kg</b></label><input id="mB" type="range" min="1" max="2000" value="150">
- <label>Distance d <b id="vD">5 m</b></label><input id="d" type="range" min="1" max="20" step="0.5" value="5">
+ <label for="mA">Masse de A <b id="vA">600 kg</b></label><input id="mA" type="range" min="1" max="2000" value="600">
+ <label for="mB">Masse de B <b id="vB">150 kg</b></label><input id="mB" type="range" min="1" max="2000" value="150">
+ <label for="d">Distance d <b id="vD">5 m</b></label><input id="d" type="range" min="1" max="20" step="0.5" value="5">
  <div class="res">F<sub>A/B</sub> = F<sub>B/A</sub> = G·m<sub>A</sub>·m<sub>B</sub> / d²<br><span class="big" id="vF"></span></div>
  <div class="note">Si d double, F est divisée par 4 (loi en 1/d²).</div>
 </div>
 <div class="ctrl" id="c2" hidden>
- <label>Masse du corps <b id="vm">60 kg</b></label><input id="m" type="range" min="1" max="200" value="60">
- <label>Astre</label><select id="as"><option value="9.8">Terre (g = 9,8 N/kg)</option><option value="1.62">Lune (1,62)</option><option value="3.7">Mars (3,7)</option><option value="24.8">Jupiter (24,8)</option><option value="8.87">Vénus (8,87)</option></select>
+ <label for="m">Masse du corps <b id="vm">60 kg</b></label><input id="m" type="range" min="1" max="200" value="60">
+ <label for="as">Astre</label><select id="as"><option value="9.8">Terre (g = 9,8 N/kg)</option><option value="1.62">Lune (1,62)</option><option value="3.7">Mars (3,7)</option><option value="24.8">Jupiter (24,8)</option><option value="8.87">Vénus (8,87)</option></select>
  <div class="res">P = m · g<br><span class="big" id="vP"></span><br><small>La masse ne change pas, le poids change.</small></div>
 </div></div>""",
  r"""
@@ -293,14 +293,14 @@ sim("plan-incline-pression", "Exemples d'actions mécaniques", "tc", "Plan incli
  """<div class="tabs chips"><button aria-pressed="true" id="t1">Plan incliné</button><button aria-pressed="false" id="t2">Force pressante</button></div>
 <div class="labbody"><div class="scene"><svg id="sv" viewBox="0 0 560 320"></svg></div>
 <div class="ctrl" id="c1">
- <label>Angle α <b id="va">30°</b></label><input id="a" type="range" min="0" max="45" value="30">
- <label>Masse m <b id="vm">500 g</b></label><input id="m" type="range" min="100" max="1000" step="50" value="500">
+ <label for="a">Angle α <b id="va">30°</b></label><input id="a" type="range" min="0" max="45" value="30">
+ <label for="m">Masse m <b id="vm">500 g</b></label><input id="m" type="range" min="100" max="1000" step="50" value="500">
  <div class="res" id="r1"></div>
  <div class="note">À l'équilibre : R⃗ = −P⃗. R<sub>N</sub> = P·cos α ; R<sub>T</sub> = P·sin α ; k = tan φ = R<sub>T</sub>/R<sub>N</sub>.</div>
 </div>
 <div class="ctrl" id="c2" hidden>
- <label>Force F <b id="vF">30 N</b></label><input id="F" type="range" min="1" max="200" value="30">
- <label>Surface S <b id="vS">2 cm²</b></label><input id="S" type="range" min="0.5" max="20" step="0.5" value="2">
+ <label for="F">Force F <b id="vF">30 N</b></label><input id="F" type="range" min="1" max="200" value="30">
+ <label for="S">Surface S <b id="vS">2 cm²</b></label><input id="S" type="range" min="0.5" max="20" step="0.5" value="2">
  <div class="res" id="r2"></div>
 </div></div>""",
  r"""
@@ -337,8 +337,8 @@ sim("tests-chimiques", "Les espèces chimiques", "tc", "Laboratoire des tests ch
  "Choisis un échantillon et un réactif : observe le résultat et conclus.",
  """<div class="scene"><svg id="sv" viewBox="0 0 560 300"></svg></div>
 <div class="ctrl">
- <label>Échantillon</label><select id="ech"></select>
- <label>Test</label><select id="tst"></select>
+ <label for="ech">Échantillon</label><select id="ech"></select>
+ <label for="tst">Test</label><select id="tst"></select>
  <button class="bt pri" id="go">Réaliser le test</button>
  <div class="res" id="rs">Choisis puis réalise le test.</div>
 </div>""",
@@ -366,8 +366,8 @@ sim("ampoule-a-decanter", "Extraction, séparation et identification", "tc", "Ex
  "Choisis le solvant extracteur : est-il bien choisi ? Où se trouve chaque phase ?",
  """<div class="scene"><svg id="sv" viewBox="0 0 560 340"></svg></div>
 <div class="ctrl">
- <label>Espèce à extraire</label><select id="esp"><option>Eugénol (clou de girofle)</option><option>Limonène (orange)</option><option>Menthone (menthe)</option></select>
- <label>Solvant extracteur</label><select id="sol"></select>
+ <label for="esp">Espèce à extraire</label><select id="esp"><option>Eugénol (clou de girofle)</option><option>Limonène (orange)</option><option>Menthone (menthe)</option></select>
+ <label for="sol">Solvant extracteur</label><select id="sol"></select>
  <div class="chips"><button class="bt pri" id="ag">Agiter puis laisser décanter</button></div>
  <div class="res" id="rs"></div>
 </div>""",

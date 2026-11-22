@@ -6,7 +6,7 @@ from content import ERREURS, QUIZ, RESUMES, PROGRAMME
 from sims import SIMS
 E = html.escape
 EXTRACT = json.load(open(os.path.join(os.path.dirname(__file__), "extract.json"), encoding="utf-8"))
-COLORS = ["#1f4e9c", "#c0392b", "#2e7d4f", "#b7791f", "#7a3fa8", "#0e7c86"]
+COLORS = ["#1f4e9c", "#c0392b", "#2e7d4f", "#8a5a10", "#7a3fa8", "#0e7c86"]
 
 CSS = r"""
 .pills{display:flex;gap:8px;flex-wrap:wrap;margin:4px 0 6px;position:sticky;top:0;z-index:6;background:rgba(246,244,239,.96);padding:10px 0;backdrop-filter:blur(6px)}
@@ -151,8 +151,8 @@ def exercices_html(niv, unite):
         out.append(f"""<div class="ex" data-n="{n}"><div class="ex-h"><b>Exercice {n}</b><div class="sp">
 {'<button type="button" class="rep">Voir la réponse</button>' if co else ''}{'<button type="button" class="err">⚠ Erreur fréquente</button>' if err else ''}</div></div>
 <div class="errbox"><b>Erreur fréquente :</b> {E(err or '')}</div>
-<div class="ex-b"><div><div class="lbl">Énoncé</div>{en}<div class="wmk"><span>Pr. Youness HAFIDI</span></div></div>
-<div class="cor"><div class="lbl">Correction</div>{co or '<p class="tip">Correction bientôt disponible.</p>'}{'<div class="veil">🔒 Essaie d’abord seul…<br>puis touche ici pour voir la correction</div>' if co else ''}<div class="wmk"><span>Pr. Youness HAFIDI</span></div></div></div></div>""")
+<div class="ex-b"><div><div class="lbl">Énoncé</div>{en}<div class="wmk" aria-hidden="true"><span>Pr. Youness HAFIDI</span></div></div>
+<div class="cor"><div class="lbl">Correction</div>{co or '<p class="tip">Correction bientôt disponible.</p>'}{'<div class="veil">🔒 Essaie d’abord seul…<br>puis touche ici pour voir la correction</div>' if co else ''}<div class="wmk" aria-hidden="true"><span>Pr. Youness HAFIDI</span></div></div></div></div>""")
     return "\n".join(out)
 
 

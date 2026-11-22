@@ -37,7 +37,7 @@ def TAB(head, rows, cls=""):
     h = "".join(f"<th>{x}</th>" for x in head)
     b = "".join((f'<tr class="grp"><td colspan="{len(r)}">{r[0]}</td></tr>' if len(r) > 2 and r[0].startswith("<b>Cas") and not any(r[1:]) else
                  "<tr>" + "".join(f"<td>{x}</td>" for x in r) + "</tr>") for r in rows)
-    return f'<div class="ctab {cls}"><table><thead><tr>{h}</tr></thead><tbody>{b}</tbody></table></div>'
+    return f'<div class="ctab {cls}" tabindex="0" role="region" aria-label="Tableau"><table><thead><tr>{h}</tr></thead><tbody>{b}</tbody></table></div>'
 
 def UL(*items):
     return "<ul>" + "".join(f"<li>{x}</li>" for x in items) + "</ul>"
@@ -74,7 +74,12 @@ def MOL(f, label=True):
 
 def QCM(q, opts, ok, expl=""):
     """Question à choix : clic -> vert/rouge + explication. ok = index de la bonne réponse."""
-    bt = "".join(f'<button type="button" data-ok="{1 if i == ok else 0}">{o}</button>' for i, o in enumerate(opts))
+    import re as _re
+    def _plain(x):
+        x = _re.sub(r"<[^>]+>", "", x); x = x.replace("\\dfrac", "").replace("\\frac", "").replace("$", "")
+        x = _re.sub(r"\^\{([^}]*)\}", r" puissance \1", x); x = _re.sub(r"\\[a-zA-Z]+", " ", x)
+        return _re.sub(r"[{}\\]", "", x).strip()
+    bt = "".join(f'<button type="button" aria-label="{E(_plain(o))}" data-ok="{1 if i == ok else 0}">{o}</button>' for i, o in enumerate(opts))
     return f'<div class="qcm"><p class="qa-q">{q}</p><div class="qcm-o">{bt}</div><div class="qcm-e" hidden>{expl}</div></div>'
 
 def VF(q, vrai, expl=""):
