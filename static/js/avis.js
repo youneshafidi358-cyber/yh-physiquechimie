@@ -84,6 +84,32 @@
   }
   fab.addEventListener("click", function () { open(false); });
 
+  /* Note moyenne visible en haut de chaque page */
+  var bcss = ".av-badge{display:inline-flex;align-items:center;gap:6px;margin:0 8px;padding:6px 12px;min-height:36px;border-radius:999px;border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.12);color:#fff;font:700 14px/1 Inter,system-ui,sans-serif;cursor:pointer;white-space:nowrap}" +
+    ".av-badge .s{color:#f5c542;letter-spacing:1px}.av-badge small{font-weight:500;opacity:.85}" +
+    ".av-hero{display:inline-flex;align-items:center;gap:8px;margin-top:12px;padding:8px 14px;border-radius:14px;background:#fff;color:#0f2350;font:700 15px Inter,system-ui,sans-serif;box-shadow:0 4px 14px rgba(15,35,80,.12);border:0;cursor:pointer}" +
+    ".av-hero .s{color:#f5b400;font-size:18px;letter-spacing:1px}.av-hero small{color:#565f74;font-weight:500}" +
+    "@media (max-width:700px){.av-badge small{display:none}.av-badge{margin:0 4px;padding:6px 10px}}";
+  var bs = document.createElement("style"); bs.textContent = bcss; document.head.appendChild(bs);
+  function stars(m) { var r = Math.round(m), o = ""; for (var i = 1; i <= 5; i++) o += i <= r ? "★" : "☆"; return o; }
+  fetch("/api/note").then(function (r) { return r.json(); }).then(function (d) {
+    if (!d || !d.nombre) return;
+    var m = String(d.moyenne).replace(".", ","), txt = d.nombre + " avis";
+    var lbl = "Note du site : " + m + " sur 5, " + txt + ". Donner mon avis";
+    var top = document.querySelector("header.top .wrap .brand");
+    if (top) {
+      var b = document.createElement("button"); b.type = "button"; b.className = "av-badge"; b.setAttribute("aria-label", lbl);
+      b.innerHTML = '<span class="s" aria-hidden="true">★</span>' + m + '/5 <small>(' + txt + ')</small>';
+      b.onclick = function () { open(false); }; top.insertAdjacentElement("afterend", b);
+    }
+    var hero = document.querySelector(".hero2 .h-cta, .hero2 form, .hero2 h1");
+    if (hero) {
+      var h = document.createElement("button"); h.type = "button"; h.className = "av-hero"; h.setAttribute("aria-label", lbl);
+      h.innerHTML = '<span class="s" aria-hidden="true">' + stars(d.moyenne) + '</span> ' + m + '/5 <small>· ' + txt + ' d\'élèves</small>';
+      h.onclick = function () { open(false); }; hero.insertAdjacentElement("afterend", h);
+    }
+  }).catch(function () {});
+
   /* Invitation automatique : une seule fois par visiteur, après 3 pages vues ou 75 s sur une page,
      puis de nouveau 7 jours après « Plus tard ». */
   if (!done) {
