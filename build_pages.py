@@ -367,6 +367,12 @@ def build():
         else:
             title = f"{_u} – {lv['short']} : exercices corrigés"
             desc = f"{_u} ({lv['long']}) : séries d'exercices et corrigés en ligne. Gratuit, par Pr. Youness HAFIDI."
+        if len(title) > 65:
+            title = title.replace(" : cours et exercices corrigés", " : cours et exercices")
+        if len(title) > 65:
+            title = title.replace(" : cours et exercices", " : cours")
+        if len(desc) > 160:
+            desc = desc.replace(" Gratuit, par Pr. Youness HAFIDI.", " Gratuit.")
         if len(title) + 21 <= 70:
             title += " | YH Physique-Chimie"
         cards = ""
@@ -512,7 +518,7 @@ def build():
         if niv not in USED_LEVELS:
             allli += f'<h2 class="sec">{LEVELS[niv]["short"]} – {LEVELS[niv]["long"]} <small style="font-family:Inter;font-size:13px;color:#7a5a00;background:var(--gold-soft);padding:3px 10px;border-radius:99px">Bientôt · قريبا</small></h2>'
     url = f"{BASE}/lecons/"
-    t = "Toutes les leçons de physique-chimie – 2AC, 3AC, TCS | YH Physique-Chimie"
+    t = "Leçons de physique-chimie 2AC, 3AC, TCS | YH Physique-Chimie"
     dsc = "Toutes les leçons de physique-chimie de Pr. Youness HAFIDI : séries d'exercices et corrigés en ligne pour la 2AC, la 3AC et le tronc commun scientifique."
     body = f"""<section class="head"><div class="wrap"><div class="crumbs"><a href="/">Accueil</a> › Toutes les leçons</div>
 <h1>Toutes les leçons</h1><div class="ar" lang="ar">جميع الدروس</div></div></section>
