@@ -1,0 +1,82 @@
+# Page d'administration du site (Pages CMS : https://app.pagescms.org)
+media:
+  - name: documents
+    label: Documents PDF et vidéos
+    input: static/cours
+    output: cours
+    extensions: [pdf, mp4, jpg, png]
+
+content:
+  - name: ressources
+    label: Ajouter une série, un corrigé ou un devoir
+    type: file
+    path: static/extras.json
+    format: json
+    list: true
+    fields:
+      - name: niveau
+        label: Niveau
+        type: select
+        required: true
+        options:
+          values:
+            - value: "1ac"
+              label: "1AC"
+            - value: "2ac"
+              label: "2AC"
+            - value: "3ac"
+              label: "3AC"
+            - value: "tc"
+              label: "TCS"
+            - value: "1bac"
+              label: "1BAC"
+            - value: "2bac"
+              label: "2BAC"
+      - name: unite
+        label: Leçon (choisis ou écris une nouvelle leçon)
+        type: select
+        required: true
+        options:
+          creatable: true
+          values:
+            - "Contrôles surveillés – Semestre 1"
+            - "Exemples d'actions mécaniques"
+            - "Extraction, séparation et identification"
+            - "L'air qui nous entoure"
+            - "La gravitation universelle"
+            - "Les atomes et les ions"
+            - "Les combustions"
+            - "Les espèces chimiques"
+            - "Les matériaux dans la vie quotidienne"
+            - "Les molécules et les atomes"
+            - "Réaction de quelques matériaux avec l'air"
+            - "Révision — Devoir n°1"
+      - name: type
+        label: Type de document
+        type: select
+        required: true
+        options:
+          values:
+            - value: "exo"
+              label: "Série d'exercices"
+            - value: "corrige"
+              label: "Corrigé"
+            - value: "controle"
+              label: "Devoir surveillé"
+            - value: "cours"
+              label: "Cours (PDF)"
+            - value: "video"
+              label: "Vidéo"
+      - name: titre
+        label: Titre affiché
+        type: string
+        required: true
+      - name: url
+        label: Fichier PDF (ou vidéo)
+        type: file
+        required: true
+        options:
+          media: documents
+      - name: description
+        label: Petite description (facultatif)
+        type: string

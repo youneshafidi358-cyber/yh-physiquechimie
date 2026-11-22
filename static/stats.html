@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Statistiques — YH Physique-Chimie</title>
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="48x48" href="/icon-48.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="js/chart.umd.min.js"></script>
+<style>
+  :root{--navy:#0f2350;--navy2:#1a3a7c;--ink:#14213d;--muted:#6b7590;--bg:#f6f4ef;--card:#fff;--line:#e4dfd3;
+    --blue:#1f4e9c;--gold:#d4a017;--green:#2e7d4f;--red:#c0392b;--wa:#25d366;--fb:#1877f2}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Inter,system-ui,sans-serif;color:var(--ink);background:var(--bg)}
+  h1,h2{font-family:Fraunces,Georgia,serif;margin:0}
+  .wrap{max-width:1150px;margin:0 auto;padding:0 18px}
+  header{background:var(--navy);color:#fff;padding:18px 0}
+  header .wrap{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+  header img{width:52px;height:52px;border-radius:50%;border:3px solid var(--gold);background:#fff}
+  header h1{font-size:clamp(20px,3vw,28px)}
+  header p{margin:2px 0 0;color:#c9d5ef;font-size:14px}
+  .periods{margin-left:auto;display:flex;gap:6px;flex-wrap:wrap}
+  .periods button{border:1px solid rgba(255,255,255,.25);background:transparent;color:#fff;padding:7px 12px;border-radius:10px;cursor:pointer;font:inherit;font-size:14px}
+  .periods button[aria-pressed="true"]{background:var(--gold);color:#2b1f00;border-color:var(--gold);font-weight:600}
+  main{padding:22px 0 50px}
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:18px}
+  .kpi{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+  .kpi .l{font-size:13px;color:var(--muted);font-weight:500}
+  .kpi .v{font-family:Fraunces,serif;font-size:32px;font-weight:800;margin-top:4px}
+  .kpi .s{font-size:12.5px;color:var(--muted);margin-top:2px}
+  .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+  .box{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;min-width:0;overflow:hidden}
+  .box.full{grid-column:1/-1}
+  .box h2{font-size:17px;margin-bottom:12px;color:var(--navy2)}
+  .bars{display:flex;flex-direction:column;gap:9px}
+  .bar .top{display:flex;justify-content:space-between;font-size:14px;margin-bottom:4px;gap:10px}
+  .bar .top span:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .bar .top b{white-space:nowrap}
+  .bar .track{height:9px;background:#eef1f7;border-radius:9px;overflow:hidden}
+  .bar .fill{height:100%;background:var(--blue);border-radius:9px}
+  .empty{color:var(--muted);font-size:14px;padding:6px 0}
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  th,td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--line)}
+  th{color:var(--muted);font-weight:600;font-size:12.5px}
+  td.n{text-align:right;font-weight:600}
+  .login{max-width:380px;margin:70px auto;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:26px;text-align:center}
+  .login img{width:80px;height:80px;border-radius:50%;border:3px solid var(--gold)}
+  .login input{width:100%;padding:11px;border:1px solid var(--line);border-radius:10px;font:inherit;margin:14px 0 10px;text-align:center}
+  .login button,.btn{background:var(--blue);color:#fff;border:0;border-radius:10px;padding:10px 18px;font:inherit;font-weight:600;cursor:pointer}
+  .msg{color:var(--red);font-size:14px;min-height:20px}
+  .info{font-size:13px;color:var(--muted);margin-top:16px;text-align:center}
+  @media (max-width:760px){.grid{grid-template-columns:1fr}.periods{margin-left:0}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+/* Lien du script Google (Apps Script) — même lien que STATS_URL dans index.html */
+const STATS_URL = "https://script.google.com/macros/s/AKfycbxta1pz0xrqrIa9RiENIXd_CQwiQpkvcwtm_sWBH15-UfBTCN4clgsdmtc3HXZtXh4I/exec";
+const $ = s => document.querySelector(s);
+let ROWS = [], PERIOD = "7";
+const COLORS = ["#1f4e9c","#d4a017","#2e7d4f","#c0392b","#7b4fd4","#1aa3a3","#e07b39","#6b7590"];
+const esc = t => String(t).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const dayKey = t => { const d=new Date(t); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); };
+const fmtDay = k => { const [y,m,d]=k.split("-"); return d+"/"+m; };
+
+function loginView(err){
+  $("#app").innerHTML = `<div class="login">
+    <img src="logo.jpg" alt="">
+    <h1 style="font-size:22px;margin-top:10px">Statistiques du site</h1>
+    <p style="color:#6b7590;font-size:14px">Entrez votre code d'accès</p>
+    <form id="f"><input id="k" type="password" placeholder="Code" autocomplete="current-password">
+    <div class="msg">${err||""}</div><button>Entrer</button></form></div>`;
+  $("#f").onsubmit = e => { e.preventDefault(); const k=$("#k").value.trim(); if(k){ try{localStorage.setItem("yh_stats_cle",k);}catch(_){} load(k); } };
+}
+
+async function load(cle){
+  if(!STATS_URL){ $("#app").innerHTML='<div class="login"><h1 style="font-size:20px">Pas encore configuré</h1><p class="info">Le lien du script Google n\'est pas encore ajouté.</p></div>'; return; }
+  $("#app").innerHTML = '<div class="login"><img src="logo.jpg" alt=""><p>Chargement des statistiques…</p></div>';
+  try{
+    const r = await fetch(STATS_URL + "?cle=" + encodeURIComponent(cle) + "&t=" + Date.now());
+    const d = await r.json();
+    if(d.erreur){ try{localStorage.removeItem("yh_stats_cle");}catch(_){} return loginView("Code incorrect."); }
+    ROWS = (d.lignes||[]).map(r=>({t:+r[0],ev:r[1],vid:r[2],src:r[3]||"direct",dev:r[4]||"?",br:r[5]||"?",niveau:r[6],titre:r[7],type:r[8],canal:r[9],nouveau:+r[10]===1}));
+    render();
+  }catch(e){ loginView("Impossible de charger les données. Vérifiez votre connexion."); }
+}
+
+function count(arr, key){ const m={}; arr.forEach(x=>{ const k=key(x); if(k) m[k]=(m[k]||0)+1; }); return Object.entries(m).sort((a,b)=>b[1]-a[1]); }
+function bars(list, total, color){
+  if(!list.length) return '<div class="empty">Pas encore de données.</div>';
+  return '<div class="bars">'+list.map(([k,v],i)=>{ const p=total?Math.round(v*100/total):0;
+    return `<div class="bar"><div class="top"><span>${esc(k)}</span><b>${v} · ${p} %</b></div><div class="track"><div class="fill" style="width:${p}%;background:${color||COLORS[i%COLORS.length]}"></div></div></div>`; }).join("")+'</div>';
+}
+const LABEL_SRC = {facebook:"Facebook",whatsapp:"WhatsApp",google:"Google",direct:"Lien direct / favori",instagram:"Instagram",youtube:"YouTube"};
+
+let charts=[];
+function render(){
+  const now = Date.now();
+  const from = PERIOD==="1" ? new Date(new Date().setHours(0,0,0,0)).getTime() : PERIOD==="all" ? 0 : now - (+PERIOD)*86400000;
+  const rows = ROWS.filter(r=>r.t>=from);
+  const visits = rows.filter(r=>r.ev==="visite");
+  const uniq = new Set(visits.map(r=>r.vid)).size;
+  const nouveaux = visits.filter(r=>r.nouveau).length;
+  const docs = rows.filter(r=>r.ev==="ouverture_document");
+  const contacts = rows.filter(r=>r.ev==="clic_contact");
+  const today = ROWS.filter(r=>r.ev==="visite" && r.t>=new Date(new Date().setHours(0,0,0,0)).getTime()).length;
+  const pname = {"1":"aujourd'hui","7":"7 derniers jours","30":"30 derniers jours","all":"depuis le début"}[PERIOD];
+
+  $("#app").innerHTML = `
+  <header><div class="wrap">
+    <img src="logo.jpg" alt="">
+    <div><h1>Statistiques du site</h1><p>YH Physique-Chimie · Pr. Youness HAFIDI</p></div>
+    <div class="periods">${[["1","Aujourd'hui"],["7","7 jours"],["30","30 jours"],["all","Tout"]].map(([k,l])=>`<button data-p="${k}" aria-pressed="${PERIOD===k}">${l}</button>`).join("")}
+      <button id="refresh">↻ Actualiser</button></div>
+  </div></header>
+  <main class="wrap">
+    <div class="kpis">
+      <div class="kpi"><div class="l">Visites (${pname})</div><div class="v">${visits.length}</div><div class="s">Aujourd'hui : ${today}</div></div>
+      <div class="kpi"><div class="l">Visiteurs différents</div><div class="v">${uniq}</div><div class="s">${nouveaux} nouveaux · ${Math.max(0,visits.length-nouveaux)} visites de retour</div></div>
+      <div class="kpi"><div class="l">Documents ouverts</div><div class="v">${docs.length}</div><div class="s">${visits.length?(docs.length/visits.length).toFixed(1):0} par visite</div></div>
+      <div class="kpi"><div class="l">Clics de contact</div><div class="v">${contacts.length}</div><div class="s">WhatsApp ${contacts.filter(c=>c.canal==="WhatsApp").length} · Tél. ${contacts.filter(c=>c.canal==="Téléphone").length} · FB ${contacts.filter(c=>c.canal==="Facebook").length}</div></div>
+    </div>
+    <div class="grid">
+      <div class="box full"><h2>Visites par jour</h2><div style="height:230px"><canvas id="cDays"></canvas></div></div>
+      <div class="box"><h2>D'où viennent les visiteurs</h2><div style="height:220px"><canvas id="cSrc"></canvas></div><div id="lSrc" style="margin-top:12px"></div></div>
+      <div class="box"><h2>Appareils</h2><div style="height:220px"><canvas id="cDev"></canvas></div><div id="lDev" style="margin-top:12px"></div></div>
+      <div class="box"><h2>Niveaux les plus consultés</h2>${bars(count(docs,r=>r.niveau), docs.length, "#d4a017")}</div>
+      <div class="box"><h2>Séries ou corrigés</h2>${bars(count(docs,r=>r.type), docs.length, "#2e7d4f")}</div>
+      <div class="box full"><h2>Documents les plus ouverts</h2>${
+        (()=>{ const l=count(docs,r=>r.titre); if(!l.length) return '<div class="empty">Pas encore de données.</div>';
+          return '<table><tr><th>#</th><th>Document</th><th style="text-align:right">Ouvertures</th><th style="text-align:right">%</th></tr>'+
+          l.slice(0,15).map(([k,v],i)=>`<tr><td>${i+1}</td><td>${esc(k)}</td><td class="n">${v}</td><td class="n">${Math.round(v*100/docs.length)} %</td></tr>`).join("")+'</table>'; })()
+      }</div>
+      <div class="box"><h2>Navigateurs</h2>${bars(count(visits,r=>r.br), visits.length)}</div>
+      <div class="box"><h2>Heures de visite</h2><div style="height:200px"><canvas id="cHours"></canvas></div></div>
+    </div>
+    <p class="info">Données enregistrées dans votre Google Sheet « Statistiques YH ». Mise à jour à chaque actualisation.</p>
+  </main>`;
+
+  document.querySelectorAll(".periods button[data-p]").forEach(b=>b.onclick=()=>{ PERIOD=b.dataset.p; render(); });
+  $("#refresh").onclick=()=>{ try{ load(localStorage.getItem("yh_stats_cle")); }catch(_){} };
+
+  charts.forEach(c=>c.destroy()); charts=[];
+  const srcList=count(visits,r=>LABEL_SRC[r.src]||r.src), devList=count(visits,r=>r.dev);
+  $("#lSrc").innerHTML=bars(srcList,visits.length); $("#lDev").innerHTML=bars(devList,visits.length);
+  if(!window.Chart) return;
+  Chart.defaults.font.family="Inter, sans-serif";
+  // jours
+  const nDays = PERIOD==="1"?1:PERIOD==="all"?Math.max(1,Math.ceil((now-(ROWS[0]?.t||now))/86400000)+1):+PERIOD;
+  const keys=[]; for(let i=Math.min(nDays,90)-1;i>=0;i--) keys.push(dayKey(now-i*86400000));
+  const perDay=Object.fromEntries(keys.map(k=>[k,0])); visits.forEach(v=>{ const k=dayKey(v.t); if(k in perDay) perDay[k]++; });
+  charts.push(new Chart($("#cDays"),{type:"bar",data:{labels:keys.map(fmtDay),datasets:[{label:"Visites",data:keys.map(k=>perDay[k]),backgroundColor:"#1f4e9c",borderRadius:5}]},
+    options:{maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{precision:0}}}}}));
+  // sources & appareils
+  const pie=(id,list)=>{
+    if(list.length) charts.push(new Chart($(id),{type:"doughnut",data:{labels:list.map(x=>x[0]),datasets:[{data:list.map(x=>x[1]),backgroundColor:COLORS,borderWidth:2}]},
+      options:{maintainAspectRatio:false,cutout:"62%",plugins:{legend:{position:"right"}}}})); };
+  pie("#cSrc",srcList); pie("#cDev",devList);
+  // heures
+  const hours=Array(24).fill(0); visits.forEach(v=>hours[new Date(v.t).getHours()]++);
+  charts.push(new Chart($("#cHours"),{type:"line",data:{labels:hours.map((_,h)=>h+"h"),datasets:[{data:hours,borderColor:"#d4a017",backgroundColor:"rgba(212,160,23,.15)",fill:true,tension:.35,pointRadius:0}]},
+    options:{maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{precision:0}}}}}));
+}
+
+let saved=""; try{ saved=localStorage.getItem("yh_stats_cle")||""; }catch(_){}
+saved ? load(saved) : loginView();
+</script>
+</body>
+</html>

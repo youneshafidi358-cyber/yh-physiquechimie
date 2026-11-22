@@ -1,0 +1,246 @@
+{
+ "2ac|Contrôles surveillés – Semestre 1": [
+  {
+   "titre": "Devoir n°1 – Sujet A",
+   "sujet": "cours/DS1_2APIC_Sujet_A.pdf",
+   "corrige": "cours/Corrige_detaille_DS1_2APIC_A.pdf",
+   "ex": [
+    {
+     "lab": "Exercice 1",
+     "en": [
+      "ctrl_2ac_A_e1_0.jpg"
+     ],
+     "co": [
+      "ctrl_2ac_A_c1_0.jpg"
+     ],
+     "video": null
+    },
+    {
+     "lab": "Exercice 2",
+     "en": [
+      "ctrl_2ac_A_e2_0.jpg",
+      "ctrl_2ac_A_e2_1.jpg"
+     ],
+     "co": [
+      "ctrl_2ac_A_c2_0.jpg"
+     ],
+     "video": null
+    },
+    {
+     "lab": "Exercice 3",
+     "en": [
+      "ctrl_2ac_A_e3_0.jpg"
+     ],
+     "co": [
+      "ctrl_2ac_A_c3_0.jpg"
+     ],
+     "video": null
+    }
+   ]
+  },
+  {
+   "titre": "Devoir n°1 – Sujet B",
+   "sujet": "cours/DS1_2APIC_Sujet_B.pdf",
+   "corrige": "cours/Corrige_detaille_DS1_2APIC_B.pdf",
+   "ex": [
+    {
+     "lab": "Exercice 1",
+     "en": [
+      "ctrl_2ac_B_e1_0.jpg"
+     ],
+     "co": [
+      "ctrl_2ac_B_c1_0.jpg"
+     ],
+     "video": null
+    },
+    {
+     "lab": "Exercice 2",
+     "en": [
+      "ctrl_2ac_B_e2_0.jpg",
+      "ctrl_2ac_B_e2_1.jpg"
+     ],
+     "co": [
+      "ctrl_2ac_B_c2_0.jpg"
+     ],
+     "video": null
+    },
+    {
+     "lab": "Exercice 3",
+     "en": [
+      "ctrl_2ac_B_e3_0.jpg"
+     ],
+     "co": [
+      "ctrl_2ac_B_c3_0.jpg"
+     ],
+     "video": null
+    }
+   ]
+  },
+  {
+   "titre": "Devoir n°1 – Sujet C",
+   "sujet": "cours/DS1_2APIC_Sujet_C.pdf",
+   "corrige": "cours/Corrige_detaille_DS1_2APIC_C.pdf",
+   "ex": [
+    {
+     "lab": "Exercice 1",
+     "en": [
+      "ctrl_2ac_C_e1_0.jpg"
+     ],
+     "co": [
+      "ctrl_2ac_C_c1_0.jpg"
+     ],
+     "video": null
+    },
+    {
+     "lab": "Exercice 2",
+     "en": [
+      "ctrl_2ac_C_e2_0.jpg",
+      "ctrl_2ac_C_e2_1.jpg"
+     ],
+     "co": [
+      "ctrl_2ac_C_c2_0.jpg"
+     ],
+     "video": null
+    },
+    {
+     "lab": "Exercice 3",
+     "en": [
+      "ctrl_2ac_C_e3_0.jpg"
+     ],
+     "co": [
+      "ctrl_2ac_C_c3_0.jpg"
+     ],
+     "video": null
+    }
+   ]
+  },
+  {
+   "titre": "Devoir n°1 – Sujet D",
+   "sujet": "cours/DS1_2APIC_Sujet_D.pdf",
+   "corrige": "cours/Corrige_detaille_DS1_2APIC_D.pdf",
+   "ex": [
+    {
+     "lab": "Exercice 1",
+     "en": [
+      "ctrl_2ac_D_e1_0.jpg"
+     ],
+     "co": [
+      "ctrl_2ac_D_c1_0.jpg"
+     ],
+     "video": null
+    },
+    {
+     "lab": "Exercice 2",
+     "en": [
+      "ctrl_2ac_D_e2_0.jpg",
+      "ctrl_2ac_D_e2_1.jpg"
+     ],
+     "co": [
+      "ctrl_2ac_D_c2_0.jpg"
+     ],
+     "video": null
+    },
+    {
+     "lab": "Exercice 3",
+     "en": [
+      "ctrl_2ac_D_e3_0.jpg"
+     ],
+     "co": [
+      "ctrl_2ac_D_c3_0.jpg"
+     ],
+     "video": null
+    }
+   ]
+  }
+ ],
+ "3ac|Contrôles surveillés – Semestre 1": [
+  {
+   "titre": "Devoir n°1",
+   "sujet": "cours/DS1_3APIC_Sujet.pdf",
+   "corrige": "cours/Corrige_detaille_DS1_3APIC.pdf",
+   "ex": [
+    {
+     "lab": "Exercice 1",
+     "en": [
+      "ctrl_3ac_e1_0.jpg"
+     ],
+     "co": [
+      "ctrl_3ac_c1_0.jpg"
+     ],
+     "video": null
+    },
+    {
+     "lab": "Exercice 2",
+     "en": [
+      "ctrl_3ac_e2_0.jpg",
+      "ctrl_3ac_e2_1.jpg"
+     ],
+     "co": [
+      "ctrl_3ac_c2_0.jpg"
+     ],
+     "video": null
+    },
+    {
+     "lab": "Exercice 3",
+     "en": [
+      "ctrl_3ac_e3_0.jpg"
+     ],
+     "co": [
+      "ctrl_3ac_c3_0.jpg"
+     ],
+     "video": null
+    }
+   ]
+  }
+ ],
+ "tc|Contrôles surveillés – Semestre 1": [
+  {
+   "titre": "Devoir n°1",
+   "sujet": "cours/DS1_TCSF_Sujet.pdf",
+   "corrige": "cours/Corrige_detaille_DS1_TCSF.pdf",
+   "ex": [
+    {
+     "lab": "Exercice 1",
+     "en": [
+      "ctrl_tc_e1_0.jpg"
+     ],
+     "co": [
+      "ctrl_tc_c1_0.jpg"
+     ],
+     "video": "Correction_DS1_TCSF_Ex1_Gravitation.mp4"
+    },
+    {
+     "lab": "Exercice 2",
+     "en": [
+      "ctrl_tc_e2_0.jpg",
+      "ctrl_tc_e2_1.jpg"
+     ],
+     "co": [
+      "ctrl_tc_c2_0.jpg"
+     ],
+     "video": "Correction_DS1_TCSF_Ex2_Actions_mecaniques.mp4"
+    },
+    {
+     "lab": "Chimie",
+     "en": [
+      "ctrl_tc_e3_0.jpg"
+     ],
+     "co": [
+      "ctrl_tc_c3_0.jpg"
+     ],
+     "video": "Correction_DS1_TCSF_Chimie.mp4"
+    },
+    {
+     "lab": "Situation-problème",
+     "en": [
+      "ctrl_tc_e4_0.jpg"
+     ],
+     "co": [
+      "ctrl_tc_c4_0.jpg"
+     ],
+     "video": "Correction_DS1_TCSF_Situation_probleme.mp4"
+    }
+   ]
+  }
+ ]
+}

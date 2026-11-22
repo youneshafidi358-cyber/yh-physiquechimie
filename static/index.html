@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<script async src="https://www.googletagmanager.com/gtm.js?id=GTM-P9DXGPJ4"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+</script>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>YH Physique-Chimie — Pr. Youness HAFIDI | Cours 2AC, 3AC, TCS</title>
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="48x48" href="/icon-48.png">
+<link rel="icon" type="image/png" sizes="96x96" href="/icon-96.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta property="og:site_name" content="YH Physique-Chimie">
+<meta name="application-name" content="YH Physique-Chimie">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"YH Physique-Chimie","alternateName":["YH Physique Chimie","Youness Physique"],"url":"https://yh-physiquechimie.pages.dev/"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"Youness HAFIDI","jobTitle":"Professeur de Physique-Chimie","url":"https://yh-physiquechimie.pages.dev/","image":"https://yh-physiquechimie.pages.dev/icon-512.png","sameAs":["https://www.facebook.com/profile.php?id=61596309328709","https://www.linkedin.com/in/youness-hafidi"]}</script>
+<meta name="google-site-verification" content="NNE96oEd5142jaFkEU-Ow71XV1E0XlCy0i3QoOTmpPM" />
+<link rel="canonical" href="https://yh-physiquechimie.pages.dev/">
+<meta property="og:title" content="YH Physique-Chimie — Pr. Youness HAFIDI">
+<meta property="og:image" content="https://yh-physiquechimie.pages.dev/banniere.jpg">
+<meta name="description" content="Cours, séries d'exercices, corrigés et vidéos de physique-chimie (2AC, 3AC, Tronc commun) par Pr. Youness HAFIDI.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700;9..144,800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="/js/pdf.min.js"></script>
+<style>
+  :root{
+    --navy:#0f2350; --navy2:#1a3a7c; --ink:#14213d; --ink2:#3d4a66; --muted:#6b7590;
+    --bg:#f6f4ef; --card:#fff; --line:#e4dfd3;
+    --blue:#1f4e9c; --blue-soft:#e8effb;
+    --gold:#d4a017; --gold-soft:#fbf3dc;
+    --red:#c0392b; --green:#2e7d4f; --wa:#25d366; --fb:#1877f2;
+    --r:14px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  html,body{margin:0}
+  body{font-family:Inter,system-ui,sans-serif;color:var(--ink);background:var(--bg);line-height:1.5}
+  h1,h2,h3{font-family:Fraunces,Georgia,serif;margin:0;letter-spacing:-.01em}
+  button,input,select,textarea{font:inherit;color:inherit}
+  a{color:inherit}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+  img{max-width:100%;display:block}
+
+  /* ---------- Menu ---------- */
+  .top{background:#0a1838;color:#fff;position:relative;z-index:30}
+  .top .wrap{display:flex;align-items:center;gap:12px;padding:8px 20px}
+  .top .brand{font-family:Fraunces,serif;font-weight:800;font-size:17px;text-decoration:none;display:flex;align-items:center;gap:8px}
+  .top .brand img{width:34px;height:34px;border-radius:50%;border:2px solid var(--gold);background:#fff}
+  .menu{margin-left:auto;display:flex;gap:4px;align-items:center}
+  .menu>a,.menu .dd>button{all:unset;cursor:pointer;font-size:14px;font-weight:600;color:#dfe6f5;padding:8px 10px;border-radius:8px}
+  .menu>a:hover,.menu .dd>button:hover,.menu>a.on{color:#fff;background:rgba(255,255,255,.1)}
+  .menu>a.on{box-shadow:inset 0 -2px 0 var(--gold)}
+  .dd{position:relative}.dd>button::after{content:"";display:inline-block;margin-left:6px;width:6px;height:6px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(45deg) translateY(-3px)}
+  .dd .dm{display:none;position:absolute;right:0;top:calc(100% + 6px);background:#fff;color:var(--ink);border-radius:12px;box-shadow:0 14px 34px rgba(0,0,0,.25);min-width:250px;padding:6px;z-index:50}
+  .dd.open .dm,.dd:hover .dm{display:block}
+  .dm a{display:flex;justify-content:space-between;gap:10px;text-decoration:none;padding:9px 12px;border-radius:8px;font-size:14px;font-weight:600}
+  .dm a:hover{background:var(--blue-soft);color:var(--blue)}
+  .dm a small{font-weight:500;color:var(--muted)} .dm a.soon{opacity:.75} .dm a.soon small{color:#7a5a00;background:var(--gold-soft);padding:1px 7px;border-radius:99px}
+  .burger{all:unset;display:none;margin-left:auto;cursor:pointer;color:#fff;font-weight:700;padding:8px 12px;border-radius:8px;background:rgba(255,255,255,.12)}
+  @media(max-width:760px){.burger{display:block}.menu{display:none;position:absolute;left:0;right:0;top:100%;flex-direction:column;align-items:stretch;background:#0f2350;padding:8px 14px 14px;z-index:60}
+   .menu.open{display:flex}.dd .dm{position:static;box-shadow:none;margin-top:4px}.dd:hover .dm{display:none}.dd.open .dm{display:block}}
+
+  /* ---------- Refonte accueil ---------- */
+  .skip{position:absolute;left:12px;top:-60px;z-index:100;background:var(--gold);color:#2b1f00;font-weight:800;padding:10px 16px;border-radius:10px;text-decoration:none}
+  .skip:focus{top:12px}
+  .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  :focus-visible{outline:3px solid #ffb703;outline-offset:3px;border-radius:6px}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
+  .hero2{background:radial-gradient(1200px 500px at 85% -10%,#2a56a8 0%,transparent 60%),linear-gradient(160deg,#0b1d45,#14306a);color:#fff;padding:46px 0 54px}
+  .h2grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:42px;align-items:center}
+  .h2grid>div{min-width:0}.hero2 h1{overflow-wrap:anywhere}.hero2 .contacts{flex-wrap:wrap}
+  .eyebrow{display:inline-block;background:rgba(212,160,23,.16);color:#ffd666;border:1px solid rgba(212,160,23,.45);padding:6px 12px;border-radius:99px;font-size:13.5px;font-weight:700;letter-spacing:.02em}
+  .hero2 h1{font-size:clamp(32px,4.6vw,54px);line-height:1.08;margin:16px 0 12px;font-weight:800}
+  .hero2 h1 em{font-style:normal;color:#ffd666}
+  .lead2{font-size:18px;color:#d5def2;max-width:560px;margin:0}
+  .ar2{font-family:"Noto Naskh Arabic",Tahoma,serif;font-size:19px;color:#ffd666;margin:8px 0 0}
+  .hsearch{margin-top:22px;display:flex;align-items:center;gap:8px;background:#fff;border-radius:16px;padding:6px 6px 6px 14px;box-shadow:0 14px 40px rgba(0,0,0,.3);max-width:600px;color:var(--ink)}
+  .hsearch input{flex:1;border:0;font-size:16.5px;padding:12px 4px;min-width:0;background:transparent;color:var(--ink)}
+  .hsearch input:focus{outline:none}.hsearch:focus-within{outline:3px solid #ffb703}
+  .hsearch button{border:0;background:var(--gold);color:#2b1f00;font-weight:800;font-size:15.5px;padding:0 18px;min-height:46px;border-radius:12px;cursor:pointer}
+  .quick{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:12px;font-size:14px;color:#c9d5ef}
+  .quick button{border:1px solid rgba(255,255,255,.28);background:rgba(255,255,255,.08);color:#fff;border-radius:99px;padding:8px 13px;min-height:38px;font-size:14px;cursor:pointer}
+  .quick button:hover{background:rgba(255,255,255,.18)}
+  .hcta{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
+  .cbtn.gold{background:var(--gold);border-color:var(--gold);color:#2b1f00;min-height:46px}
+  .cbtn.ghost{background:transparent;min-height:46px}
+  .artcard{position:relative;border-radius:22px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,.45);border:3px solid rgba(212,160,23,.55)}
+  .artcard>img{width:100%;height:auto;display:block}
+  .prof{position:absolute;left:14px;bottom:14px;right:14px;display:flex;gap:12px;align-items:center;background:rgba(11,29,69,.86);backdrop-filter:blur(6px);border-radius:14px;padding:10px 12px}
+  .prof img{width:50px;height:50px;border-radius:50%;border:2px solid var(--gold);background:#fff}
+  .prof b{display:block;font-family:Fraunces,serif;font-size:17px}.prof span{font-size:13px;color:#c9d5ef}
+  .blk{padding:46px 0}.blk.alt{background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .bt2{font-size:clamp(24px,3vw,32px);color:var(--navy);margin-bottom:20px;display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+  .bt2 span{font-family:"Noto Naskh Arabic",Tahoma,serif;font-size:.62em;color:#7a5a00;font-weight:600}
+  .lvgrid{display:grid;grid-template-columns:repeat(6,1fr);gap:14px}
+  @media(max-width:1000px){.lvgrid{grid-template-columns:repeat(3,1fr)}}
+  .lv{display:flex;flex-direction:column;gap:6px;text-decoration:none;background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px 16px;min-height:150px;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden}
+  .lv::before{content:"";position:absolute;inset:0 0 auto 0;height:6px;background:var(--c,#1f4e9c)}
+  .lv:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(20,33,61,.12)}
+  .lv .code{font-family:Fraunces,serif;font-size:30px;font-weight:800;color:var(--c,#1f4e9c)}
+  .lv .nm{font-weight:700;color:var(--ink)}.lv .ar{font-family:"Noto Naskh Arabic",Tahoma,serif;color:var(--muted);font-size:15px}
+  .lv .ct{margin-top:auto;font-size:13px;font-weight:700;color:var(--blue)}
+  .lv.soon{opacity:.8}.lv.soon .ct{color:#7a5a00}
+  .fgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px}
+  .feat{display:flex;flex-direction:column;gap:6px;text-decoration:none;border:1px solid var(--line);border-radius:18px;padding:20px;background:var(--bg);min-height:150px}
+  .feat:hover{border-color:var(--blue);background:#fff}
+  .feat .fi{font-size:30px}.feat b{font-family:Fraunces,serif;font-size:19px;color:var(--navy)}.feat span{color:var(--ink2);font-size:14.5px}
+  .sgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px}
+  .sim{display:flex;gap:12px;align-items:center;text-decoration:none;background:linear-gradient(135deg,#0f2350,#1a3a7c);color:#fff;border-radius:16px;padding:16px;min-height:90px}
+  .sim .e{font-size:28px}.sim b{display:block;font-size:15px}.sim span{font-size:12.5px;color:#c9d5ef}
+  .sim:hover{filter:brightness(1.12)}
+  .steps{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
+  .steps li{display:flex;gap:12px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px}
+  .steps li b{flex:none;width:40px;height:40px;border-radius:50%;background:var(--gold);color:#2b1f00;display:grid;place-items:center;font-family:Fraunces,serif;font-size:20px}
+  .f2{background:#0a1838;color:#b8c5e3;padding:40px 0 0;font-size:14.5px}
+  .fcols{display:grid;grid-template-columns:1.4fr 1fr 1fr 1.2fr;gap:26px}
+  .f2 h3{font-family:Inter,sans-serif;font-size:14px;letter-spacing:.06em;text-transform:uppercase;color:#ffd666;margin-bottom:10px}
+  .f2 a{display:block;color:#fff;text-decoration:none;padding:5px 0}.f2 a:hover{text-decoration:underline}
+  .fbrand{display:flex;align-items:center;gap:10px;margin-bottom:8px}.fbrand img{border-radius:50%;border:2px solid var(--gold);background:#fff}.fbrand b{font-family:Fraunces,serif;font-size:18px;color:#fff}
+  .fbot{border-top:1px solid rgba(255,255,255,.1);margin-top:26px;padding:16px 20px;font-size:13px;color:#8ea0c6}
+  .chip,.seg button,.cbtn{min-height:40px}
+  @media(max-width:860px){.h2grid{grid-template-columns:minmax(0,1fr);gap:26px}.fcols{grid-template-columns:1fr 1fr}.hero2{padding:30px 0 36px}}
+  @media(max-width:520px){.hsearch button{padding:0 12px}.fcols{grid-template-columns:1fr}.lvgrid{grid-template-columns:1fr 1fr}}
+  /* ---------- Hero ---------- */
+  .hero{background:var(--navy);color:#fff;position:relative}
+  .banner{position:relative;max-height:440px;overflow:hidden}
+  .banner img{width:100%;height:auto;aspect-ratio:1672/941;object-fit:cover;object-position:top}
+  .banner::after{content:"";position:absolute;inset:auto 0 0 0;height:45%;background:linear-gradient(to bottom,rgba(15,35,80,0),var(--navy))}
+  .id{position:relative;z-index:2;display:flex;gap:20px;align-items:flex-end;margin-top:-70px;padding-bottom:26px}
+  .logo{width:132px;height:132px;border-radius:50%;flex:none;border:4px solid var(--gold);background:#fff;box-shadow:0 10px 30px rgba(0,0,0,.35);overflow:hidden}
+  .logo img{width:100%;height:100%;object-fit:cover}
+  .id h1{font-size:clamp(26px,4.4vw,40px);font-weight:800}
+  .id .role{color:#c9d5ef;margin:4px 0 0;font-size:15px}
+  .id .motto{color:var(--gold);font-weight:600;letter-spacing:.04em;font-size:14px;margin-top:6px}
+  .contacts{display:flex;flex-wrap:wrap;gap:10px;padding-bottom:28px}
+  .cbtn{display:inline-flex;align-items:center;gap:8px;text-decoration:none;font-weight:600;font-size:14.5px;
+    padding:10px 16px;border-radius:12px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);color:#fff}
+  .cbtn:hover{background:rgba(255,255,255,.18)}
+  .cbtn.wa{background:var(--wa);border-color:var(--wa);color:#05361a}
+  .cbtn.fb{background:var(--fb);border-color:var(--fb)}
+  .cbtn svg{flex:none}
+  .badge{display:inline-flex;align-items:center;font-size:12px;font-weight:600;padding:4px 10px;border-radius:99px;background:rgba(255,255,255,.12)}
+  .badge.prof{background:var(--gold);color:#2b1f00}
+
+  /* ---------- Navigation ---------- */
+  .bar{position:sticky;top:0;z-index:5;background:rgba(246,244,239,.95);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  .levels{display:flex;gap:8px;overflow-x:auto;padding:14px 0 10px;scrollbar-width:none}
+  .levels::-webkit-scrollbar{display:none}
+  .chip{flex:none;border:1px solid var(--line);background:#fff;border-radius:99px;padding:7px 15px;font-size:14px;font-weight:600;cursor:pointer;white-space:nowrap}
+  .chip:hover{border-color:var(--blue)}
+  .chip[aria-pressed="true"]{background:var(--navy);border-color:var(--navy);color:#fff}
+  .chip .soon{margin-left:6px;font-size:10.5px;font-weight:700;padding:1px 6px;border-radius:99px;background:var(--gold-soft);color:#7a5a00;vertical-align:1px}
+  .chip[aria-pressed="true"] .soon{background:var(--gold);color:#2b1f00}
+  .soonbox{border-style:solid;border-color:#efd99a;background:var(--gold-soft)}
+  .soon-ic{font-size:34px;margin-bottom:6px}
+  .soon-ar{font-family:"Noto Naskh Arabic",Tahoma,serif;font-size:22px;color:#7a5a00;margin:4px 0 8px}
+  .soonbox a{color:var(--blue);font-weight:600}
+  .ix-soon{display:inline-block;white-space:nowrap;font-size:13px;font-weight:600;color:#7a5a00;background:var(--gold-soft);padding:3px 10px;border-radius:99px;margin-left:8px}
+  .chip.chip-sout{border-color:var(--gold);color:#7a5a00;text-decoration:none}
+  .tools{display:flex;gap:10px;flex-wrap:wrap;padding-bottom:12px;align-items:center}
+  .seg{display:inline-flex;background:#fff;border:1px solid var(--line);border-radius:10px;padding:3px;overflow-x:auto;max-width:100%}
+  .seg button{border:0;background:none;padding:6px 12px;border-radius:8px;font-size:14px;cursor:pointer;color:var(--ink2);white-space:nowrap}
+  .seg button[aria-pressed="true"]{background:var(--blue);color:#fff}
+  .search{flex:1;min-width:180px;border:1px solid var(--line);border-radius:10px;padding:8px 12px;background:#fff}
+  .search:focus,.field input:focus,.field select:focus,.field textarea:focus{outline:2px solid var(--blue);outline-offset:1px}
+
+  main{padding:26px 0 40px}
+
+  /* ---------- Panneau professeur ---------- */
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:var(--r);margin-bottom:28px;overflow:hidden}
+  .panel summary{list-style:none;cursor:pointer;padding:16px 20px;display:flex;align-items:center;gap:10px;font-weight:600}
+  .panel summary::-webkit-details-marker{display:none}
+  .panel summary .plus{width:26px;height:26px;border-radius:8px;background:var(--gold);color:#2b1f00;display:grid;place-items:center;font-size:18px;line-height:1}
+  .panel[open] summary{border-bottom:1px solid var(--line)}
+  .form{padding:18px 20px 20px;display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+  .field{display:flex;flex-direction:column;gap:5px}
+  .field.full{grid-column:1/-1}
+  .field label{font-size:13px;font-weight:600;color:var(--ink2)}
+  .field input,.field select,.field textarea{border:1px solid var(--line);border-radius:10px;padding:9px 11px;background:#fff}
+  .field textarea{resize:vertical;min-height:56px}
+  .drop{border:2px dashed #c8cfdf;border-radius:12px;padding:18px;text-align:center;color:var(--muted);cursor:pointer;background:#fafbfe}
+  .drop.over{border-color:var(--blue);background:var(--blue-soft)}
+  .drop strong{color:var(--ink)}
+  .actions{grid-column:1/-1;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+  .btn{border:0;border-radius:10px;padding:10px 18px;font-weight:600;cursor:pointer;background:var(--blue);color:#fff}
+  .btn:disabled{opacity:.55;cursor:wait}
+  .msg{font-size:14px;color:var(--muted)}
+  .msg.err{color:var(--red)} .msg.ok{color:var(--green)}
+
+  /* ---------- Niveaux, unités, cartes ---------- */
+  .level{margin-bottom:40px}
+  .level-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:16px;border-bottom:3px solid var(--navy);padding-bottom:8px}
+  .level-head h2{font-size:clamp(22px,3vw,28px)}
+  .level-head .code{font-family:Inter,sans-serif;font-weight:700;font-size:13px;color:#fff;background:var(--blue);padding:3px 9px;border-radius:6px}
+  .level-head .cnt{color:var(--muted);font-size:14px;margin-left:auto}
+  .unit{margin:0 0 22px}
+  .unit h3{font-size:18px;color:var(--navy2);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+  .unit h3::before{content:"";width:6px;height:18px;border-radius:3px;background:var(--gold);flex:none}
+  .unit h3 .mat{font-family:Inter,sans-serif;font-size:11.5px;font-weight:600;padding:2px 8px;border-radius:99px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:14px;display:flex;gap:12px;align-items:flex-start;
+    cursor:pointer;transition:transform .12s,box-shadow .12s;position:relative;text-align:left}
+  .card:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(20,33,61,.08)}
+  .card:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+  .icon{width:42px;height:42px;border-radius:10px;display:grid;place-items:center;flex:none}
+  .icon.cours{background:var(--blue-soft);color:var(--blue)}
+  .icon.exo{background:var(--gold-soft);color:#9a7200}
+  .icon.corrige{background:#e5f3ea;color:var(--green)}
+  .icon.controle{background:#efe7fb;color:#7a3fa8}
+  .icon.video{background:#fbe9e7;color:var(--red)}
+  .card .txt{min-width:0;flex:1}
+  .card h4{margin:0;font-size:14.5px;font-weight:600;line-height:1.35}
+  .card .sub{font-size:12.5px;color:var(--muted);margin-top:3px}
+  .card p{margin:4px 0 0;font-size:13px;color:var(--ink2)}
+  .phys{background:var(--blue-soft);color:var(--blue)}
+  .chim{background:#e5f3ea;color:var(--green)}
+  .pc{background:var(--gold-soft);color:#7a5a00}
+  .del{position:absolute;top:8px;right:8px;border:0;background:#fff;border-radius:8px;width:28px;height:28px;cursor:pointer;color:var(--muted);display:grid;place-items:center}
+  .del:hover{background:#fbe9e7;color:var(--red)}
+  .empty{text-align:center;padding:50px 20px;color:var(--muted);background:var(--card);border:1px dashed var(--line);border-radius:var(--r)}
+  .empty h3{color:var(--ink);font-size:20px;margin-bottom:6px}
+
+  /* ---------- Soutien ---------- */
+  .soutien{background:var(--navy);color:#fff;padding:44px 0}
+  .soutien h2{font-size:clamp(24px,3.4vw,32px)}
+  .soutien .lead{color:#c9d5ef;max-width:620px;margin:8px 0 18px}
+  .s-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:28px;align-items:start}
+  .flyer{border-radius:16px;overflow:hidden;box-shadow:0 14px 40px rgba(0,0,0,.4);border:3px solid rgba(212,160,23,.6)}
+  .langs{display:inline-flex;background:rgba(255,255,255,.1);border-radius:10px;padding:3px;margin-bottom:12px}
+  .langs button{border:0;background:none;color:#fff;padding:6px 14px;border-radius:8px;cursor:pointer;font-weight:600}
+  .langs button[aria-pressed="true"]{background:var(--gold);color:#2b1f00}
+  .s-list{list-style:none;padding:0;margin:0 0 20px;display:grid;gap:10px}
+  .s-list li{display:flex;gap:10px;align-items:flex-start;background:rgba(255,255,255,.06);border-radius:12px;padding:12px 14px}
+  .s-list li b{color:var(--gold)}
+  .num{font-family:Fraunces,serif;font-size:clamp(28px,5vw,40px);font-weight:800;letter-spacing:.02em;margin:6px 0 14px}
+
+  .ix{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:18px 20px;margin-top:10px}
+  .ix h2{font-size:20px;margin-bottom:10px;color:var(--navy2)}
+  .ix-lvl{padding:8px 0;border-top:1px solid var(--line)} .ix-lvl:first-of-type{border-top:0}
+  .ix-h{font-weight:700;text-decoration:none;color:var(--navy)} .ix-h:hover{text-decoration:underline}
+  .ix-links{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+  .ix-links a{font-size:13.5px;text-decoration:none;padding:4px 10px;border-radius:99px;background:var(--blue-soft);color:var(--blue)}
+  .ix-links a:hover{background:var(--blue);color:#fff}
+  .unit h3 .pl{margin-left:auto;font-family:Inter,sans-serif;font-size:12.5px;font-weight:600;text-decoration:none;color:var(--blue);white-space:nowrap}
+  .unit h3 .pl:hover{text-decoration:underline}
+  .shr{position:absolute;bottom:8px;right:8px;width:30px;height:30px;border-radius:8px;display:grid;place-items:center;background:#e9f9ef;color:#128c4a;text-decoration:none}
+  .shr:hover{background:var(--wa);color:#05361a}
+  .card{padding-right:44px}
+  footer{background:#0a1838;color:#9fb0d4;padding:24px 0;font-size:14px}
+  footer .wrap{display:flex;gap:14px;flex-wrap:wrap;align-items:center;justify-content:space-between}
+  footer a{color:#fff}
+
+  .wa-float{position:fixed;right:18px;bottom:18px;z-index:40;width:56px;height:56px;border-radius:50%;background:var(--wa);display:grid;place-items:center;
+    box-shadow:0 8px 24px rgba(0,0,0,.25)}
+
+  /* ---------- Lecteur protégé ---------- */
+  .viewer{position:fixed;inset:0;z-index:60;background:#0e1424;display:none;flex-direction:column}
+  .viewer.open{display:flex}
+  .vbar{display:flex;align-items:center;gap:12px;padding:12px 16px;color:#fff;background:var(--navy);border-bottom:1px solid rgba(255,255,255,.08)}
+  .vbar h3{font-family:Inter,sans-serif;font-size:16px;font-weight:600;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .vbar .lock{font-size:12px;color:var(--gold);display:flex;gap:5px;align-items:center;white-space:nowrap}
+  .vclose{border:0;background:rgba(255,255,255,.12);color:#fff;border-radius:10px;padding:8px 14px;cursor:pointer;font-weight:600}
+  .vbody{flex:1;overflow:auto;position:relative;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+  .pages{max-width:960px;margin:0 auto;padding:18px 12px 40px;display:flex;flex-direction:column;gap:14px;align-items:center}
+  .pagebox{position:relative;background:#fff;box-shadow:0 4px 20px rgba(0,0,0,.35);width:100%}
+  .pagebox canvas{display:block;width:100%;height:auto;pointer-events:none}
+  .wm{position:absolute;inset:0;pointer-events:none;overflow:hidden;display:flex;align-items:center;justify-content:center}
+  .wm span{transform:rotate(-30deg);font-family:Fraunces,serif;font-size:clamp(18px,4vw,34px);color:rgba(31,78,156,.10);white-space:nowrap;font-weight:700}
+  .vidbox{max-width:1000px;margin:0 auto;padding:20px 12px;position:relative}
+  .vidbox video{width:100%;max-height:78vh;background:#000;border-radius:10px;display:block}
+  .vidbox .wm span{color:rgba(255,255,255,.14)}
+  .vload{color:#c9d2e6;text-align:center;padding:60px 20px}
+  .embed{position:relative;max-width:1000px;margin:0 auto;height:calc(100% - 8px);padding:8px 12px}
+  .embed iframe{width:100%;height:100%;border:0;border-radius:8px;background:#fff}
+  .embed.yt{height:auto;aspect-ratio:16/9;margin-top:20px}
+  .embed .shield{position:absolute;top:8px;right:12px;width:90px;height:64px;background:transparent}
+  @media print{ body{display:none!important} }
+  @media (max-width:760px){
+    .s-grid{grid-template-columns:1fr}
+    .id{flex-direction:column;align-items:flex-start;margin-top:-56px;gap:12px}
+    .logo{width:104px;height:104px}
+  }
+  @media (max-width:640px){ .form{grid-template-columns:1fr} .vbar .lock{display:none} }
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+
+<!--NAV--><header class="top"><div class="wrap"><a class="brand" href="/"><img src="/logo.jpg" alt="">YH Physique-Chimie</a><button class="burger" type="button" onclick="this.nextElementSibling.classList.toggle('open')">☰ Menu</button>
+<nav class="menu" aria-label="Menu principal"><a href="/" class="on">Accueil</a>
+<div class="dd"><button type="button" onclick="this.parentElement.classList.toggle('open')">Niveaux</button><div class="dm"><a class="soon" href="/niveau/1ac/">1AC <small>Bientôt</small></a><a href="/niveau/2ac/">2AC <small>2e année collège</small></a><a href="/niveau/3ac/">3AC <small>3e année collège</small></a><a href="/niveau/tc/">TCS <small>Tronc commun scientifique</small></a><a class="soon" href="/niveau/1bac/">1BAC <small>Bientôt</small></a><a class="soon" href="/niveau/2bac/">2BAC <small>Bientôt</small></a></div></div>
+<a href="/lecons/">Leçons</a><a href="/a-propos/">À propos</a><a href="/contact/">Contact</a></nav></div></header><!--/NAV-->
+<a class="skip" href="#niveaux">Aller au contenu</a>
+<section class="hero2" aria-labelledby="heroT">
+  <div class="wrap h2grid">
+    <div class="h2txt">
+      <span class="eyebrow">Physique-Chimie · Collège et lycée · Gratuit</span>
+      <h1 id="heroT">Comprendre la physique-chimie, <em>simplement.</em></h1>
+      <p class="lead2">Résumés en cartes mentales, séries et corrigés côte à côte, quiz, simulations et devoirs surveillés — par <b>Pr. Youness HAFIDI</b>.</p>
+      
+      <form class="hsearch" role="search" onsubmit="event.preventDefault();goSearch(this.q.value)">
+        <label for="hq" class="sr">Rechercher une leçon</label>
+        <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
+        <input id="hq" name="q" type="search" placeholder="Que veux-tu réviser ? (combustion, gravitation…)" autocomplete="off">
+        <button type="submit">Rechercher</button>
+      </form>
+      <div class="quick" aria-label="Recherches rapides"><span>Populaire :</span>
+        <button type="button" onclick="goSearch('combustion')">Combustion</button><button type="button" onclick="goSearch('gravitation')">Gravitation</button><button type="button" onclick="goSearch('atomes')">Atomes et ions</button><button type="button" onclick="goSearch('devoir')">Devoirs</button></div>
+      <div class="hcta"><a class="cbtn gold" href="#niveaux">Choisir mon niveau</a><a class="cbtn ghost" href="/simulations/">🧪 Labo virtuel</a></div>
+    </div>
+    <div class="h2art">
+      <div class="artcard"><img src="/banniere.jpg" alt="Bannière Youness Physique : apprendre, comprendre, réussir" width="1672" height="941">
+        <div class="prof"><img src="/logo.jpg" alt="" width="64" height="64"><div><b>Pr. Youness HAFIDI</b><span>Professeur de Physique-Chimie · Cycle secondaire</span></div></div></div>
+      <div class="contacts" style="padding:14px 0 0">
+        <a class="cbtn wa" href="https://wa.me/212694194880" target="_blank" rel="noopener"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.4-.7-2.8-1.1-4.6-4-4.8-4.2-.1-.2-1.1-1.5-1.1-2.9s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.3.5-.4.4c-.1.1-.3.3-.1.6.2.3.7 1.2 1.6 2 1.1 1 2 1.3 2.3 1.4.3.1.4.1.6-.1l.8-1c.2-.3.4-.2.6-.1l1.9.9c.3.1.5.2.5.3.1.2.1.7-.1 1.3Z"/></svg>WhatsApp</a>
+        <a class="cbtn" href="tel:+212694194880">📞 06 94 19 48 80</a>
+        <a class="cbtn fb" href="https://www.facebook.com/profile.php?id=61596309328709" target="_blank" rel="noopener">Facebook</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="blk" id="niveaux" aria-labelledby="nivT"><div class="wrap">
+  <h2 class="bt2" id="nivT">Choisis ton niveau </h2>
+  <div class="lvgrid">
+<!--NIVEAUX-->
+<a class="lv soon" style="--c:#0e7c86" href="/niveau/1ac/"><span class="code">1AC</span><span class="nm">1re année collège</span><span class="ct">Bientôt</span></a>
+<a class="lv" style="--c:#1f4e9c" href="/niveau/2ac/"><span class="code">2AC</span><span class="nm">2e année collège</span><span class="ct">4 leçons · 14 documents →</span></a>
+<a class="lv" style="--c:#7a3fa8" href="/niveau/3ac/"><span class="code">3AC</span><span class="nm">3e année collège</span><span class="ct">4 leçons · 8 documents →</span></a>
+<a class="lv" style="--c:#c0392b" href="/niveau/tc/"><span class="code">TCS</span><span class="nm">Tronc commun scientifique</span><span class="ct">6 leçons · 12 documents →</span></a>
+<a class="lv soon" style="--c:#b7791f" href="/niveau/1bac/"><span class="code">1BAC</span><span class="nm">1re année Baccalauréat</span><span class="ct">Bientôt</span></a>
+<a class="lv soon" style="--c:#2e7d4f" href="/niveau/2bac/"><span class="code">2BAC</span><span class="nm">2e année Baccalauréat</span><span class="ct">Bientôt</span></a>
+<!--/NIVEAUX-->
+  </div>
+</div></section>
+
+<section class="blk alt" aria-labelledby="featT"><div class="wrap">
+  <h2 class="bt2" id="featT">Tout pour réussir, au même endroit</h2>
+  <div class="fgrid">
+    <a class="feat" href="/lecons/"><span class="fi">🧠</span><b>Résumés interactifs</b><span>Chaque leçon en carte mentale cliquable.</span></a>
+    <a class="feat" href="/lecons/"><span class="fi">✍️</span><b>Exercices corrigés</b><span>Énoncé et correction côte à côte + erreurs fréquentes.</span></a>
+    <a class="feat" href="/lecons/"><span class="fi">✅</span><b>Quiz</b><span>Teste-toi et obtiens ta note tout de suite.</span></a>
+    <a class="feat" href="/simulations/"><span class="fi">🧪</span><b>Simulations</b><span>Fais les expériences en ligne, sans danger.</span></a>
+    <a class="feat" href="#cours" onclick="setType('controle')"><span class="fi">📝</span><b>Devoirs surveillés</b><span>Sujets + corrigés + barèmes, pour s'entraîner.</span></a>
+  </div>
+</div></section>
+
+
+<div class="bar" id="resbar" hidden>
+  <div class="wrap">
+    <nav class="levels" id="levels" aria-label="Niveaux"></nav>
+    <div class="tools">
+      <div class="seg" id="typeSeg" role="group" aria-label="Type de ressource">
+        <button data-t="all" aria-pressed="true">Tout</button>
+        <button data-t="cours" aria-pressed="false">Cours</button>
+        <button data-t="exo" aria-pressed="false">Séries</button>
+        <button data-t="corrige" aria-pressed="false">Corrigés</button>
+        <button data-t="controle" aria-pressed="false">Contrôles</button>
+        <button data-t="video" aria-pressed="false">Vidéos</button>
+      </div>
+      <input class="search" id="search" type="search" placeholder="Rechercher une leçon, une série…">
+    </div>
+  </div>
+</div>
+
+<main class="wrap" id="cours">
+  <h2 class="bt2" id="contenu" tabindex="-1" style="margin-top:6px" hidden>Résultats de la recherche </h2>
+  <div id="list" hidden></div>
+  <section class="ix" aria-labelledby="ixT" hidden>
+    <h2 id="ixT">Toutes les leçons par niveau</h2>
+<!--LECONS-->
+<div class="ix-lvl"><span class="ix-h">1AC – 1re année collège</span><span class="ix-soon">Bientôt</span></div>
+<div class="ix-lvl"><a class="ix-h" href="/niveau/2ac/">2AC – 2e année collège</a><div class="ix-links"><a href="/lecons/2ac-l-air-qui-nous-entoure/">L&#x27;air qui nous entoure</a> <a href="/lecons/2ac-les-molecules-et-les-atomes/">Les molécules et les atomes</a> <a href="/lecons/2ac-les-combustions/">Les combustions</a> <a href="/lecons/2ac-controles-surveilles-semestre-1/">Contrôles surveillés – Semestre 1</a></div></div>
+<div class="ix-lvl"><a class="ix-h" href="/niveau/3ac/">3AC – 3e année collège</a><div class="ix-links"><a href="/lecons/3ac-les-materiaux-dans-la-vie-quotidienne/">Les matériaux dans la vie quotidienne</a> <a href="/lecons/3ac-les-atomes-et-les-ions/">Les atomes et les ions</a> <a href="/lecons/3ac-reaction-de-quelques-materiaux-avec-l-air/">Réaction de quelques matériaux avec l&#x27;air</a> <a href="/lecons/3ac-controles-surveilles-semestre-1/">Contrôles surveillés – Semestre 1</a></div></div>
+<div class="ix-lvl"><a class="ix-h" href="/niveau/tc/">TCS – Tronc commun scientifique</a><div class="ix-links"><a href="/lecons/tc-la-gravitation-universelle/">La gravitation universelle</a> <a href="/lecons/tc-exemples-d-actions-mecaniques/">Exemples d&#x27;actions mécaniques</a> <a href="/lecons/tc-les-especes-chimiques/">Les espèces chimiques</a> <a href="/lecons/tc-extraction-separation-et-identification/">Extraction, séparation et identification</a> <a href="/lecons/tc-revision-devoir-n-1/">Révision — Devoir n°1</a> <a href="/lecons/tc-controles-surveilles-semestre-1/">Contrôles surveillés – Semestre 1</a></div></div>
+<div class="ix-lvl"><span class="ix-h">1BAC – 1re année Baccalauréat</span><span class="ix-soon">Bientôt</span></div>
+<div class="ix-lvl"><span class="ix-h">2BAC – 2e année Baccalauréat</span><span class="ix-soon">Bientôt</span></div>
+<!--/LECONS-->
+  </section>
+</main>
+
+<section class="blk alt" aria-labelledby="simT"><div class="wrap">
+  <h2 class="bt2" id="simT">Le labo virtuel </h2>
+  <div class="sgrid">
+<!--SIMS-->
+<a class="sim" href="/lecons/2ac-l-air-qui-nous-entoure/#lab"><span class="e" aria-hidden="true">💨</span><span><b>Compressibilité et expansibilité de l&#x27;air</b><span>2AC · L&#x27;air qui nous entoure</span></span></a>
+<a class="sim" href="/lecons/2ac-les-molecules-et-les-atomes/#lab"><span class="e" aria-hidden="true">⚛️</span><span><b>Construis une molécule</b><span>2AC · Les molécules et les atomes</span></span></a>
+<a class="sim" href="/lecons/2ac-les-combustions/#lab"><span class="e" aria-hidden="true">🔥</span><span><b>La combustion du butane – bec Bunsen</b><span>2AC · Les combustions</span></span></a>
+<a class="sim" href="/lecons/3ac-les-materiaux-dans-la-vie-quotidienne/#lab"><span class="e" aria-hidden="true">🔍</span><span><b>Enquête : identifie le matériau</b><span>3AC · Les matériaux dans la vie quotidienne</span></span></a>
+<a class="sim" href="/lecons/3ac-les-atomes-et-les-ions/#lab"><span class="e" aria-hidden="true">🧲</span><span><b>De l&#x27;atome à l&#x27;ion</b><span>3AC · Les atomes et les ions</span></span></a>
+<a class="sim" href="/lecons/3ac-reaction-de-quelques-materiaux-avec-l-air/#lab"><span class="e" aria-hidden="true">🔩</span><span><b>Expérience : quand le fer rouille-t-il ?</b><span>3AC · Réaction de quelques matériaux avec l&#x27;air</span></span></a>
+<a class="sim" href="/lecons/tc-la-gravitation-universelle/#lab"><span class="e" aria-hidden="true">🪐</span><span><b>Interaction gravitationnelle et poids</b><span>TCS · La gravitation universelle</span></span></a>
+<a class="sim" href="/lecons/tc-exemples-d-actions-mecaniques/#lab"><span class="e" aria-hidden="true">📐</span><span><b>Plan incliné et force pressante</b><span>TCS · Exemples d&#x27;actions mécaniques</span></span></a>
+<a class="sim" href="/lecons/tc-les-especes-chimiques/#lab"><span class="e" aria-hidden="true">🧪</span><span><b>Laboratoire des tests chimiques</b><span>TCS · Les espèces chimiques</span></span></a>
+<a class="sim" href="/lecons/tc-extraction-separation-et-identification/#lab"><span class="e" aria-hidden="true">⚗️</span><span><b>Extraction par solvant – ampoule à décanter</b><span>TCS · Extraction, séparation et identification</span></span></a>
+<!--/SIMS-->
+  </div>
+  <p style="text-align:center;margin-top:16px"><a class="cbtn gold" href="/simulations/">Voir toutes les simulations →</a></p>
+</div></section>
+
+<section class="blk" aria-labelledby="howT"><div class="wrap">
+  <h2 class="bt2" id="howT">Comment réviser avec le site ?</h2>
+  <ol class="steps">
+    <li><b>1</b><span><strong>Lis le résumé</strong> de la leçon (carte mentale).</span></li>
+    <li><b>2</b><span><strong>Cherche les exercices</strong> seul, sur ta feuille.</span></li>
+    <li><b>3</b><span><strong>Vérifie</strong> avec « Voir la réponse » et « Erreur fréquente ».</span></li>
+    <li><b>4</b><span><strong>Fais le quiz</strong> et la simulation, puis un devoir.</span></li>
+  </ol>
+</div></section>
+
+<section class="soutien" id="soutien">
+  <div class="wrap s-grid">
+    <div>
+      <div class="flyer"><img id="flyerImg" src="/soutien_fr.jpg" alt="Affiche des cours de soutien en physique-chimie"></div>
+    </div>
+    <div>
+      <h2>Cours de soutien en Physique-Chimie</h2>
+      <p class="lead">Comprends aujourd'hui, réussis demain ! Du 1AC au 2BAC, à distance ou à domicile.</p>
+      <ul class="s-list">
+        <li><span>✔</span><span><b>Niveaux :</b> 1AC, 2AC, 3AC, Tronc commun scientifique, 1BAC, 2BAC</span></li>
+        <li><span>✔</span><span><b>Programme :</b> explication claire des cours, exercices d'application corrigés, préparation aux contrôles et examens</span></li>
+        <li><span>✔</span><span><b>Suivi personnalisé</b> selon le niveau de chaque élève, remise à niveau et consolidation des acquis</span></li>
+        <li><span>✔</span><span><b>Modes :</b> cours à distance (en ligne) ou à domicile (individuel ou petit groupe)</span></li>
+      </ul>
+      <div class="num">06 94 19 48 80</div>
+      <div class="contacts" style="padding:0">
+        <a class="cbtn wa" href="https://wa.me/212694194880?text=Bonjour%20Pr.%20Hafidi%2C%20je%20souhaite%20des%20informations%20sur%20les%20cours%20de%20soutien." target="_blank" rel="noopener">Réserver sur WhatsApp</a>
+        <a class="cbtn" href="tel:+212694194880">Appeler</a>
+        <a class="cbtn fb" href="https://www.facebook.com/profile.php?id=61596309328709" target="_blank" rel="noopener">Page Facebook</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="f2">
+  <div class="wrap fcols">
+    <div><div class="fbrand"><img src="/logo.jpg" alt="" width="44" height="44"><b>YH Physique-Chimie</b></div>
+      <p>Ressources gratuites de physique-chimie par Pr. Youness HAFIDI, professeur au cycle secondaire.</p></div>
+    <nav aria-label="Niveaux"><h3>Niveaux</h3><a href="/niveau/2ac/">2AC</a><a href="/niveau/3ac/">3AC</a><a href="/niveau/tc/">Tronc commun</a><a href="/niveau/1bac/">1BAC (bientôt)</a><a href="/niveau/2bac/">2BAC (bientôt)</a></nav>
+    <nav aria-label="Site"><h3>Le site</h3><a href="/lecons/">Toutes les leçons</a><a href="/simulations/">Simulations</a><a href="/a-propos/">À propos</a><a href="/contact/">Contact</a></nav>
+    <div><h3>Contact</h3><a href="https://wa.me/212694194880" target="_blank" rel="noopener">WhatsApp : 06 94 19 48 80</a><a href="https://www.facebook.com/profile.php?id=61596309328709" target="_blank" rel="noopener">Facebook</a><a href="https://www.linkedin.com/in/youness-hafidi" target="_blank" rel="noopener">LinkedIn</a></div>
+  </div>
+  <div class="wrap fbot">© Pr. Youness HAFIDI — Consultation en ligne uniquement · Reproduction interdite sans autorisation</div>
+</footer>
+
+<a class="wa-float" href="https://wa.me/212694194880" target="_blank" rel="noopener" aria-label="Discuter sur WhatsApp">
+  <svg width="30" height="30" viewBox="0 0 24 24" fill="#fff"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.4-.7-2.8-1.1-4.6-4-4.8-4.2-.1-.2-1.1-1.5-1.1-2.9s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.3.5-.4.4c-.1.1-.3.3-.1.6.2.3.7 1.2 1.6 2 1.1 1 2 1.3 2.3 1.4.3.1.4.1.6-.1l.8-1c.2-.3.4-.2.6-.1l1.9.9c.3.1.5.2.5.3.1.2.1.7-.1 1.3Z"/></svg>
+</a>
+
+<div class="viewer" id="viewer" role="dialog" aria-modal="true" aria-labelledby="vTitle">
+  <div class="vbar">
+    <h3 id="vTitle"></h3>
+    <span class="lock">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+      Lecture seule — téléchargement désactivé
+    </span>
+    <button class="vclose" id="vClose">Fermer</button>
+  </div>
+  <div class="vbody" id="vBody"></div>
+</div>
+
+<script>
+const LEVELS = [
+  {id:"1ac",  label:"1re année collège",      short:"1AC"},
+  {id:"2ac",  label:"2e année collège",       short:"2AC"},
+  {id:"3ac",  label:"3e année collège",       short:"3AC"},
+  {id:"tc",   label:"Tronc commun scientifique", short:"TCS"},
+  {id:"1bac", label:"1re année Baccalauréat", short:"1BAC"},
+  {id:"2bac", label:"2e année Baccalauréat",  short:"2BAC"},
+];
+const TYPES = {cours:"Cours", exo:"Série", corrige:"Corrigé", video:"Vidéo", controle:"Devoir surveillé"};
+const PROG = {"2ac": ["L'air qui nous entoure", "Les molécules et les atomes", "Les combustions"], "3ac": ["Les matériaux dans la vie quotidienne", "Les atomes et les ions", "Réaction de quelques matériaux avec l'air"], "tc": ["La gravitation universelle", "Exemples d'actions mécaniques", "Les espèces chimiques", "Extraction, séparation et identification", "Révision — Devoir n°1"]};
+function progOrder(niv,u){ const l=PROG[niv]||[]; const i=l.findIndex(x=>nrm(x)===nrm(u)); return i>=0? i+1 : (/^contr/i.test(nrm(u))?90:50); }
+const MATIERES = {phys:"Physique", chim:"Chimie", pc:"Physique-Chimie"};
+const WATERMARK = "Pr. Youness HAFIDI · 06 94 19 48 80";
+const MAX = 20 * 1024 * 1024;
+
+const state = {level:"all", type:"all", q:"", items:[], loaded:false, error:"", canEdit:false};
+let db = null, assets = null;
+const $ = s => document.querySelector(s);
+const src = it => it.url ? (/^(https?:|\/)/.test(it.url) ? it.url : "/"+it.url) : ("/_blob/" + it.assetId);
+/* Statistiques maison (Google Sheet « Statistiques YH ») */
+const STATS_URL = "https://script.google.com/macros/s/AKfycbxta1pz0xrqrIa9RiENIXd_CQwiQpkvcwtm_sWBH15-UfBTCN4clgsdmtc3HXZtXh4I/exec";
+const STATS = (()=>{
+  let vid="", nouveau=false;
+  try{ vid=localStorage.getItem("yh_vid")||""; if(!vid){ vid=Math.random().toString(36).slice(2,10)+Date.now().toString(36); localStorage.setItem("yh_vid",vid); nouveau=true; } }catch(e){ vid="anon"; }
+  const q=new URLSearchParams(location.search);
+  let src=q.get("utm_source")||"";
+  if(!src){ try{ const h=document.referrer?new URL(document.referrer).hostname:""; src = !h||h===location.hostname ? "direct" : h; }catch(e){ src="direct"; } }
+  src=src.toLowerCase();
+  if(/facebook|fb\.|m\.facebook|l\.facebook|lm\.facebook/.test(src)) src="facebook";
+  else if(/whatsapp|wa\.me/.test(src)) src="whatsapp";
+  else if(/google\./.test(src)) src="google";
+  else if(/instagram/.test(src)) src="instagram";
+  else if(/youtube/.test(src)) src="youtube";
+  else if(/bing|yahoo|duckduckgo/.test(src)) src="autre moteur";
+  const ua=navigator.userAgent;
+  const dev=/iPad|Tablet/i.test(ua)?"tablette":/Mobi|Android|iPhone/i.test(ua)?"téléphone":"ordinateur";
+  const br=/Edg\//.test(ua)?"Edge":/OPR\/|Opera/.test(ua)?"Opera":/SamsungBrowser/.test(ua)?"Samsung":/Firefox/.test(ua)?"Firefox":/Chrome/.test(ua)?"Chrome":/Safari/.test(ua)?"Safari":"autre";
+  function send(ev,extra){
+    if(!STATS_URL) return;
+    const body=JSON.stringify(Object.assign({ev,vid,src,dev,br,nouveau},extra||{}));
+    try{ if(navigator.sendBeacon && navigator.sendBeacon(STATS_URL,new Blob([body],{type:"text/plain;charset=utf-8"}))) return; }catch(e){}
+    try{ fetch(STATS_URL,{method:"POST",mode:"no-cors",body,headers:{"Content-Type":"text/plain;charset=utf-8"},keepalive:true}); }catch(e){}
+  }
+  try{ if(!sessionStorage.getItem("yh_vu")){ sessionStorage.setItem("yh_vu","1"); send("visite"); } }catch(e){ send("visite"); }
+  return {send};
+})();
+function track(name, params){
+  try{ if(window.gtag) gtag('event', name, params||{}); }catch(e){}
+  try{ STATS.send(name, Object.assign({}, params||{}, {type:(params||{}).type_document||''})); }catch(e){}
+}
+let LESSON_PAGES = {};
+const nrm = x => (x||"").toString().trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+function lessonPage(niv, unite){
+  for(const k in LESSON_PAGES){ const [n,u]=k.split("|"); if(n===niv && nrm(u)===nrm(unite)) return LESSON_PAGES[k]; }
+  return "";
+}
+const LEVEL_NAME = id => (LEVELS.find(l=>l.id===id)||{}).short || id;
+
+const ICONS = {
+  cours:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h11l5 5v11H4z"/><path d="M15 4v5h5M8 13h8M8 17h6"/></svg>',
+  exo:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>',
+  corrige:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 4h6v3H9z"/><path d="M6 6H5v15h14V6h-1"/><path d="m8.5 14 2 2 4-4"/></svg>',
+  controle:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>',
+  video:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="m10 9 5 3-5 3z" fill="currentColor"/></svg>',
+  trash:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg>'
+};
+
+/* ---------- Filtres ---------- */
+function renderLevels(){
+  const nav = $("#levels");
+  nav.innerHTML = "";
+  [{id:"all", short:"Tous les niveaux"}, ...LEVELS].forEach(l=>{
+    const b = document.createElement("button");
+    b.className = "chip"; b.textContent = l.short;
+    if(l.id!=="all" && state.loaded && !state.items.some(it=>it.niveau===l.id)){ const k=document.createElement("small"); k.className="soon"; k.textContent="Bientôt"; b.appendChild(k); }
+    b.setAttribute("aria-pressed", state.level===l.id);
+    b.onclick = ()=>{ track('choix_niveau', {niveau: l.short}); state.level = l.id; location.hash = l.id==="all" ? "cours" : "niveau-"+l.id; renderLevels(); renderList(); };
+    nav.appendChild(b);
+  });
+  const s = document.createElement("a"); s.className="chip chip-sout"; s.href="#soutien"; s.textContent="★ Cours de soutien";
+  nav.appendChild(s);
+}
+$("#typeSeg").addEventListener("click", e=>{
+  const b = e.target.closest("button"); if(!b) return;
+  state.type = b.dataset.t;
+  document.querySelectorAll("#typeSeg button").forEach(x=>x.setAttribute("aria-pressed", x===b));
+  renderList();
+});
+$("#search").addEventListener("input", e=>{ state.q = e.target.value.trim().toLowerCase(); renderList(); });
+function readHash(){
+  const m = location.hash.replace("#","").match(/^niveau-(\w+)$/);
+  state.level = (m && LEVELS.some(l=>l.id===m[1])) ? m[1] : "all";
+}
+window.addEventListener("hashchange", ()=>{ readHash(); renderLevels(); renderList(); });
+
+/* ---------- Liste ---------- */
+function renderList(){
+  const list = $("#list");
+  list.innerHTML = "";
+  if(!state.loaded){
+    list.innerHTML = '<div class="empty"><h3>'+(state.error ? "Contenu indisponible" : "Chargement des cours…")+'</h3><p>'+(state.error||"")+'</p></div>';
+    return;
+  }
+  const items = state.items.filter(it =>
+    (state.level==="all" || it.niveau===state.level) &&
+    (state.type==="all" || it.type===state.type) &&
+    (!state.q || (it.titre+" "+(it.unite||"")+" "+(it.description||"")+" "+(it.sousType||"")).toLowerCase().includes(state.q))
+  );
+  if(state.level!=="all" && !state.items.some(it=>it.niveau===state.level)){
+    const L = LEVELS.find(l=>l.id===state.level);
+    const box = document.createElement("div"); box.className="empty soonbox";
+    box.innerHTML = '<div class="soon-ic">⏳</div><h3>'+L.short+' — '+L.label+' : bientôt disponible</h3><p>Les séries et corrigés de ce niveau arrivent très prochainement. Pour un cours de soutien dès maintenant : <a href="https://wa.me/212694194880" target="_blank" rel="noopener">WhatsApp 06 94 19 48 80</a></p>';
+    list.appendChild(box); return;
+  }
+  if(!items.length){
+    const box = document.createElement("div"); box.className="empty";
+    box.innerHTML = state.items.length
+      ? "<h3>Aucun résultat</h3><p>Essayez un autre niveau, un autre type ou une autre recherche.</p>"
+      : "<h3>Aucune ressource pour l'instant</h3><p>Les cours et vidéos apparaîtront ici dès leur publication.</p>";
+    list.appendChild(box); return;
+  }
+  LEVELS.forEach(l=>{
+    const group = items.filter(it=>it.niveau===l.id);
+    if(!group.length) return;
+    const sec = document.createElement("section"); sec.className="level"; sec.id = "lvl-"+l.id;
+    const head = document.createElement("div"); head.className="level-head";
+    const code = document.createElement("span"); code.className="code"; code.textContent=l.short;
+    const h2 = document.createElement("h2"); h2.textContent = l.label;
+    const cnt = document.createElement("span"); cnt.className="cnt"; cnt.textContent = group.length+" ressource"+(group.length>1?"s":"");
+    head.append(code,h2,cnt); sec.appendChild(head);
+
+    const units = new Map();
+    group.forEach(it=>{
+      const k = it.unite || "Autres ressources";
+      if(!units.has(k)) units.set(k, {name:k, ord: progOrder(l.id,k), mat: it.matiere, items:[]});
+      const u = units.get(k); u.items.push(it);
+    });
+    [...units.values()].sort((a,b)=>a.ord-b.ord || a.name.localeCompare(b.name)).forEach(u=>{
+      const ud = document.createElement("div"); ud.className="unit";
+      const h3 = document.createElement("h3");
+      h3.append(document.createTextNode(u.name));
+      if(MATIERES[u.mat]){ const m=document.createElement("span"); m.className="mat "+u.mat; m.textContent=MATIERES[u.mat]; h3.appendChild(m); }
+      const pg = lessonPage(l.id, u.name);
+      if(pg){ const a=document.createElement("a"); a.className="pl"; a.href=pg; a.textContent="Page de la leçon →"; h3.appendChild(a); }
+      const grid = document.createElement("div"); grid.className="grid";
+      const rank = {cours:0, video:1, controle:2, exo:2, corrige:3};
+      u.items.sort((a,b)=> /^contr/i.test(nrm(u.name)) ? (a.ordre??0)-(b.ordre??0) : ((rank[a.type]??9)-(rank[b.type]??9) || (a.ordre??a.createdAt)-(b.ordre??b.createdAt)))
+        .forEach(it=> grid.appendChild(card(it)));
+      ud.append(h3,grid); sec.appendChild(ud);
+    });
+    list.appendChild(sec);
+  });
+}
+function card(it){
+  const c = document.createElement("div");
+  c.className="card"; c.tabIndex=0; c.setAttribute("role","button");
+  const ic = document.createElement("div"); ic.className="icon "+it.type; ic.innerHTML = ICONS[it.type]||ICONS.cours;
+  const txt = document.createElement("div"); txt.className="txt";
+  const h4 = document.createElement("h4"); h4.textContent = it.titre;
+  const sub = document.createElement("div"); sub.className="sub"; sub.textContent = it.sousType || TYPES[it.type] || "";
+  txt.append(h4, sub);
+  if(it.description){ const p=document.createElement("p"); p.textContent=it.description; txt.appendChild(p); }
+  c.append(ic, txt);
+  const sh = document.createElement("a"); sh.className="shr"; sh.target="_blank"; sh.rel="noopener";
+  sh.title="Partager sur WhatsApp"; sh.setAttribute("aria-label","Partager sur WhatsApp");
+  const link = location.origin + (lessonPage(it.niveau, it.unite) || ("/?doc="+encodeURIComponent(it.url||"")));
+  sh.href = "https://wa.me/?text="+encodeURIComponent("📚 "+it.titre+" ("+LEVEL_NAME(it.niveau)+") – en ligne : "+link);
+  sh.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.4-.7-2.8-1.1-4.6-4-4.8-4.2-.1-.2-1.1-1.5-1.1-2.9s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.3.5-.4.4c-.1.1-.3.3-.1.6.2.3.7 1.2 1.6 2 1.1 1 2 1.3 2.3 1.4.3.1.4.1.6-.1l.8-1c.2-.3.4-.2.6-.1l1.9.9c.3.1.5.2.5.3.1.2.1.7-.1 1.3Z"/></svg>';
+  sh.onclick = e=>{ e.stopPropagation(); track('partage_whatsapp', {titre: it.titre, niveau: LEVEL_NAME(it.niveau)}); };
+  c.appendChild(sh);
+  if(false){
+    const d = document.createElement("button"); d.className="del"; d.title="Supprimer"; d.setAttribute("aria-label","Supprimer"); d.innerHTML=ICONS.trash;
+    d.onclick = e=>{ e.stopPropagation(); askDelete(it, d); };
+    c.appendChild(d);
+  }
+  c.onclick = ()=> openViewer(it);
+  c.onkeydown = e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); openViewer(it);} };
+  return c;
+}
+function askDelete(it, btn){
+  if(btn.dataset.armed){
+    btn.disabled = true;
+    (async()=>{
+      try{
+        await db.doc("ressources/"+it.id).delete();
+        if(assets && it.assetId){ try{ await assets.delete(it.assetId); }catch(e){} }
+      }catch(e){ btn.disabled=false; btn.title="Échec de la suppression"; }
+    })();
+    return;
+  }
+  btn.dataset.armed = "1"; btn.style.background="#c0392b"; btn.style.color="#fff"; btn.title="Toucher encore pour confirmer";
+  setTimeout(()=>{ delete btn.dataset.armed; btn.style.background=""; btn.style.color=""; btn.title="Supprimer"; }, 2500);
+}
+
+/* ---------- Lecteur protégé ---------- */
+let blobUrl = null, renderToken = 0;
+function wm(){ const w=document.createElement("div"); w.className="wm"; const s=document.createElement("span"); s.textContent=WATERMARK; w.appendChild(s); return w; }
+async function openViewer(it){
+  const token = ++renderToken;
+  track('ouverture_document', {titre: it.titre, niveau: LEVEL_NAME(it.niveau), type_document: TYPES[it.type]||it.type, lecon: it.unite||''});
+  $("#vTitle").textContent = it.titre;
+  const body = $("#vBody"); body.innerHTML = '<div class="vload">Chargement…</div>';
+  $("#viewer").classList.add("open"); document.body.style.overflow="hidden";
+  const u = src(it);
+  const drive = u.match(/drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?(?:export=\w+&)?id=)([\w-]+)/);
+  const yt = u.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([\w-]{6,})/);
+  if(drive || yt){
+    body.innerHTML = "";
+    const box = document.createElement("div"); box.className = "embed" + (yt ? " yt" : "");
+    const fr = document.createElement("iframe");
+    fr.src = drive ? "https://drive.google.com/file/d/"+drive[1]+"/preview" : "https://www.youtube-nocookie.com/embed/"+yt[1]+"?rel=0&modestbranding=1";
+    fr.allow = "autoplay; encrypted-media; fullscreen"; fr.allowFullscreen = true;
+    box.appendChild(fr);
+    if(drive){ const sh=document.createElement("div"); sh.className="shield"; box.appendChild(sh); }
+    body.appendChild(box);
+    return;
+  }
+  try{
+    const res = await fetch(u);
+    if(!res.ok) throw new Error("http "+res.status);
+    if(it.type==="video"){
+      const blob = await res.blob();
+      if(token!==renderToken) return;
+      blobUrl = URL.createObjectURL(blob);
+      body.innerHTML = "";
+      const box = document.createElement("div"); box.className="vidbox";
+      const v = document.createElement("video");
+      v.controls = true; v.playsInline = true; v.preload = "metadata";
+      v.setAttribute("controlsList","nodownload noremoteplayback");
+      v.disablePictureInPicture = true; v.disableRemotePlayback = true;
+      v.src = blobUrl;
+      box.append(v, wm()); body.appendChild(box);
+    } else {
+      const buf = await res.arrayBuffer();
+      if(token!==renderToken) return;
+      const lib = window.pdfjsLib;
+      if(!lib) throw new Error("pdf.js");
+      lib.GlobalWorkerOptions.workerSrc = "/js/pdf.worker.min.js";
+      const pdf = await lib.getDocument({data:buf, isEvalSupported:false}).promise;
+      body.innerHTML = "";
+      const wrap = document.createElement("div"); wrap.className="pages"; body.appendChild(wrap);
+      const width = Math.min(960, body.clientWidth - 24);
+      const dpr = Math.min(window.devicePixelRatio||1, 2);
+      for(let n=1; n<=pdf.numPages; n++){
+        if(token!==renderToken) return;
+        const page = await pdf.getPage(n);
+        const base = page.getViewport({scale:1});
+        const vp = page.getViewport({scale:(width/base.width)*dpr});
+        const box = document.createElement("div"); box.className="pagebox";
+        const cv = document.createElement("canvas"); cv.width = vp.width; cv.height = vp.height;
+        box.append(cv, wm()); wrap.appendChild(box);
+        await page.render({canvasContext:cv.getContext("2d"), viewport:vp}).promise;
+      }
+    }
+  }catch(e){
+    if(token===renderToken) body.innerHTML = '<div class="vload">Impossible d\'ouvrir ce fichier pour le moment.</div>';
+  }
+}
+function closeViewer(){
+  renderToken++;
+  $("#viewer").classList.remove("open"); document.body.style.overflow="";
+  $("#vBody").innerHTML = "";
+  if(blobUrl){ URL.revokeObjectURL(blobUrl); blobUrl=null; }
+}
+$("#vClose").onclick = closeViewer;
+document.addEventListener("keydown", e=>{
+  if(e.key==="Escape" && $("#viewer").classList.contains("open")) closeViewer();
+  const k = e.key.toLowerCase();
+  if((e.ctrlKey||e.metaKey) && (k==="s"||k==="p"||(k==="c" && $("#viewer").classList.contains("open")))) e.preventDefault();
+});
+["contextmenu","dragstart","selectstart","copy"].forEach(ev=> $("#vBody").addEventListener(ev, e=> e.preventDefault()));
+document.addEventListener("contextmenu", e=>{ if(e.target.closest("video,canvas,.viewer,.flyer,.banner,.logo")) e.preventDefault(); });
+
+/* ---------- Affiche soutien FR / AR ---------- */
+document.querySelector(".langs")?.addEventListener("click", e=>{
+  const b = e.target.closest("button"); if(!b) return;
+  document.querySelectorAll(".langs button").forEach(x=>x.setAttribute("aria-pressed", x===b));
+  $("#flyerImg").src = b.dataset.l==="ar" ? "/soutien_ar.jpg" : "/soutien_fr.jpg";
+});
+
+document.addEventListener('click', e=>{
+  const a = e.target.closest('a[href]'); if(!a) return;
+  const h = a.getAttribute('href');
+  const canal = h.includes('wa.me') ? 'WhatsApp' : h.startsWith('tel:') ? 'Téléphone' : h.includes('facebook.com') ? 'Facebook' : null;
+  if(canal) track('clic_contact', {canal, emplacement: a.closest('.soutien') ? 'soutien' : a.classList.contains('wa-float') ? 'bouton_flottant' : 'entete'});
+});
+/* ---------- Démarrage ---------- */
+/* Lien CSV du Google Sheet publié (Fichier → Partager → Publier sur le Web → CSV). Vide = catalogue.json */
+const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vR719MSv0H2Gjchf9Id3GXEXwcX_G-0EhbAbhYcrYbO2kmYrNVYjAcchKE928Y0c2YcjDNRYTT-Rltf/pub?gid=1662435983&single=true&output=csv";
+
+function parseCSV(t){
+  const rows=[]; let row=[], f="", q=false;
+  for(let i=0;i<t.length;i++){
+    const c=t[i];
+    if(q){ if(c=='"'){ if(t[i+1]=='"'){ f+='"'; i++; } else q=false; } else f+=c; }
+    else if(c=='"') q=true;
+    else if(c==','){ row.push(f); f=""; }
+    else if(c=='\n'||c=='\r'){ if(c=='\r'&&t[i+1]=='\n') i++; row.push(f); rows.push(row); row=[]; f=""; }
+    else f+=c;
+  }
+  if(f!==""||row.length){ row.push(f); rows.push(row); }
+  return rows;
+}
+const norm = x => (x||"").toString().trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/\s+/g," ");
+function fromSheet(text){
+  const rows = parseCSV(text).filter(r=>r.some(c=>c.trim()));
+  if(!rows.length) return [];
+  const head = rows[0].map(norm);
+  const col = n => head.indexOf(n);
+  const ci = {niv:col("niveau"), mat:col("matiere"), lec:col("lecon"), typ:col("type"), fmt:col("format"), tit:col("titre"), lien:col("lien"), desc:col("description")};
+  const NIV = {"1ac":"1ac","1apic":"1ac","2ac":"2ac","2apic":"2ac","3ac":"3ac","3apic":"3ac","tcs":"tc","tc":"tc","tcsf":"tc","tronc commun":"tc","1bac":"1bac","2bac":"2bac"};
+  const MAT = {"physique":"phys","chimie":"chim","physique-chimie":"pc"};
+  const TYP = {"cours":"cours","serie":"exo","series":"exo","exercices":"exo","corrige":"corrige","correction":"corrige","video":"video"};
+  const lessonOrder = {};
+  const out = [];
+  rows.slice(1).forEach((r,i)=>{
+    const g = k => ci[k]>=0 ? (r[ci[k]]||"").trim() : "";
+    const niveau = NIV[norm(g("niv")).replace(/\s/g,"")] || NIV[norm(g("niv"))];
+    const url = g("lien"), titre = g("tit");
+    if(!niveau || !url || !titre) return;
+    const unite = g("lec") || "Autres ressources";
+    const key = niveau+"|"+unite;
+    if(!(key in lessonOrder)) lessonOrder[key] = Object.keys(lessonOrder).length+1;
+    out.push({id:"s"+i, niveau, unite, ordreUnite:lessonOrder[key], ordre:i,
+      matiere: MAT[norm(g("mat"))] || "pc", type: TYP[norm(g("typ"))] || "cours",
+      sousType: g("fmt"), titre, url, description: g("desc")});
+  });
+  return out;
+}
+async function start(){
+  readHash(); renderLevels(); renderList();
+  try{ LESSON_PAGES = await (await fetch("/lecons/index.json",{cache:"no-cache"})).json(); }catch(e){}
+  try{
+    if(SHEET_CSV_URL){
+      try{
+        const r = await fetch(SHEET_CSV_URL + (SHEET_CSV_URL.includes("?")?"&":"?") + "t=" + Date.now());
+        if(!r.ok) throw 0;
+        state.items = fromSheet(await r.text());
+        if(!state.items.length) throw 0;
+        state.loaded = true;
+      }catch(e){ state.items = []; }
+    }
+    if(!state.loaded){
+      const r = await fetch("/catalogue.json", {cache:"no-cache"});
+      state.items = await r.json(); state.loaded = true;
+    }
+    try{ const ex = await (await fetch("/extras.json",{cache:"no-cache"})).json();
+      const have = new Set(state.items.map(i=>i.url)); ex.forEach(e=>{ if(!have.has(e.url)) state.items.push(e); }); }catch(e){}
+  }catch(e){ state.error = "Le contenu n'est pas accessible pour le moment."; }
+  renderLevels(); renderList();
+  const doc = new URLSearchParams(location.search).get("doc");
+  if(doc){ const it = state.items.find(x=>x.url===doc); if(it){ openViewer(it); } }
+}
+function showRes(){ ['contenu','list','resbar'].forEach(i=>{const e=document.getElementById(i); if(e) e.hidden=false;}); }
+function goSearch(q){ showRes(); q=(q||'').trim(); const i=document.getElementById('search'); i.value=q; state.q=q.toLowerCase(); state.level='all'; renderLevels(); renderList();
+  document.getElementById('contenu').scrollIntoView({behavior:'smooth'}); setTimeout(()=>document.getElementById('contenu').focus({preventScroll:true}),400); try{gtag('event','recherche_accueil',{q})}catch(e){} }
+function setType(t){ showRes(); state.type=t; document.querySelectorAll('#typeSeg button').forEach(x=>x.setAttribute('aria-pressed', x.dataset.t===t)); renderList(); }
+start();
+</script>
+</body>
+</html>
