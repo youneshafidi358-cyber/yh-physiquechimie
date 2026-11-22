@@ -100,6 +100,26 @@ function bars(list, total, color){
 }
 const LABEL_SRC = {facebook:"Facebook",whatsapp:"WhatsApp",google:"Google",direct:"Lien direct / favori",instagram:"Instagram",youtube:"YouTube"};
 
+const villeAvis = r => (r.type && String(r.type).startsWith("/")) ? "" : (r.canal||"");
+function villesHtml(rows){
+  const vis=rows.filter(r=>r.ev==="visite");
+  const avecV=vis.filter(r=>r.canal);
+  if(!avecV.length) return '<div class="empty">Pas encore de données : la ville est enregistrée à partir de maintenant, à chaque nouvelle visite.</div>';
+  const m={}; avecV.forEach(r=>{ const k=r.canal; const x=m[k]||(m[k]={reg:r.type||"",n:0,v:new Set()}); x.n++; x.v.add(r.vid); });
+  const l=Object.entries(m).sort((a,b)=>b[1].v.size-a[1].v.size).slice(0,25);
+  const tot=avecV.length;
+  return '<table><tr><th>#</th><th>Ville</th><th>Région</th><th style="text-align:right">Visiteurs</th><th style="text-align:right">Visites</th><th style="text-align:right">Part</th></tr>'+
+    l.map(([k,x],i)=>`<tr><td>${i+1}</td><td><b>${esc(k)}</b></td><td style="color:#565f74">${esc(x.reg)}</td><td class="n">${x.v.size}</td><td class="n">${x.n}</td><td class="n">${Math.round(x.n*100/tot)} %</td></tr>`).join("")+'</table>'+
+    (vis.length>avecV.length?`<div style="color:#565f74;font-size:12.5px;margin-top:6px">${vis.length-avecV.length} visite(s) sans ville (anciennes visites ou position inconnue).</div>`:'');
+}
+function avisVillesHtml(rows){
+  const last={}; rows.filter(r=>r.ev==="avis"&&+r.niveau>=1&&+r.niveau<=5).forEach(r=>{ last[r.vid]=r; });
+  const m={}; Object.values(last).forEach(r=>{ const v=villeAvis(r); if(!v) return; const x=m[v]||(m[v]={n:0,s:0}); x.n++; x.s+= +r.niveau; });
+  const l=Object.entries(m).sort((a,b)=>b[1].n-a[1].n);
+  if(!l.length) return "";
+  return '<h3 style="font-size:15px;margin:16px 0 8px">📍 Avis par ville</h3><table><tr><th>Ville</th><th style="text-align:right">Avis</th><th style="text-align:right">Moyenne</th></tr>'+
+    l.map(([k,x])=>`<tr><td><b>${esc(k)}</b></td><td class="n">${x.n}</td><td class="n">${(x.s/x.n).toFixed(1).replace(".",",")} ★</td></tr>`).join("")+'</table>';
+}
 function avisHtml(rows){
   const av=rows.filter(r=>r.ev==="avis"&&+r.niveau>=1&&+r.niveau<=5);
   if(!av.length) return '<div class="empty">Pas encore d\'avis sur cette période.</div>';
@@ -108,7 +128,7 @@ function avisHtml(rows){
   const dist=[5,4,3,2,1].map(n=>[n+" ★",uniq.filter(r=>+r.niveau===n).length]);
   const com=uniq.filter(r=>r.titre).sort((a,b)=>b.t-a.t).slice(0,30);
   return `<div style="display:flex;gap:24px;flex-wrap:wrap;align-items:center"><div style="text-align:center"><div style="font-size:44px;font-weight:800;color:#0f2350">${moy.toFixed(1).replace(".",",")}</div><div style="color:#f5b400;font-size:22px">${"★".repeat(Math.round(moy))}${"☆".repeat(5-Math.round(moy))}</div><div style="color:#565f74;font-size:13px">${uniq.length} visiteur${uniq.length>1?"s":""}</div></div><div style="flex:1;min-width:220px">${bars(dist,uniq.length,"#f5b400")}</div></div>`+
-   (com.length?'<h3 style="font-size:15px;margin:16px 0 8px">Derniers commentaires</h3>'+com.map(r=>`<div style="border-top:1px solid #e8edf6;padding:8px 0"><b style="color:#f5b400">${"★".repeat(+r.niveau)}</b> <span style="color:#565f74;font-size:12.5px">${new Date(r.t).toLocaleDateString("fr-FR")} · ${esc(r.type||"")}</span><div>${esc(r.titre)}</div></div>`).join(""):'');
+   (com.length?'<h3 style="font-size:15px;margin:16px 0 8px">Derniers commentaires</h3>'+com.map(r=>`<div style="border-top:1px solid #e8edf6;padding:8px 0"><b style="color:#f5b400">${"★".repeat(+r.niveau)}</b> <span style="color:#565f74;font-size:12.5px">${new Date(r.t).toLocaleDateString("fr-FR")}${villeAvis(r)?" · 📍 "+esc(villeAvis(r)):""}</span><div>${esc(r.titre)}</div></div>`).join(""):'')+avisVillesHtml(rows);
 }
 function hms(sec){ sec=Math.round(sec); if(sec<60) return sec+" s"; const m=Math.floor(sec/60), h=Math.floor(m/60); return h? h+" h "+String(m%60).padStart(2,"0")+" min" : m+" min "+String(sec%60).padStart(2,"0")+" s"; }
 function dureeHtml(durs){
@@ -154,6 +174,7 @@ function render(){
     </div>
     <div class="grid">
       <div class="box full"><h2>⭐ Avis et commentaires des visiteurs</h2>${avisHtml(rows)}</div>
+      <div class="box full"><h2>📍 Villes des visiteurs</h2>${villesHtml(rows)}</div>
       <div class="box full"><h2>Visites par jour</h2><div style="height:230px"><canvas id="cDays"></canvas></div></div>
       <div class="box"><h2>D'où viennent les visiteurs</h2><div style="height:220px"><canvas id="cSrc"></canvas></div><div id="lSrc" style="margin-top:12px"></div></div>
       <div class="box"><h2>Appareils</h2><div style="height:220px"><canvas id="cDev"></canvas></div><div id="lDev" style="margin-top:12px"></div></div>

@@ -35,9 +35,11 @@
   fab.setAttribute("aria-haspopup", "dialog");
   document.body.appendChild(fab);
 
+  var GEO = { ville: "", region: "" };
+  try { fetch("/api/geo").then(function (r) { return r.json(); }).then(function (g) { if (g) GEO = g; }).catch(function () {}); } catch (e) {}
   function send(stars, comment) {
     var body = JSON.stringify({ ev: "avis", vid: vid, src: "site", dev: /Mobi|Android|iPhone/i.test(navigator.userAgent) ? "téléphone" : "ordinateur",
-      br: "", niveau: String(stars), titre: (comment || "").slice(0, 150), type: location.pathname, canal: document.title.slice(0, 120), nouveau: 0 });
+      br: "", niveau: String(stars), titre: (comment || "").slice(0, 150), type: GEO.region || "", canal: GEO.ville || "", nouveau: 0 });
     try { fetch("/api/avis", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ vid: vid, note: stars }), keepalive: true }).then(function () { setTimeout(charger, 300); }).catch(function () {}); } catch (e) {}
     try { if (navigator.sendBeacon && navigator.sendBeacon(URL_SCRIPT, new Blob([body], { type: "text/plain;charset=utf-8" }))) return; } catch (e) {}
     try { fetch(URL_SCRIPT, { method: "POST", mode: "no-cors", body: body, headers: { "Content-Type": "text/plain;charset=utf-8" }, keepalive: true }); } catch (e) {}
