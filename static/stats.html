@@ -87,6 +87,8 @@ async function load(cle){
     ROWS = (d.lignes||[]).map(r=>({t:+r[0],ev:r[1],vid:r[2],src:r[3]||"direct",dev:r[4]||"?",br:r[5]||"?",niveau:r[6],titre:r[7],type:r[8],canal:r[9],nouveau:+r[10]===1}));
     /* Reprise des notes enregistrées dans le Google Sheet vers la note publique du site */
     try{ const last={}; ROWS.forEach(r=>{ const n=+r.niveau; if(r.ev==="avis"&&n>=1&&n<=5&&r.vid&&(!last[r.vid]||last[r.vid].t<r.t)) last[r.vid]={vid:r.vid,note:n,t:r.t,c:r.titre||"",v:villeAvis(r)}; });
+      /* commentaire : le plus récent non vide de chaque visiteur */
+      ROWS.filter(r=>r.ev==="avis"&&r.titre&&last[r.vid]).sort((a,b)=>a.t-b.t).forEach(r=>{ last[r.vid].c=r.titre; });
       const imp=Object.values(last); if(imp.length) fetch("/api/avis",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({import:imp})}).catch(()=>{}); }catch(e){}
     render();
   }catch(e){ loginView("Impossible de charger les données. Vérifiez votre connexion."); }

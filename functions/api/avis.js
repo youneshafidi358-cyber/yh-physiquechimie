@@ -19,7 +19,7 @@ async function bilan(kv) {
     if (l.list_complete) break; cur = l.cursor;
   }
   coms.sort((a, b) => b.t - a.t);
-  return { moyenne: n ? Math.round((tot / n) * 10) / 10 : 0, nombre: n, repartition: rep, commentaires: coms.slice(0, 30) };
+  return { moyenne: n ? Math.round((tot / n) * 10) / 10 : 0, nombre: n, repartition: rep, commentaires: coms.slice(0, 200) };
 }
 
 export async function onRequestGet({ env, request, waitUntil }) {
@@ -41,7 +41,11 @@ export async function onRequestPost({ env, request }) {
       const v = String(it.vid || "").replace(/[^\w-]/g, "").slice(0, 40), n = +it.note, t = +it.t || 0, c = propre(it.c), vi = String(it.v || "").slice(0, 40);
       if (!v || !(n >= 1 && n <= 5)) continue;
       const ex = await env.ABONNES.getWithMetadata("a:" + v);
-      if (ex && ex.metadata && +ex.metadata.t >= t) continue;
+      if (ex && ex.metadata && +ex.metadata.t >= t) {
+        // La note du site est plus récente : on garde sa note mais on récupère le commentaire s'il lui manque
+        if (c && ex.metadata.c !== c) { await env.ABONNES.put("a:" + v, String(ex.metadata.n), { metadata: Object.assign({}, ex.metadata, { c, v: ex.metadata.v || vi }) }); k++; }
+        continue;
+      }
       await env.ABONNES.put("a:" + v, String(n), { metadata: { n, t, c, v: vi } }); k++;
     }
     try { await caches.default.delete(new Request(new URL("/api/avis?v=1", request.url).toString())); } catch (_) {}
