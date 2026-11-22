@@ -85,6 +85,9 @@ async function load(cle){
     const d = await r.json();
     if(d.erreur){ try{localStorage.removeItem("yh_stats_cle");}catch(_){} return loginView("Code incorrect."); }
     ROWS = (d.lignes||[]).map(r=>({t:+r[0],ev:r[1],vid:r[2],src:r[3]||"direct",dev:r[4]||"?",br:r[5]||"?",niveau:r[6],titre:r[7],type:r[8],canal:r[9],nouveau:+r[10]===1}));
+    /* Reprise des notes enregistrées dans le Google Sheet vers la note publique du site */
+    try{ const last={}; ROWS.forEach(r=>{ const n=+r.niveau; if(r.ev==="avis"&&n>=1&&n<=5&&r.vid&&(!last[r.vid]||last[r.vid].t<r.t)) last[r.vid]={vid:r.vid,note:n,t:r.t}; });
+      const imp=Object.values(last); if(imp.length) fetch("/api/avis",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({import:imp})}).catch(()=>{}); }catch(e){}
     render();
   }catch(e){ loginView("Impossible de charger les données. Vérifiez votre connexion."); }
 }

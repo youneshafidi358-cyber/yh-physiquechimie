@@ -25,6 +25,19 @@ export async function onRequestGet({ env, request, waitUntil }) {
 export async function onRequestPost({ env, request }) {
   if (!env.ABONNES) return J({ ok: false }, 503);
   const d = await request.json().catch(() => null);
+  // Reprise des anciennes notes du Google Sheet (envoyées par la page Statistiques) : on garde la plus récente par visiteur
+  if (d && Array.isArray(d.import)) {
+    let k = 0;
+    for (const it of d.import.slice(0, 500)) {
+      const v = String(it.vid || "").replace(/[^\w-]/g, "").slice(0, 40), n = +it.note, t = +it.t || 0;
+      if (!v || !(n >= 1 && n <= 5)) continue;
+      const ex = await env.ABONNES.getWithMetadata("a:" + v);
+      if (ex && ex.metadata && +ex.metadata.t >= t) continue;
+      await env.ABONNES.put("a:" + v, String(n), { metadata: { n, t } }); k++;
+    }
+    try { await caches.default.delete(new Request(new URL("/api/avis?v=1", request.url).toString())); } catch (_) {}
+    return J({ ok: true, ajoutes: k });
+  }
   const n = d && +d.note, vid = d && String(d.vid || "").replace(/[^\w-]/g, "").slice(0, 40);
   if (!vid || !(n >= 1 && n <= 5)) return J({ ok: false }, 400);
   await env.ABONNES.put("a:" + vid, String(n), { metadata: { n, t: Date.now() } });
