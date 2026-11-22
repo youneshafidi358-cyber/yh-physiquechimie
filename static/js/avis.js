@@ -42,7 +42,7 @@
     try { fetch(URL_SCRIPT, { method: "POST", mode: "no-cors", body: body, headers: { "Content-Type": "text/plain;charset=utf-8" }, keepalive: true }); } catch (e) {}
   }
 
-  function open(auto) {
+  function open(auto, pre) {
     if (document.querySelector(".av-back")) return;
     var last = document.activeElement;
     var back = document.createElement("div"); back.className = "av-back";
@@ -80,34 +80,47 @@
       box.innerHTML = '<div class="av-ok"><div>🙏</div><h2>Merci beaucoup !</h2><p>Ton avis aide à améliorer le site pour tous les élèves.</p><div class="av-row" style="justify-content:center"><button type="button" class="av-send">Fermer</button></div></div>';
       box.querySelector(".av-send").onclick = close; box.querySelector(".av-send").focus();
     };
-    setTimeout(function () { back.querySelector("#av5").focus(); }, 30);
+    if (pre) { var pr = back.querySelector("#av" + pre); pr.checked = true; val = pre; paint(pre); btn.disabled = false; }
+    setTimeout(function () { (pre ? back.querySelector("#avC") : back.querySelector("#av5")).focus(); }, 30);
   }
   fab.addEventListener("click", function () { open(false); });
 
-  /* Note moyenne visible en haut de chaque page */
-  var bcss = ".av-badge{display:inline-flex;align-items:center;gap:6px;margin:0 8px;padding:6px 12px;min-height:36px;border-radius:999px;border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.12);color:#fff;font:700 14px/1 Inter,system-ui,sans-serif;cursor:pointer;white-space:nowrap}" +
-    ".av-badge .s{color:#f5c542;letter-spacing:1px}.av-badge small{font-weight:500;opacity:.85}" +
-    ".av-hero{display:inline-flex;align-items:center;gap:8px;margin-top:12px;padding:8px 14px;border-radius:14px;background:#fff;color:#0f2350;font:700 15px Inter,system-ui,sans-serif;box-shadow:0 4px 14px rgba(15,35,80,.12);border:0;cursor:pointer}" +
-    ".av-hero .s{color:#f5b400;font-size:18px;letter-spacing:1px}.av-hero small{color:#565f74;font-weight:500}" +
-    "@media (max-width:700px){.av-badge small{display:none}.av-badge{margin:0 4px;padding:6px 10px}}";
+  /* Bouton « Noter le site » toujours visible en haut + étoiles cliquables sur l'accueil */
+  var bcss = ".av-badge{display:inline-flex;align-items:center;gap:6px;margin:0 8px;padding:7px 14px;min-height:38px;border-radius:999px;border:0;background:#f5c542;color:#0f2350;font:800 14px/1 Inter,system-ui,sans-serif;cursor:pointer;white-space:nowrap;box-shadow:0 3px 10px rgba(0,0,0,.18)}" +
+    ".av-badge:hover{background:#ffd75e}.av-badge small{font-weight:600;opacity:.8}" +
+    ".av-strip{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:14px;padding:10px 16px;border-radius:14px;background:#fff;color:#0f2350;font:700 15px Inter,system-ui,sans-serif;box-shadow:0 4px 14px rgba(15,35,80,.15);width:fit-content;max-width:100%}" +
+    ".av-strip .st{display:inline-flex}.av-strip .st button{border:0;background:none;padding:0 2px;font-size:30px;line-height:1;color:#c9ced8;cursor:pointer}" +
+    ".av-strip .st button.on{color:#f5b400}.av-strip small{color:#565f74;font-weight:500}" +
+    "@media (max-width:700px){.av-badge small,.av-badge .t{display:none}.av-badge{margin:0 4px;padding:7px 11px}}";
   var bs = document.createElement("style"); bs.textContent = bcss; document.head.appendChild(bs);
-  function stars(m) { var r = Math.round(m), o = ""; for (var i = 1; i <= 5; i++) o += i <= r ? "★" : "☆"; return o; }
+  var top = document.querySelector("header.top .wrap .brand"), badge = null;
+  if (top) {
+    badge = document.createElement("button"); badge.type = "button"; badge.className = "av-badge";
+    badge.setAttribute("aria-haspopup", "dialog"); badge.setAttribute("aria-label", "Noter le site");
+    badge.innerHTML = '★ <span class="t">Noter le site</span>';
+    badge.onclick = function () { open(false); }; top.insertAdjacentElement("afterend", badge);
+  }
+  var hero = document.querySelector(".hero2 .h-cta, .hero2 form, .hero2 h1"), info = null;
+  if (hero) {
+    var strip = document.createElement("div"); strip.className = "av-strip";
+    strip.innerHTML = '<span>Donne ta note au site :</span><span class="st" role="group" aria-label="Choisis une note de 1 à 5 étoiles">' +
+      [1, 2, 3, 4, 5].map(function (n) { return '<button type="button" data-n="' + n + '" aria-label="' + n + ' étoile' + (n > 1 ? "s" : "") + '">★</button>'; }).join("") +
+      '</span><small class="inf"></small>';
+    hero.insertAdjacentElement("afterend", strip); info = strip.querySelector(".inf");
+    var sb = strip.querySelectorAll(".st button"), mine = +(ls("yh_avis_note") || 0);
+    function pt(n) { sb.forEach(function (x, i) { x.classList.toggle("on", i < n); }); }
+    pt(mine);
+    sb.forEach(function (x) {
+      var n = +x.dataset.n;
+      x.onmouseenter = function () { pt(n); }; x.onmouseleave = function () { pt(+(ls("yh_avis_note") || 0)); };
+      x.onclick = function () { open(false, n); };
+    });
+  }
   fetch("/api/note").then(function (r) { return r.json(); }).then(function (d) {
     if (!d || !d.nombre) return;
     var m = String(d.moyenne).replace(".", ","), txt = d.nombre + " avis";
-    var lbl = "Note du site : " + m + " sur 5, " + txt + ". Donner mon avis";
-    var top = document.querySelector("header.top .wrap .brand");
-    if (top) {
-      var b = document.createElement("button"); b.type = "button"; b.className = "av-badge"; b.setAttribute("aria-label", lbl);
-      b.innerHTML = '<span class="s" aria-hidden="true">★</span>' + m + '/5 <small>(' + txt + ')</small>';
-      b.onclick = function () { open(false); }; top.insertAdjacentElement("afterend", b);
-    }
-    var hero = document.querySelector(".hero2 .h-cta, .hero2 form, .hero2 h1");
-    if (hero) {
-      var h = document.createElement("button"); h.type = "button"; h.className = "av-hero"; h.setAttribute("aria-label", lbl);
-      h.innerHTML = '<span class="s" aria-hidden="true">' + stars(d.moyenne) + '</span> ' + m + '/5 <small>· ' + txt + ' d\'élèves</small>';
-      h.onclick = function () { open(false); }; hero.insertAdjacentElement("afterend", h);
-    }
+    if (badge) { badge.innerHTML = '★ ' + m + '/5 <small>(' + txt + ')</small> <span class="t">· Noter</span>'; badge.setAttribute("aria-label", "Note du site " + m + " sur 5, " + txt + ". Noter le site"); }
+    if (info) info.textContent = "Moyenne : " + m + "/5 · " + txt;
   }).catch(function () {});
 
   /* Invitation automatique : une seule fois par visiteur, après 3 pages vues ou 75 s sur une page,
