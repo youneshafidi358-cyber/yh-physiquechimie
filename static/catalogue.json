@@ -578,5 +578,31 @@
   "ordre": 339,
   "lieu": "Azilal · janvier 2020",
   "description": "Corrigé détaillé pas à pas : méthodes, réponses encadrées, erreurs fréquentes."
+ },
+ {
+  "niveau": "3ac",
+  "matiere": "pc",
+  "unite": "Examens locaux – Semestre 1",
+  "type": "controle",
+  "sousType": "Examen local",
+  "titre": "Examen local 2020 – Sujet F",
+  "url": "cours/Sujet_Examen_local_3AC_2020_F.pdf",
+  "id": "el3_Fs",
+  "ordre": 340,
+  "lieu": "Fquih Ben Salah · janvier 2020",
+  "description": "Examen normalisé local 2020 (Fquih Ben Salah · janvier 2020). Énoncé retapé."
+ },
+ {
+  "niveau": "3ac",
+  "matiere": "pc",
+  "unite": "Examens locaux – Semestre 1",
+  "type": "corrige",
+  "sousType": "Corrigé détaillé",
+  "titre": "Corrigé détaillé – Examen local 2020, sujet F",
+  "url": "cours/Corrige_Examen_local_3AC_2020_F.pdf",
+  "id": "el3_Fc",
+  "ordre": 341,
+  "lieu": "Fquih Ben Salah · janvier 2020",
+  "description": "Corrigé détaillé pas à pas : méthodes, réponses encadrées, erreurs fréquentes."
  }
 ]
