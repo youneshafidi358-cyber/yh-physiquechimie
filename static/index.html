@@ -516,7 +516,8 @@ const STATS = (()=>{
   }
   /* La ville (approximative) est jointe à la visite : canal = ville, type = région */
   function visite(){
-    let fini=false; const go=g=>{ if(fini) return; fini=true; send("visite", g&&g.ville ? {canal:g.ville, type:g.region||"", niveau:g.pays&&g.pays!=="MA"?g.pays:""} : {}); };
+    let fini=false; const go=g=>{ if(fini) return; fini=true; send("visite", g&&g.ville ? {canal:g.ville, type:g.region||"", niveau:g.pays&&g.pays!=="MA"?g.pays:""} : {});
+      try{ fetch("/api/compteur",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({nouveau,src}),keepalive:true}).catch(()=>{}); }catch(e){} };
     try{ fetch("/api/geo").then(r=>r.json()).then(go).catch(()=>go()); }catch(e){ go(); }
     setTimeout(()=>go(), 2500);
   }
