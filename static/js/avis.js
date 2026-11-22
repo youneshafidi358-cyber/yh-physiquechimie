@@ -91,7 +91,7 @@
     ".av-strip{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:14px;padding:10px 16px;border-radius:14px;background:#fff;color:#0f2350;font:700 15px Inter,system-ui,sans-serif;box-shadow:0 4px 14px rgba(15,35,80,.15);width:fit-content;max-width:100%}" +
     ".av-strip .st{display:inline-flex}.av-strip .st button{border:0;background:none;padding:0 2px;font-size:30px;line-height:1;color:#c9ced8;cursor:pointer}" +
     ".av-strip .st button.on{color:#f5b400}.av-strip small{color:#565f74;font-weight:500}" +
-    "@media (max-width:700px){.av-badge small,.av-badge .t{display:none}.av-badge{margin:0 4px;padding:7px 11px}}";
+    "@media (max-width:700px){.av-badge small{display:none}.av-badge{margin:0 4px;padding:7px 10px;font-size:13px}}";
   var bs = document.createElement("style"); bs.textContent = bcss; document.head.appendChild(bs);
   var top = document.querySelector("header.top .wrap .brand"), badge = null;
   if (top) {
