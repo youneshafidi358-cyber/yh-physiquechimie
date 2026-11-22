@@ -630,5 +630,31 @@
   "ordre": 343,
   "lieu": "Alfred Kastler · janvier 2025",
   "description": "Corrigé détaillé pas à pas : méthodes, réponses encadrées, erreurs fréquentes."
+ },
+ {
+  "niveau": "3ac",
+  "matiere": "pc",
+  "unite": "Examens locaux – Semestre 1",
+  "type": "controle",
+  "sousType": "Examen local",
+  "titre": "Examen local 2025 – Sujet H",
+  "url": "cours/Sujet_Examen_local_3AC_2025_H.pdf",
+  "id": "el3_Hs",
+  "ordre": 344,
+  "lieu": "Marrakech · janvier 2025",
+  "description": "Examen normalisé local 2025 (Marrakech · janvier 2025). Énoncé retapé."
+ },
+ {
+  "niveau": "3ac",
+  "matiere": "pc",
+  "unite": "Examens locaux – Semestre 1",
+  "type": "corrige",
+  "sousType": "Corrigé détaillé",
+  "titre": "Corrigé détaillé – Examen local 2025, sujet H",
+  "url": "cours/Corrige_Examen_local_3AC_2025_H.pdf",
+  "id": "el3_Hc",
+  "ordre": 345,
+  "lieu": "Marrakech · janvier 2025",
+  "description": "Corrigé détaillé pas à pas : méthodes, réponses encadrées, erreurs fréquentes."
  }
 ]
