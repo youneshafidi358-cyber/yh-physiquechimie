@@ -149,7 +149,7 @@
       i = (k + list.length) % list.length; var a = list[i];
       q.classList.add("out");
       setTimeout(function () {
-        q.innerHTML = '<span class="s" aria-label="' + a.n + ' étoiles sur 5">' + "★".repeat(a.n) + "☆".repeat(5 - a.n) + '</span><br>« ' + esc2(a.c) + ' »<div class="who">' + (a.v ? "📍 " + esc2(a.v) + " · " : "") + ilya(a.t) + '</div>';
+        q.innerHTML = '« ' + esc2(a.c) + ' »<div class="who">' + (a.t ? new Date(a.t).toLocaleDateString("fr-FR") : "") + '</div>';
         q.classList.remove("out");
       }, 250);
       ds.forEach(function (d, k2) { d.classList.toggle("on", k2 === i); });
