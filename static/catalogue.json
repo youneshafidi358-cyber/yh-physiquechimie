@@ -552,5 +552,31 @@
   "ordre": 337,
   "lieu": "Béni Mellal-Khénifra · 2022",
   "description": "Corrigé détaillé pas à pas : méthodes, réponses encadrées, erreurs fréquentes."
+ },
+ {
+  "niveau": "3ac",
+  "matiere": "pc",
+  "unite": "Examens locaux – Semestre 1",
+  "type": "controle",
+  "sousType": "Examen local",
+  "titre": "Examen local 2020 – Sujet E",
+  "url": "cours/Sujet_Examen_local_3AC_2020_E.pdf",
+  "id": "el3_Es",
+  "ordre": 338,
+  "lieu": "Azilal · janvier 2020",
+  "description": "Examen normalisé local 2020 (Azilal · janvier 2020). Énoncé retapé."
+ },
+ {
+  "niveau": "3ac",
+  "matiere": "pc",
+  "unite": "Examens locaux – Semestre 1",
+  "type": "corrige",
+  "sousType": "Corrigé détaillé",
+  "titre": "Corrigé détaillé – Examen local 2020, sujet E",
+  "url": "cours/Corrige_Examen_local_3AC_2020_E.pdf",
+  "id": "el3_Ec",
+  "ordre": 339,
+  "lieu": "Azilal · janvier 2020",
+  "description": "Corrigé détaillé pas à pas : méthodes, réponses encadrées, erreurs fréquentes."
  }
 ]
