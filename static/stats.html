@@ -146,6 +146,7 @@ function render(){
       <div class="kpi"><div class="l">Documents ouverts</div><div class="v">${docs.length}</div><div class="s">${visits.length?(docs.length/visits.length).toFixed(1):0} par visite</div></div>
       <div class="kpi"><div class="l">⭐ Note des visiteurs</div><div class="v">${avN? avM.toFixed(1).replace(".",",")+"/5" : "–"}</div><div class="s">${avN} avis · ${avAll.filter(r=>r.titre).length} commentaires</div></div>
       <div class="kpi"><div class="l">⏱ Temps de lecture</div><div class="v">${durs.length? hms(durTot/durs.length) : "–"}</div><div class="s">moyen par document · total ${hms(durTot)}</div></div>
+      <div class="kpi"><div class="l">🔔 Abonnés aux nouveautés</div><div class="v" id="kAb">–</div><div class="s">reçoivent une notification à chaque nouveau document</div></div>
       <div class="kpi"><div class="l">Clics de contact</div><div class="v">${contacts.length}</div><div class="s">WhatsApp ${contacts.filter(c=>c.canal==="WhatsApp").length} · Tél. ${contacts.filter(c=>c.canal==="Téléphone").length} · FB ${contacts.filter(c=>c.canal==="Facebook").length}</div></div>
     </div>
     <div class="grid">
@@ -170,6 +171,7 @@ function render(){
   document.querySelectorAll(".periods button[data-p]").forEach(b=>b.onclick=()=>{ PERIOD=b.dataset.p; render(); });
   $("#refresh").onclick=()=>{ try{ load(localStorage.getItem("yh_stats_cle")); }catch(_){} };
 
+  fetch("/api/push/stats").then(r=>r.json()).then(d=>{ const e=document.getElementById("kAb"); if(e && d && d.abonnes!=null) e.textContent=d.abonnes; }).catch(()=>{});
   charts.forEach(c=>c.destroy()); charts=[];
   const srcList=count(visits,r=>LABEL_SRC[r.src]||r.src), devList=count(visits,r=>r.dev);
   $("#lSrc").innerHTML=bars(srcList,visits.length); $("#lDev").innerHTML=bars(devList,visits.length);

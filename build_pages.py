@@ -191,6 +191,8 @@ def _page(title, desc, canonical, body, jsonld, nav, extra_css, extra_js):
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#0f2350">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="YH Physique-Chimie">
 <meta property="og:title" content="{E(title)}">
@@ -220,6 +222,7 @@ def _page(title, desc, canonical, body, jsonld, nav, extra_css, extra_js):
 document.addEventListener('click',e=>{{const a=e.target.closest('a[data-ev]');if(!a)return;try{{gtag('event',a.dataset.ev,{{titre:a.dataset.t||'',lecon:document.title}})}}catch(x){{}}}});
 </script>
 <script defer src="/js/avis.js"></script>
+<script defer src="/js/suivre.js"></script>
 </body>
 </html>"""
 
