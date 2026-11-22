@@ -812,16 +812,22 @@ async function start(){
         state.loaded = true;
       }catch(e){ state.items = []; }
     }
-    if(!state.loaded){
-      const r = await fetch("/catalogue.json", {cache:"no-cache"});
-      state.items = await r.json(); state.loaded = true;
-    }
+    try{ const r = await fetch("/catalogue.json", {cache:"no-cache"}); const cat = await r.json();
+      const have = new Set(state.items.map(i=>i.url)); cat.forEach(c=>{ if(!have.has(c.url)) state.items.push(c); }); state.loaded = true;
+    }catch(e){ if(!state.loaded) throw e; }
     try{ const ex = await (await fetch("/extras.json",{cache:"no-cache"})).json();
       const have = new Set(state.items.map(i=>i.url)); ex.forEach(e=>{ if(!have.has(e.url)) state.items.push(e); }); }catch(e){}
   }catch(e){ state.error = "Le contenu n'est pas accessible pour le moment."; }
   renderLevels(); renderList();
   const doc = new URLSearchParams(location.search).get("doc");
-  if(doc){ const it = state.items.find(x=>x.url===doc); if(it){ openViewer(it); } }
+  if(doc){
+    let it = state.items.find(x=>x.url===doc || x.url==="/"+doc || "/"+x.url===doc);
+    if(!it && /^\/?(cours|videos)\/[\w.\-%() ]+\.(pdf|mp4)$/i.test(doc)){
+      const name = decodeURIComponent(doc.split("/").pop()).replace(/\.(pdf|mp4)$/i,"").replace(/_/g," ");
+      it = {titre:name, url:doc.replace(/^\//,""), type: /\.mp4$/i.test(doc) ? "video" : "cours", niveau:"", unite:""};
+    }
+    if(it){ openViewer(it); }
+  }
 }
 function showRes(){ ['contenu','list','resbar'].forEach(i=>{const e=document.getElementById(i); if(e) e.hidden=false;}); }
 function goSearch(q){ showRes(); q=(q||'').trim(); const i=document.getElementById('search'); i.value=q; state.q=q.toLowerCase(); state.level='all'; renderLevels(); renderList();
