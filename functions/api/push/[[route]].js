@@ -1,6 +1,8 @@
 // Notifications « Suivre le site » (Web Push, sans service extérieur).
 // Stockage : espace KV lié sous le nom ABONNES (Cloudflare Pages > Settings > Bindings).
 // Les clés VAPID sont créées automatiquement au premier appel et gardées dans le KV.
+import { endpointValide, limite, noter } from "../../../lib/securite.js";
+
 const SITE = "https://yh-physiquechimie.pages.dev";
 const NIV = { "2ac": "2APIC", "3ac": "3APIC", tc: "TCS", "1bac": "1BAC", "2bac": "2BAC" };
 const TYPES = { cours: "Cours", exo: "Série", corr: "Corrigé", ds: "Devoir", video: "Vidéo", resume: "Résumé" };
@@ -39,7 +41,7 @@ async function lot(kv) {
   let n = 0;
   for (const it of l.keys) {
     const ab = await kv.get(it.name, "json");
-    if (!ab || !ab.endpoint) continue;
+    if (!ab || !endpointValide(ab.endpoint)) { await kv.delete(it.name); continue; } // adresse non autorisée : supprimée
     const aud = new URL(ab.endpoint).origin;
     jetons[aud] = jetons[aud] || (await jwt(k, aud));
     try {
@@ -84,15 +86,22 @@ export async function onRequest({ request, env, params, waitUntil }) {
 
   if (route === "cle") return J({ actif: true, cle: (await cles(kv)).public });
 
+  if ((route === "abonner" || route === "desabonner") && request.method === "POST") {
+    if (await limite(request, "push-" + route, 10, 600)) { await noter(kv, request, "trop_de_requetes", route); return J({ ok: false }, 429, { "retry-after": "600" }); }
+    if (+(request.headers.get("content-length") || 0) > 4096) { await noter(kv, request, "requete_trop_grosse", route); return J({ ok: false }, 413); }
+  }
   if (route === "abonner" && request.method === "POST") {
     const s = await request.json().catch(() => null);
-    if (!s || typeof s.endpoint !== "string" || !/^https:\/\//.test(s.endpoint) || s.endpoint.length > 800) return J({ ok: false }, 400);
+    if (!s || !endpointValide(s.endpoint)) {
+      await noter(kv, request, "abonnement_refuse", s && typeof s.endpoint === "string" ? s.endpoint : "corps invalide");
+      return J({ ok: false }, 400);
+    }
     await kv.put(await idAb(s.endpoint), JSON.stringify({ endpoint: s.endpoint, t: Date.now() }));
     return J({ ok: true });
   }
   if (route === "desabonner" && request.method === "POST") {
     const s = await request.json().catch(() => null);
-    if (s && s.endpoint) await kv.delete(await idAb(s.endpoint));
+    if (s && endpointValide(s.endpoint)) await kv.delete(await idAb(s.endpoint));
     return J({ ok: true });
   }
   if (route === "derniere") {
