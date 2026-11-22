@@ -325,7 +325,7 @@ def level_hub(niv, lv):
         bt = ""
         if "sujet" in d: bt += btn(d["sujet"], "", "📄 Sujet", f"Examen local {an} – sujet {L}")
         if "corr" in d: bt += btn(d["corr"], " exc", "✅ Corrigé détaillé", f"Corrigé détaillé – sujet {L}")
-        p_ex += f'''<div class="lc exk" style="--c:{col}"><span class="lc-code">Sujet {L}</span><span class="lc-t">Examen normalisé local {an}</span><span class="lc-m">Session janvier · 1 heure</span><span class="lc-f">Énoncé + corrigé pas à pas</span><span class="exbs">{bt}</span></div>'''
+        p_ex += f'''<div class="lc exk" style="--c:{col}"><span class="lc-code">Sujet {L}</span><span class="lc-t">Examen normalisé local {an}</span><span class="lc-m">{E((d.get("sujet") or d.get("corr")).get("lieu", "Session janvier"))} · 1 heure</span><span class="lc-f">Énoncé + corrigé pas à pas</span><span class="exbs">{bt}</span></div>'''
     p_ds += "</div>" + subs + '<div class="lcards" hidden>'
     cats = [("cours", "📖", "Cours", f"{len(lessons)} leçon{'s' if len(lessons) > 1 else ''}", p_cours),
             ("exercices", "✍️", "Exercices", f"{len(exos)} série{'s' if len(exos) > 1 else ''} corrigée{'s' if len(exos) > 1 else ''}", p_exos),

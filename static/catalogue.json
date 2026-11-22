@@ -459,7 +459,8 @@
   "url": "cours/Sujet_Examen_local_3AC_2025_A.pdf",
   "id": "el3_As",
   "ordre": 330,
-  "description": "Examen normalisé local, session janvier 2025 (Afourer, Azilal). Énoncé retapé."
+  "description": "Examen normalisé local, session janvier 2025 (Afourer, Azilal). Énoncé retapé.",
+  "lieu": "Afourer (Azilal) · janvier 2025"
  },
  {
   "niveau": "3ac",
@@ -471,7 +472,8 @@
   "url": "cours/Corrige_Examen_local_3AC_2025_A.pdf",
   "id": "el3_Ac",
   "ordre": 331,
-  "description": "Corrigé détaillé pas à pas : méthodes, réponses encadrées, erreurs fréquentes."
+  "description": "Corrigé détaillé pas à pas : méthodes, réponses encadrées, erreurs fréquentes.",
+  "lieu": "Afourer (Azilal) · janvier 2025"
  },
  {
   "niveau": "3ac",
@@ -483,7 +485,8 @@
   "url": "cours/Sujet_Examen_local_3AC_2025_B.pdf",
   "id": "el3_Bs",
   "ordre": 332,
-  "description": "Examen normalisé local, session janvier 2025 (Afourer, Azilal). Énoncé retapé."
+  "description": "Examen normalisé local, session janvier 2025 (Afourer, Azilal). Énoncé retapé.",
+  "lieu": "Afourer (Azilal) · janvier 2025"
  },
  {
   "niveau": "3ac",
@@ -495,6 +498,33 @@
   "url": "cours/Corrige_Examen_local_3AC_2025_B.pdf",
   "id": "el3_Bc",
   "ordre": 333,
+  "description": "Corrigé détaillé pas à pas : méthodes, réponses encadrées, erreurs fréquentes.",
+  "lieu": "Afourer (Azilal) · janvier 2025"
+ },
+ {
+  "niveau": "3ac",
+  "matiere": "pc",
+  "unite": "Examens locaux – Semestre 1",
+  "type": "controle",
+  "sousType": "Examen local",
+  "titre": "Examen local 2025 – Sujet C",
+  "url": "cours/Sujet_Examen_local_3AC_2025_C.pdf",
+  "id": "el3_Cs",
+  "ordre": 340,
+  "lieu": "Azilal · janvier 2025",
+  "description": "Examen normalisé local, session janvier 2025 (Direction provinciale d'Azilal). Énoncé retapé."
+ },
+ {
+  "niveau": "3ac",
+  "matiere": "pc",
+  "unite": "Examens locaux – Semestre 1",
+  "type": "corrige",
+  "sousType": "Corrigé détaillé",
+  "titre": "Corrigé détaillé – Examen local 2025, sujet C",
+  "url": "cours/Corrige_Examen_local_3AC_2025_C.pdf",
+  "id": "el3_Cc",
+  "ordre": 341,
+  "lieu": "Azilal · janvier 2025",
   "description": "Corrigé détaillé pas à pas : méthodes, réponses encadrées, erreurs fréquentes."
  }
 ]
