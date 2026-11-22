@@ -49,17 +49,21 @@ def render(unite, sim_html=""):
 
 CSS = r"""
 .cbody.cahier{position:relative;background-image:linear-gradient(90deg,transparent 46px,#f2b8b8 46px,#f2b8b8 48px,transparent 48px),repeating-linear-gradient(#fff 0 31px,#dfe8f5 31px 32px);padding-left:66px!important;box-shadow:0 2px 0 #e8e2d4,0 4px 14px rgba(20,33,61,.06)}
-.cahier .page{display:block}.js-cahier .cahier .page{display:none}.js-cahier .cahier .page.on{display:block;animation:pgin .25s ease}
+.screens .scr{display:none}.screens.measuring .scr{display:block;visibility:hidden;position:absolute;left:0;right:0}.screens{position:relative}.screens .scr.on{display:block;animation:pgin .25s ease}.cs.cont::after{content:' (suite)';font-weight:400;color:#8a93a8;font-size:.8em}
+.js-cahier .cbody.cahier{font-size:15.5px;line-height:1.55}.js-cahier .cahier .cs{margin:10px 0 8px;font-size:19px}.js-cahier .cahier .bx{margin:8px 0}.js-cahier .cahier .bx-b{padding:8px 12px}.js-cahier .cahier .qa,.js-cahier .cahier .qcm{margin:6px 0;padding:6px 10px}.js-cahier .cahier .cfig img{max-height:42vh;width:auto}.js-cahier .cahier .enclair{margin:6px 0 8px;font-size:15px}
+@media (prefers-reduced-motion:reduce){.screens .scr.on{animation:none}}
 @keyframes pgin{from{opacity:0;transform:translateX(12px)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){.js-cahier .cahier .page.on{animation:none}}
 .phead{font-size:12.5px;font-weight:700;color:#8a93a8;text-align:right;margin-top:10px;letter-spacing:.04em;text-transform:uppercase}
 .pnav{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:22px 0 6px;padding-top:12px;border-top:2px dashed #e3e8f1;flex-wrap:wrap}
+.pnav button{font:inherit;border:0;cursor:pointer;display:inline-flex;align-items:center;min-height:44px;padding:8px 16px;border-radius:12px;font-weight:700;font-size:14.5px}
 .pnav a{display:inline-flex;align-items:center;min-height:44px;padding:8px 14px;border-radius:12px;font-weight:700;text-decoration:none;font-size:14.5px}
 .pprev{background:#f1f4f9;color:#123c8c}.pnext{background:#123c8c;color:#fff}.pnum{font-size:13px;color:#565f74;font-weight:600}
 .ctoc .pg{display:inline-block;min-width:30px;font-size:11.5px;font-weight:800;color:#b42318}
 .enclair{display:flex;gap:8px;align-items:flex-start;margin:8px 0 12px;padding:8px 12px;background:#fffbe9;border-left:4px solid #e0b100;border-radius:8px;font-size:15.5px}
 .enclair::before{content:"💬";flex:none}
-@media (max-width:900px){.cbody.cahier{background-image:linear-gradient(90deg,transparent 18px,#f2b8b8 18px,#f2b8b8 20px,transparent 20px),repeating-linear-gradient(#fff 0 31px,#dfe8f5 31px 32px);padding-left:30px!important}.pnav a{flex:1 1 100%;justify-content:center}.pnum{order:-1;width:100%;text-align:center}}
+@media (max-width:900px){.cbody.cahier{background-image:linear-gradient(90deg,transparent 18px,#f2b8b8 18px,#f2b8b8 20px,transparent 20px),repeating-linear-gradient(#fff 0 31px,#dfe8f5 31px 32px);padding-left:30px!important}.pnav button{font:inherit;border:0;cursor:pointer;display:inline-flex;align-items:center;min-height:44px;padding:8px 16px;border-radius:12px;font-weight:700;font-size:14.5px}
+.pnav a{flex:1 1 100%;justify-content:center}.pnum{order:-1;width:100%;text-align:center}}
 .wrap{max-width:1400px}
 .coursewrap{display:grid;grid-template-columns:230px minmax(0,1fr);gap:20px;align-items:start}
 .ctoc{position:sticky;top:76px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 12px 8px;font-size:14px;max-height:calc(100vh - 100px);overflow:auto}
@@ -122,15 +126,32 @@ JS = r"""
 <script defer src="/js/katex/auto-render.min.js" onload="renderMathInElement(document.querySelector('.cbody')||document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false});document.querySelectorAll('.katex-display').forEach(e=>{if(e.scrollWidth>e.clientWidth){e.tabIndex=0}})"></script>
 <script>
 (()=>{const cb=document.querySelector('.cbody.cahier');if(!cb)return;document.documentElement.classList.add('js-cahier');
-const ps=[...cb.querySelectorAll('.page')];const tl=[...document.querySelectorAll('.ctoc a')];
-function go(n,scroll){n=Math.max(1,Math.min(ps.length,n));ps.forEach(p=>p.classList.toggle('on',+p.dataset.p===n));tl.forEach(a=>a.classList.toggle('on',+a.dataset.p===n));
- if(scroll){const t=document.getElementById('cours');if(t)t.scrollIntoView({behavior:'smooth',block:'start'});}
- history.replaceState(null,'','#'+ps[n-1].id);window.dispatchEvent(new Event('resize'));}
-document.addEventListener('click',e=>{const a=e.target.closest('a[data-p]');if(!a||!cb.contains(a)&&!a.closest('.ctoc'))return;e.preventDefault();go(+a.dataset.p,true);});
-const h=location.hash.slice(1);const i=ps.findIndex(p=>p.id===h);let start=i>=0?i+1:1;
-const lab=document.getElementById('lab');if(h==='lab'&&lab){const pp=lab.closest('.page');if(pp)start=+pp.dataset.p;}
-go(start,false);if(h==='lab'&&lab)setTimeout(()=>lab.scrollIntoView(),50);
-document.addEventListener('keydown',e=>{if(e.target.closest('input,textarea,select'))return;const c=ps.findIndex(p=>p.classList.contains('on'))+1;if(e.key==='ArrowRight')go(c+1,true);if(e.key==='ArrowLeft')go(c-1,true);});})();
+const secs=[...cb.querySelectorAll('section.page')];const toc=[...document.querySelectorAll('.ctoc a')];
+const blocks=[];secs.forEach((s,si)=>{const h=s.querySelector('h3.cs');[...s.children].forEach(c=>{if(c.matches('.phead,.pnav,h3.cs'))return;blocks.push({el:c,si,sec:s,h});});});
+const stage=document.createElement('div');stage.className='screens';cb.appendChild(stage);secs.forEach(s=>s.style.display='none');
+let screens=[];
+function build(){const keep=blocks.map(b=>b.el);stage.innerHTML='';screens=[];
+ const H=Math.max(360,window.innerHeight-(window.innerWidth<900?190:210));let cur=null,curSi=-1;
+ function newScreen(si,cont){const d=document.createElement('div');d.className='scr';d.dataset.si=si;const h=blocks.find(b=>b.si===si).h.cloneNode(true);if(cont)h.classList.add('cont');d.appendChild(h);stage.appendChild(d);screens.push(d);return d;}
+ stage.classList.add('measuring');
+ blocks.forEach(b=>{if(b.si!==curSi){cur=newScreen(b.si,false);curSi=b.si;}
+  cur.appendChild(b.el);if(cur.scrollHeight>H&&cur.children.length>2){cur.removeChild(b.el);cur=newScreen(b.si,true);cur.appendChild(b.el);}});
+ stage.classList.remove('measuring');
+ screens.forEach((d,i)=>{const n=document.createElement('nav');n.className='pnav';n.setAttribute('aria-label','Pages du cours');
+  n.innerHTML=(i>0?'<button type="button" class="pprev" data-go="'+(i-1)+'">← Précédent</button>':'<span></span>')+'<span class="pnum">Page '+(i+1)+' / '+screens.length+'</span>'+(i<screens.length-1?'<button type="button" class="pnext" data-go="'+(i+1)+'">Suivant →</button>':'<a class="pnext" href="#resume">Résumé et exercices →</a>');d.appendChild(n);});
+ toc.forEach(a=>{const si=secs.findIndex(s=>'#'+s.id===a.getAttribute('href'));const k=screens.findIndex(d=>+d.dataset.si===si);a.dataset.go=k;const pg=a.querySelector('.pg');if(pg)pg.textContent='p.'+(k+1);});}
+let at=0;function go(k,scroll){k=Math.max(0,Math.min(screens.length-1,k));at=k;screens.forEach((d,i)=>d.classList.toggle('on',i===k));const si=+screens[k].dataset.si;
+ toc.forEach(a=>a.classList.toggle('on',+a.dataset.go===screens.findIndex(d=>+d.dataset.si===si)));
+ if(scroll){const t=document.getElementById('cours');if(t&&t.getBoundingClientRect().top<0||scroll==='force')t.scrollIntoView({behavior:'smooth',block:'start'});}
+ history.replaceState(null,'','#'+secs[si].id);window.dispatchEvent(new Event('resize-sim'));}
+build();
+document.addEventListener('click',e=>{const a=e.target.closest('[data-go]');if(!a)return;if(!(cb.contains(a)||a.closest('.ctoc')))return;e.preventDefault();go(+a.dataset.go,true);});
+const h=location.hash.slice(1);let st=0;const si0=secs.findIndex(s=>s.id===h);if(si0>=0)st=screens.findIndex(d=>+d.dataset.si===si0);
+const lab=document.getElementById('lab');if(h==='lab'&&lab){st=screens.findIndex(d=>d.contains(lab));}
+go(Math.max(0,st),false);if(h==='lab'&&lab)setTimeout(()=>lab.scrollIntoView(),60);
+let rt;window.addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{const el=screens[at]&&screens[at].children[1];build();let k=screens.findIndex(d=>el&&d.contains(el));go(k<0?0:k,false);},300);});
+document.addEventListener('keydown',e=>{if(e.target.closest('input,textarea,select'))return;if(e.key==='ArrowRight')go(at+1,true);if(e.key==='ArrowLeft')go(at-1,true);});
+let x0=null;cb.addEventListener('touchstart',e=>{x0=e.touches[0].clientX},{passive:true});cb.addEventListener('touchend',e=>{if(x0===null)return;const dx=e.changedTouches[0].clientX-x0;if(Math.abs(dx)>70&&!e.target.closest('input,.lab,.ctab,.katex-display'))go(at+(dx<0?1:-1),true);x0=null;},{passive:true});})();
 document.addEventListener('click',e=>{const o=e.target.closest('.qcm-o button');if(o){const q=o.closest('.qcm');q.querySelectorAll('button').forEach(x=>{x.classList.remove('good','bad');if(x.dataset.ok=='1'&&o.dataset.ok=='1')x.classList.add('good')});o.classList.add(o.dataset.ok=='1'?'good':'bad');const ex=q.querySelector('.qcm-e');if(o.dataset.ok=='1'){ex.hidden=false}else{ex.hidden=true}return;}
 const b=e.target.closest('.qa-btn');if(!b)return;const a=b.nextElementSibling;const op=a.hidden;a.hidden=!op;b.setAttribute('aria-expanded',op);b.textContent=op?'Masquer la réponse':'Voir la réponse';});
 </script>"""

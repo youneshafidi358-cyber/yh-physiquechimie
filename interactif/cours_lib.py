@@ -85,8 +85,10 @@ def QCM(q, opts, ok, expl=""):
 def VF(q, vrai, expl=""):
     return QCM(q, ["Vrai", "Faux"], 0 if vrai else 1, expl)
 
-def APP(*items, title="Applications interactives"):
-    return B("app", "".join(items), title)
+def APP(*items, title="Application"):
+    if len(items) == 1:
+        return B("app", items[0], title)
+    return "".join(B("app", it, f"{title} {i}") for i, it in enumerate(items, 1))
 
 
 def EC(txt):
