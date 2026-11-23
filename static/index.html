@@ -419,7 +419,7 @@
 <section class="soutien" id="soutien">
   <div class="wrap s-grid">
     <div>
-      <div class="flyer"><img id="flyerImg" src="/soutien-fr-v2.jpg" alt="Affiche des cours de soutien en physique-chimie"></div>
+      <div class="flyer"><img id="flyerImg" src="/soutien-fr-v3.jpg" alt="Affiche des cours de soutien en physique-chimie"></div>
       <div class="langs" role="group" aria-label="Langue de l'affiche">
         <button data-l="fr" aria-pressed="true">Affiche en français</button>
         <button data-l="ar" aria-pressed="false">Affiche en arabe</button>
@@ -775,7 +775,7 @@ document.addEventListener("contextmenu", e=>{ if(e.target.closest("video,canvas,
 document.querySelector(".langs")?.addEventListener("click", e=>{
   const b = e.target.closest("button"); if(!b) return;
   document.querySelectorAll(".langs button").forEach(x=>x.setAttribute("aria-pressed", x===b));
-  $("#flyerImg").src = b.dataset.l==="ar" ? "/soutien-ar-v2.jpg" : "/soutien-fr-v2.jpg";
+  $("#flyerImg").src = b.dataset.l==="ar" ? "/soutien-ar-v3.jpg" : "/soutien-fr-v3.jpg";
 });
 
 document.addEventListener('click', e=>{
@@ -876,6 +876,6 @@ start();
 <script defer src="/js/soutien.js?v=de763b40"></script>
 <script defer src="/js/avis.js?v=b0ba3bbe"></script>
 <script defer src="/js/suivre.js?v=d85949f6"></script>
-<script defer src="/js/lang.js?v=4fee3e84"></script>
+<script defer src="/js/lang.js?v=dc16d5d3"></script>
 </body>
 </html>

@@ -203,6 +203,7 @@
     document.documentElement.classList.toggle('ui-ar', lang === 'ar');
     if (lang === 'ar') doEl(document.body); else restore();
     busy = false;
+    var fb = document.querySelector('.langs button[data-l="' + lang + '"]'); if (fb) fb.click();
     if (btn) { btn.textContent = lang === 'ar' ? 'FR' : 'AR'; btn.title = lang === 'ar' ? 'Afficher en français' : 'عرض الواجهة بالعربية'; }
   }
   var st = document.createElement('style');
