@@ -773,7 +773,7 @@ ids.forEach(function(i){document.getElementById(i).addEventListener('input',go);
 
     # ---------- À propos / Contact ----------
     ab = f"""<section class="head"><div class="wrap"><div class="crumbs"><a href="/">Accueil</a> › À propos</div><h1>À propos</h1><div class="ar" lang="ar">من أنا</div></div></section>
-<main class="wrap"><div class="intro" style="display:flex;gap:18px;align-items:center;flex-wrap:wrap"><img src="/logo.jpg" alt="Logo YH Physique-Chimie" style="width:110px;height:110px;border-radius:50%;border:3px solid var(--gold)">
+<main class="wrap"><div class="intro" style="display:flex;gap:22px;align-items:center;flex-wrap:wrap"><div style="position:relative;flex-shrink:0;margin:auto"><img src="/prof-lg.webp" alt="Pr. Youness HAFIDI, professeur de physique-chimie" width="220" height="239" style="width:220px;height:239px;object-fit:cover;border-radius:18px;border:3px solid var(--gold);display:block"><img src="/logo.jpg" alt="Logo YH Physique-Chimie" style="position:absolute;right:-12px;bottom:-12px;width:64px;height:64px;border-radius:50%;border:3px solid var(--gold);background:#fff"></div>
 <div style="flex:1;min-width:240px"><p><b>Pr. Youness HAFIDI</b> — professeur de physique-chimie au cycle secondaire.</p>
 <p>YH Physique-Chimie rassemble mes ressources pour les élèves : séries d'exercices et corrigés, devoirs surveillés, résumés en cartes mentales, quiz et simulations interactives, du collège au baccalauréat (examens nationaux 2BAC SM corrigés).</p>
 <p class="ar" lang="ar" dir="rtl">أستاذ الفيزياء والكيمياء بالسلك الثانوي. يضم هذا الموقع سلاسل تمارين مع تصحيحها، وفروضا محروسة، وملخصات، وتمارين تفاعلية، مجانا.</p></div></div>
@@ -784,7 +784,7 @@ ids.forEach(function(i){document.getElementById(i).addEventListener('input',go);
     open(os.path.join(SITE, "a-propos", "index.html"), "w", encoding="utf-8").write(page("À propos – Pr. Youness HAFIDI | YH Physique-Chimie", "Pr. Youness HAFIDI, professeur de physique-chimie au cycle secondaire : ressources gratuites pour les élèves.", f"{BASE}/a-propos/", ab,
         {"@context": "https://schema.org", "@type": "AboutPage", "url": f"{BASE}/a-propos/"}, "apropos"))
     ct = f"""<section class="head"><div class="wrap"><div class="crumbs"><a href="/">Accueil</a> › Contact</div><h1>Contact</h1><div class="ar" lang="ar">تواصل معي</div></div></section>
-<main class="wrap"><div class="intro"><p>Une question sur un exercice, une remarque, ou un cours de soutien ? Écris-moi :</p></div>
+<main class="wrap"><div class="intro" style="display:flex;gap:16px;align-items:center;flex-wrap:wrap"><img src="/prof.webp" alt="Pr. Youness HAFIDI" width="96" height="96" style="width:96px;height:96px;border-radius:50%;border:3px solid var(--gold);object-fit:cover"><div style="flex:1;min-width:220px"><p><b>Pr. Youness HAFIDI</b> — professeur de physique-chimie</p><p>Une question sur un exercice, une remarque, ou un cours de soutien ? Écris-moi :</p></div></div>
 <div class="share"><a class="btn wa" href="https://wa.me/{WA}?text={E('Bonjour Pr. Hafidi,')}" target="_blank" rel="noopener" data-ev="clic_contact_page">{WA_SVG} WhatsApp : 06 52 23 69 22</a>
 <a class="btn" href="tel:+{WA}">📞 Appeler</a><a class="btn fb" href="{FB}" target="_blank" rel="noopener">{FB_SVG} Facebook</a>
 <a class="btn" href="https://www.linkedin.com/in/youness-hafidi" target="_blank" rel="noopener">in LinkedIn</a></div>

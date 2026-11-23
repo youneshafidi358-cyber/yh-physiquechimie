@@ -15,7 +15,7 @@
     "Aller au contenu": "انتقل إلى المحتوى", "Fermer": "إغلاق", "Rechercher": "بحث", "Rechercher une leçon": "ابحث عن درس", "Populaire :": "الأكثر بحثاً :",
     "Choisir mon niveau": "اختر مستواي", "Choisis ton niveau": "اختر مستواك", "Tous les niveaux": "كل المستويات",
     "Physique-Chimie · Collège et lycée · Gratuit": "الفيزياء والكيمياء · الإعدادي والثانوي · مجاناً",
-    "Professeur de Physique-Chimie · Cycle secondaire": "أستاذ الفيزياء والكيمياء · التعليم الثانوي",
+    "Professeur de Physique-Chimie · Cycle secondaire": "أستاذ الفيزياء والكيمياء · التعليم الثانوي", "Professeur de physique-chimie · Cycle secondaire": "أستاذ الفيزياء والكيمياء · التعليم الثانوي", "Pr. Youness HAFIDI": "ذ. يونس حافظي",
     "1re année collège": "الأولى إعدادي", "2e année collège": "الثانية إعدادي", "3e année collège": "الثالثة إعدادي",
     "Tronc commun scientifique": "الجذع المشترك العلمي", "Tronc commun": "الجذع المشترك", "1re année Baccalauréat": "الأولى باكالوريا", "2e année Baccalauréat": "الثانية باكالوريا",
     "1AC – 1re année collège": "1AC – الأولى إعدادي", "2AC – 2e année collège": "2AC – الثانية إعدادي", "3AC – 3e année collège": "3AC – الثالثة إعدادي",
