@@ -143,6 +143,22 @@ function dureeHtml(durs){
   return '<table><tr><th>#</th><th>Document</th><th>Niveau</th><th style="text-align:right">Lectures</th><th style="text-align:right">Temps moyen</th><th style="text-align:right">Temps total</th></tr>'+
     l.map(([k,x],i)=>`<tr><td>${i+1}</td><td>${esc(k)}<div style="color:#565f74;font-size:12px">${esc(x.type||"")}</div></td><td>${esc(x.niv||"")}</td><td class="n">${x.n}</td><td class="n">${hms(x.tot/x.n)}</td><td class="n">${hms(x.tot)}</td></tr>`).join("")+'</table>';
 }
+function examHtml(rows){
+  const d=rows.filter(r=>r.ev==="debut_mode_examen"), f=rows.filter(r=>r.ev==="fin_mode_examen");
+  if(!d.length&&!f.length) return '<div class="empty">Pas encore de données : apparaît quand un élève lance le ⏱ mode examen (page Examens nationaux 2BAC).</div>';
+  const nom=k=>{const p=String(k||"").split("-");return p.length===3?`${p[0]} ${p[1]} – ${p[2]==="N"?"normale":"rattrapage"}`:k;};
+  const m={}; d.forEach(r=>{(m[r.titre]=m[r.titre]||{d:0,t:0,e:0}).d++;}); f.forEach(r=>{const x=(m[r.titre]=m[r.titre]||{d:0,t:0,e:0}); if(r.type==="temps écoulé")x.e++; else x.t++;});
+  const fin=f.length, el=new Set(d.map(r=>r.vid)).size;
+  return `<p style="margin:0 0 10px">${d.length} examens lancés par ${el} élève${el>1?"s":""} · ${fin} terminés (${d.length?Math.round(100*fin/d.length):0} %)</p>`+
+   '<table><tr><th>Examen</th><th style="text-align:right">Lancés</th><th style="text-align:right">Terminés</th><th style="text-align:right">Temps écoulé</th></tr>'+
+   Object.entries(m).sort((a,b)=>b[1].d-a[1].d).map(([k,x])=>`<tr><td>${esc(nom(k))}</td><td class="n">${x.d}</td><td class="n">${x.t}</td><td class="n">${x.e}</td></tr>`).join("")+'</table>';
+}
+function langHtml(rows, uniq){
+  const l={}; rows.filter(r=>r.ev==="langue").sort((a,b)=>a.t-b.t).forEach(r=>{l[r.vid]=r.titre;});
+  const ar=Object.values(l).filter(v=>v==="ar").length;
+  if(!Object.keys(l).length) return '<div class="empty">Pas encore de données : apparaît quand un visiteur clique sur le bouton « ع ».</div>';
+  return `<p style="margin:0 0 8px"><b>${ar}</b> visiteur${ar>1?"s":""} utilise${ar>1?"nt":""} l'interface en arabe${uniq?` (${Math.round(100*ar/uniq)} % des visiteurs de la période)`:""}.</p>`+bars([["Arabe",ar],["Revenus au français",Object.values(l).filter(v=>v==="fr").length]], Object.keys(l).length, "#7b3fb0");
+}
 let charts=[];
 function render(){
   const now = Date.now();
@@ -191,6 +207,8 @@ function render(){
           l.slice(0,15).map(([k,v],i)=>`<tr><td>${i+1}</td><td>${esc(k)}</td><td class="n">${v}</td><td class="n">${Math.round(v*100/docs.length)} %</td></tr>`).join("")+'</table>'; })()
       }</div>
       <div class="box full"><h2>⏱ Temps passé sur chaque document</h2>${dureeHtml(durs)}</div>
+      <div class="box full"><h2>📝 Mode examen (examens nationaux)</h2>${examHtml(rows)}</div>
+      <div class="box"><h2>🌐 Langue de l'interface</h2>${langHtml(rows, uniq)}</div>
       <div class="box"><h2>Navigateurs</h2>${bars(count(visits,r=>r.br), visits.length)}</div>
       <div class="box"><h2>Heures de visite</h2><div style="height:200px"><canvas id="cHours"></canvas></div></div>
     </div>
