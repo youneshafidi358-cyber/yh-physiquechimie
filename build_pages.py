@@ -333,9 +333,14 @@ def level_hub(niv, lv):
             continue
         p_ex += f'''<div class="lc exk" style="--c:{col}"><span class="lc-code">Sujet {L}</span><span class="lc-t">Examen normalisé local {an}</span><span class="lc-m">{E((d.get("sujet") or d.get("corr")).get("lieu", "Session janvier"))} · 1 heure</span><span class="lc-f">Énoncé + corrigé pas à pas</span><span class="exbs">{bt}</span></div>'''
     if niv == "2bac":
-        hs = 'style="grid-column:1/-1;margin:14px 0 2px;font-size:19px"'
-        p_ex = f'<h3 class="sec" {hs}>📐 Sciences Mathématiques (SM A et B)</h3>' + (ex_fil["SM"] or '<p class="tip" style="grid-column:1/-1">Bientôt disponible.</p>') \
-             + f'<h3 class="sec" {hs}>🔬 Sciences Physiques (PC)</h3>' + (ex_fil["PC"] or '<p class="tip" style="grid-column:1/-1">Bientôt disponible.</p>')
+        nb = {f: ex_fil[f].count('class="lc exk"') for f in ex_fil}
+        def fcard(f, ic, t):
+            n = nb[f]
+            return card(ic, t, (f"{n} examen{'s' if n > 1 else ''} corrigé{'s' if n > 1 else ''}" if n else "Bientôt disponible"), "Sessions normale et rattrapage · sujet + corrigé", "Voir les examens →" if n else "Bientôt", f"#ex{f.lower()}", f' data-sub="ex{f.lower()}"')
+        def fsec(f, ic, t):
+            return f'''<section class="subp" id="ex{f.lower()}" hidden><h3 class="sec" style="font-size:19px">{ic} {t} – examens nationaux</h3>''' + (f'<div class="lcards">{ex_fil[f]}</div>' if ex_fil[f] else '<p class="tip">Bientôt disponible.</p>') + "</section>"
+        p_ex = fcard("SM", "📐", "Sciences Mathématiques (SM A et B)") + fcard("PC", "🔬", "Sciences Physiques (PC)") \
+             + "</div>" + fsec("SM", "📐", "Sciences Mathématiques") + fsec("PC", "🔬", "Sciences Physiques") + '<div class="lcards" hidden>'
     p_ds += "</div>" + subs + '<div class="lcards" hidden>'
     cats = [("cours", "📖", "Cours", f"{len(lessons)} leçon{'s' if len(lessons) > 1 else ''}", p_cours),
             ("exercices", "✍️", "Exercices", f"{len(exos)} série{'s' if len(exos) > 1 else ''} corrigée{'s' if len(exos) > 1 else ''}", p_exos),
@@ -363,7 +368,7 @@ ov.hidden=false;document.body.style.overflow='hidden';pg.scrollTop=0;history.pus
 try{fetch('https://script.google.com/macros/s/AKfycbxta1pz0xrqrIa9RiENIXd_CQwiQpkvcwtm_sWBH15-UfBTCN4clgsdmtc3HXZtXh4I/exec',{method:'POST',mode:'no-cors',body:JSON.stringify({ev:'ouverture_document',vid:localStorage.getItem('yh_vid')||'',src:'site',dev:/Mobi|Android|iPhone/i.test(navigator.userAgent)?'téléphone':'ordinateur',br:'',niveau:document.title.split(' – ')[0].replace('Physique-Chimie ',''),titre:b.dataset.t,type:b.classList.contains('exc')?'Corrigé':'Examen',canal:'',nouveau:0}),headers:{'Content-Type':'text/plain;charset=utf-8'},keepalive:true}).catch(()=>{});}catch(_){}
 });});})();
 document.querySelectorAll('[data-sub]').forEach(c=>c.addEventListener('click',e=>{e.preventDefault();const id=c.dataset.sub;document.querySelectorAll('.subp').forEach(p=>p.hidden=p.id!==id);document.querySelectorAll('[data-sub]').forEach(x=>x.classList.toggle('on',x===c));document.getElementById(id).scrollIntoView({behavior:'smooth'});}));
-const h=location.hash.slice(1);if(['cours','exercices','devoirs'].includes(h))show(h);if(/^ds\\d+$/.test(h)){show('devoirs');const c=document.querySelector('[data-sub="dsg'+h.slice(2)+'"]');if(c)c.click();}})();</script>"""
+const h=location.hash.slice(1);if(['cours','exercices','devoirs'].includes(h))show(h);if(h==='examens'||h==='exsm'||h==='expc'){show('examens');if(h!=='examens'){const c=document.querySelector('[data-sub="'+h+'"]');if(c)c.click();}}if(/^ds\\d+$/.test(h)){show('devoirs');const c=document.querySelector('[data-sub="dsg'+h.slice(2)+'"]');if(c)c.click();}})();</script>"""
     return f'<div class="lcards cats">{top}</div>{panels}', js
 
 def build():
