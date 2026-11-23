@@ -1,4 +1,4 @@
-/* Interface en arabe (bouton « ع / FR ») : traduit menus, boutons et titres. Les cours, exercices et examens restent en français (BIOF). */
+/* Interface en arabe (bouton « AR / FR ») : traduit menus, boutons et titres. Les cours, exercices et examens restent en français (BIOF). */
 (function () {
   var KEY = 'yh_lang';
   function get() { try { return localStorage.getItem(KEY) || 'fr'; } catch (e) { return 'fr'; } }
@@ -80,7 +80,7 @@
   function apply() {
     document.documentElement.classList.toggle('ui-ar', lang === 'ar');
     walk(document.body);
-    if (btn) { btn.textContent = lang === 'ar' ? 'FR' : 'ع'; btn.title = lang === 'ar' ? 'Afficher en français' : 'عرض الواجهة بالعربية'; }
+    if (btn) { btn.textContent = lang === 'ar' ? 'FR' : 'AR'; btn.title = lang === 'ar' ? 'Afficher en français' : 'عرض الواجهة بالعربية'; }
   }
   var st = document.createElement('style');
   st.textContent = '.lang-b{border:2px solid rgba(255,255,255,.55);background:transparent;color:#fff;border-radius:99px;min-width:40px;height:36px;padding:0 10px;font:800 16px/1 Inter,system-ui,sans-serif;cursor:pointer;margin-left:8px;flex-shrink:0}@media(max-width:760px){.lang-b{min-width:34px;height:34px;padding:0 6px;margin-left:0}header.top .wrap{gap:6px;padding:10px}header.top .wrap>a>img{width:38px;height:38px}header.top .brand{font-size:15px;line-height:1.15}header.top .brand small{display:none}header.top .burger{padding:8px 10px;flex-shrink:0}}@media(max-width:400px){header.top .av-badge{font-size:13px;padding:7px 9px}header.top .wrap{gap:4px;padding:8px}.lang-b{min-width:30px;padding:0 4px}}.lang-b:hover{background:rgba(255,255,255,.12)}html.ui-ar body{font-family:Inter,"Noto Sans Arabic","Segoe UI",Tahoma,sans-serif}';

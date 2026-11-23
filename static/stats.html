@@ -156,7 +156,7 @@ function examHtml(rows){
 function langHtml(rows, uniq){
   const l={}; rows.filter(r=>r.ev==="langue").sort((a,b)=>a.t-b.t).forEach(r=>{l[r.vid]=r.titre;});
   const ar=Object.values(l).filter(v=>v==="ar").length;
-  if(!Object.keys(l).length) return '<div class="empty">Pas encore de données : apparaît quand un visiteur clique sur le bouton « ع ».</div>';
+  if(!Object.keys(l).length) return '<div class="empty">Pas encore de données : apparaît quand un visiteur clique sur le bouton « AR ».</div>';
   return `<p style="margin:0 0 8px"><b>${ar}</b> visiteur${ar>1?"s":""} utilise${ar>1?"nt":""} l'interface en arabe${uniq?` (${Math.round(100*ar/uniq)} % des visiteurs de la période)`:""}.</p>`+bars([["Arabe",ar],["Revenus au français",Object.values(l).filter(v=>v==="fr").length]], Object.keys(l).length, "#7b3fb0");
 }
 let charts=[];
