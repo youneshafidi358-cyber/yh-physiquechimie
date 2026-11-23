@@ -89,7 +89,7 @@ async function load(cle){
     try{ const last={}; ROWS.forEach(r=>{ const n=+r.niveau; if(r.ev==="avis"&&n>=1&&n<=5&&r.vid&&(!last[r.vid]||last[r.vid].t<r.t)) last[r.vid]={vid:r.vid,note:n,t:r.t,c:r.titre||"",v:villeAvis(r)}; });
       /* commentaire : le plus récent non vide de chaque visiteur */
       ROWS.filter(r=>r.ev==="avis"&&r.titre&&last[r.vid]).sort((a,b)=>a.t-b.t).forEach(r=>{ last[r.vid].c=r.titre; });
-      const imp=Object.values(last); if(imp.length) fetch("/api/avis",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({import:imp})}).catch(()=>{}); }catch(e){}
+      const imp=Object.values(last); if(imp.length) fetch("/api/avis",{method:"POST",headers:{"Content-Type":"application/json","X-Stats-Key":cle},body:JSON.stringify({import:imp})}).catch(()=>{}); }catch(e){}
     render();
   }catch(e){ loginView("Impossible de charger les données. Vérifiez votre connexion."); }
 }
@@ -193,6 +193,7 @@ function render(){
       <div class="box full"><h2>⏱ Temps passé sur chaque document</h2>${dureeHtml(durs)}</div>
       <div class="box"><h2>Navigateurs</h2>${bars(count(visits,r=>r.br), visits.length)}</div>
       <div class="box"><h2>Heures de visite</h2><div style="height:200px"><canvas id="cHours"></canvas></div></div>
+      <div class="box full" id="secBox"><h2>🛡️ Sécurité — tentatives bloquées (30 jours)</h2><div class="empty">Chargement…</div></div>
     </div>
     <p class="info">Données enregistrées dans votre Google Sheet « Statistiques YH ». Mise à jour à chaque actualisation.</p>
   </main>`;
@@ -200,6 +201,7 @@ function render(){
   document.querySelectorAll(".periods button[data-p]").forEach(b=>b.onclick=()=>{ PERIOD=b.dataset.p; render(); });
   $("#refresh").onclick=()=>{ try{ load(localStorage.getItem("yh_stats_cle")); }catch(_){} };
 
+  securite();
   fetch("/api/avis",{cache:"no-store"}).then(r=>r.json()).then(d=>{ const e=document.getElementById("kNote"); if(e&&d&&d.nombre){ e.textContent=String(d.moyenne).replace(".",",")+"/5"; const sub=e.nextElementSibling; if(sub){ const rp=d.repartition||{}; sub.textContent=d.nombre+" avis au total · "+[5,4,3,2,1].map(k=>k+"★ "+(rp[k]||0)).join(" · "); } } }).catch(()=>{});
   fetch("/api/push/stats").then(r=>r.json()).then(d=>{ const e=document.getElementById("kAb"); if(e && d && d.abonnes!=null) e.textContent=d.abonnes; }).catch(()=>{});
   charts.forEach(c=>c.destroy()); charts=[];
@@ -222,6 +224,25 @@ function render(){
   const hours=Array(24).fill(0); visits.forEach(v=>hours[new Date(v.t).getHours()]++);
   charts.push(new Chart($("#cHours"),{type:"line",data:{labels:hours.map((_,h)=>h+"h"),datasets:[{data:hours,borderColor:"#d4a017",backgroundColor:"rgba(212,160,23,.15)",fill:true,tension:.35,pointRadius:0}]},
     options:{maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{precision:0}}}}}));
+}
+
+const MOTIFS = {abonnement_refuse:"Abonnement avec une adresse non autorisée",trop_de_requetes:"Trop de requêtes (envoi en masse)",
+  requete_trop_grosse:"Requête trop grosse",code_incorrect:"Mauvais code d'accès",code_force_brute:"Essais de code en série",import_avis_refuse:"Fausses notes en masse (import)",trop_de_notes:"Trop de notes depuis la même adresse"};
+async function securite(){
+  const box=document.getElementById("secBox"); if(!box) return;
+  const h=box.querySelector("h2").outerHTML;
+  let cle=""; try{ cle=localStorage.getItem("yh_stats_cle")||""; }catch(_){}
+  try{
+    const r=await fetch("/api/securite",{headers:{"X-Stats-Key":cle},cache:"no-store"}), d=await r.json();
+    if(!r.ok){ box.innerHTML=h+`<div class="empty">${r.status===503?"Journal pas encore activé (variable STATS_CLE ou KV ABONNES manquant).":"Accès refusé ("+esc(d.erreur||r.status)+")."}</div>`; return; }
+    const l=d.tentatives||[];
+    if(!l.length){ box.innerHTML=h+'<div class="empty">✅ Aucune tentative bloquée. Tout est calme.</div>'; return; }
+    const parMotif=count(l,x=>MOTIFS[x.motif]||x.motif), ips=new Set(l.map(x=>x.ip)).size;
+    box.innerHTML=h+`<p style="margin:0 0 10px;font-size:14px"><b style="color:var(--red)">${l.length}</b> tentative${l.length>1?"s":""} bloquée${l.length>1?"s":""} venant de <b>${ips}</b> adresse${ips>1?"s":""} IP. Rien n'est passé.</p>`+
+      bars(parMotif,l.length,"#c0392b")+
+      '<div style="overflow-x:auto;margin-top:12px"><table><tr><th>Date</th><th>Motif</th><th>IP</th><th>Pays</th><th>Détail</th></tr>'+
+      l.slice(0,50).map(x=>`<tr><td>${new Date(x.t).toLocaleString("fr-FR")}</td><td>${esc(MOTIFS[x.motif]||x.motif)}</td><td>${esc(x.ip)}</td><td>${esc(x.pays||"")}</td><td style="max-width:320px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${esc(x.ua||"")}">${esc(x.chemin||"")} ${esc(x.detail||"")}</td></tr>`).join("")+'</table></div>';
+  }catch(e){ box.innerHTML=h+'<div class="empty">Journal indisponible pour le moment.</div>'; }
 }
 
 let saved=""; try{ saved=localStorage.getItem("yh_stats_cle")||""; }catch(_){}

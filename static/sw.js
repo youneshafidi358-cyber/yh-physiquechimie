@@ -5,7 +5,9 @@ self.addEventListener("push", (e) => {
   e.waitUntil(fetch("/api/push/derniere", { cache: "no-store" }).then((r) => r.json()).catch(() => ({}))
     .then((m) => self.registration.showNotification(m.titre || "YH Physique-Chimie", {
       body: m.corps || "Nouveautés sur le site", icon: "/icon-192.png", badge: "/icon-96.png",
-      data: { url: m.url || "/" }, tag: "yh-nouveau", renotify: true })));
+      data: { url: m.url || "/" },
+      // Même message reçu deux fois = même tag : il remplace l'ancien sans sonner une deuxième fois.
+      tag: "yh-" + (m.t || "nouveau"), renotify: false })));
 });
 self.addEventListener("notificationclick", (e) => {
   e.notification.close();

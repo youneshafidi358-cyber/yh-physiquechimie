@@ -1,6 +1,8 @@
 // Notifications « Suivre le site » (Web Push, sans service extérieur).
 // Stockage : espace KV lié sous le nom ABONNES (Cloudflare Pages > Settings > Bindings).
 // Les clés VAPID sont créées automatiquement au premier appel et gardées dans le KV.
+import { endpointValide, limite, noter } from "../../../lib/securite.js";
+
 const SITE = "https://yh-physiquechimie.pages.dev";
 const NIV = { "2ac": "2APIC", "3ac": "3APIC", tc: "TCS", "1bac": "1BAC", "2bac": "2BAC" };
 const TYPES = { cours: "Cours", exo: "Série", corr: "Corrigé", ds: "Devoir", video: "Vidéo", resume: "Résumé" };
@@ -39,7 +41,7 @@ async function lot(kv) {
   let n = 0;
   for (const it of l.keys) {
     const ab = await kv.get(it.name, "json");
-    if (!ab || !ab.endpoint) continue;
+    if (!ab || !endpointValide(ab.endpoint)) { await kv.delete(it.name); continue; } // adresse non autorisée : supprimée
     const aud = new URL(ab.endpoint).origin;
     jetons[aud] = jetons[aud] || (await jwt(k, aud));
     try {
@@ -51,8 +53,20 @@ async function lot(kv) {
   return n;
 }
 
-// Regarde s'il y a de nouveaux documents dans le site ; si oui, prépare une notification.
+// Heure et jour au Maroc (Africa/Casablanca suit aussi le changement d'heure du Ramadan).
+function maroc(now = new Date()) {
+  const p = Object.fromEntries(new Intl.DateTimeFormat("en-GB", { timeZone: "Africa/Casablanca", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", hourCycle: "h23" })
+    .formatToParts(now).map((x) => [x.type, x.value]));
+  return { jour: `${p.year}-${p.month}-${p.day}`, heure: +p.hour };
+}
+const HEURE_DEBUT = 17, HEURE_FIN = 22; // envoi groupé entre 17 h et 22 h, au plus une fois par jour
+
+// Regarde s'il y a de nouveaux documents ; si oui, prépare UNE notification groupée par jour.
+// Les nouveautés de la journée s'accumulent (« vus » n'est mis à jour qu'à l'envoi).
 async function verifier(kv, origin) {
+  const { jour, heure } = maroc();
+  if (heure < HEURE_DEBUT || heure >= HEURE_FIN) return;
+  if ((await kv.get("jour_envoi")) === jour) return; // déjà une notification aujourd'hui
   const items = [];
   for (const f of ["/catalogue.json", "/extras.json"]) {
     try { const r = await fetch(origin + f, { cf: { cacheTtl: 60 } }); if (r.ok) (await r.json()).forEach((x) => x && x.url && items.push(x)); } catch (_) {}
@@ -63,17 +77,22 @@ async function verifier(kv, origin) {
   if (!vus) { await kv.put("vus", JSON.stringify(urls)); return; } // première fois : on n'envoie rien
   const S = new Set(vus), nouv = items.filter((x) => !S.has(x.url));
   if (!nouv.length) return;
+  await kv.put("jour_envoi", jour); // posé avant l'envoi : un deuxième passage le même jour ne renvoie rien
+  const niv = (x) => NIV[x.niveau] || x.niveau || "";
   let msg;
   if (nouv.length === 1) {
     const x = nouv[0];
-    msg = { titre: "Nouveau : " + x.titre, corps: [x.sousType || TYPES[x.type] || "", NIV[x.niveau] || x.niveau || "", x.unite || ""].filter(Boolean).join(" · "), url: "/?doc=" + encodeURIComponent(x.url) };
+    msg = { titre: "Nouveau document : " + x.titre, corps: [x.sousType || TYPES[x.type] || "", niv(x), x.unite || ""].filter(Boolean).join(" · "), url: "/?doc=" + encodeURIComponent(x.url) };
   } else {
-    msg = { titre: nouv.length + " nouveaux documents sur YH Physique-Chimie", corps: nouv.slice(0, 3).map((x) => "• " + x.titre).join("\n") + (nouv.length > 3 ? "\n…" : ""), url: "/" };
+    const niveaux = [...new Set(nouv.map(niv).filter(Boolean))].join(", ");
+    msg = { titre: nouv.length + " nouveaux documents" + (niveaux ? " (" + niveaux + ")" : ""),
+      corps: nouv.slice(0, 3).map((x) => x.titre).join(" – ") + (nouv.length > 3 ? " et " + (nouv.length - 3) + " autre" + (nouv.length > 4 ? "s" : "") : ""), url: "/" };
   }
+  msg.titre = msg.titre.slice(0, 80); msg.corps = msg.corps.slice(0, 180);
   msg.t = Date.now();
   await kv.put("derniere", JSON.stringify(msg));
   await kv.put("vus", JSON.stringify([...new Set([...vus, ...urls])]));
-  await kv.put("envoi", JSON.stringify({ cursor: null }));
+  await kv.put("envoi", JSON.stringify({ cursor: null, t: msg.t }));
 }
 
 export async function onRequest({ request, env, params, waitUntil }) {
@@ -84,15 +103,22 @@ export async function onRequest({ request, env, params, waitUntil }) {
 
   if (route === "cle") return J({ actif: true, cle: (await cles(kv)).public });
 
+  if ((route === "abonner" || route === "desabonner") && request.method === "POST") {
+    if (await limite(request, "push-" + route, 10, 600)) { await noter(kv, request, "trop_de_requetes", route); return J({ ok: false }, 429, { "retry-after": "600" }); }
+    if (+(request.headers.get("content-length") || 0) > 4096) { await noter(kv, request, "requete_trop_grosse", route); return J({ ok: false }, 413); }
+  }
   if (route === "abonner" && request.method === "POST") {
     const s = await request.json().catch(() => null);
-    if (!s || typeof s.endpoint !== "string" || !/^https:\/\//.test(s.endpoint) || s.endpoint.length > 800) return J({ ok: false }, 400);
+    if (!s || !endpointValide(s.endpoint)) {
+      await noter(kv, request, "abonnement_refuse", s && typeof s.endpoint === "string" ? s.endpoint : "corps invalide");
+      return J({ ok: false }, 400);
+    }
     await kv.put(await idAb(s.endpoint), JSON.stringify({ endpoint: s.endpoint, t: Date.now() }));
     return J({ ok: true });
   }
   if (route === "desabonner" && request.method === "POST") {
     const s = await request.json().catch(() => null);
-    if (s && s.endpoint) await kv.delete(await idAb(s.endpoint));
+    if (s && endpointValide(s.endpoint)) await kv.delete(await idAb(s.endpoint));
     return J({ ok: true });
   }
   if (route === "derniere") {
