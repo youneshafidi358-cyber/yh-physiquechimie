@@ -53,8 +53,20 @@ async function lot(kv) {
   return n;
 }
 
-// Regarde s'il y a de nouveaux documents dans le site ; si oui, prépare une notification.
+// Heure et jour au Maroc (Africa/Casablanca suit aussi le changement d'heure du Ramadan).
+function maroc(now = new Date()) {
+  const p = Object.fromEntries(new Intl.DateTimeFormat("en-GB", { timeZone: "Africa/Casablanca", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", hourCycle: "h23" })
+    .formatToParts(now).map((x) => [x.type, x.value]));
+  return { jour: `${p.year}-${p.month}-${p.day}`, heure: +p.hour };
+}
+const HEURE_DEBUT = 17, HEURE_FIN = 22; // envoi groupé entre 17 h et 22 h, au plus une fois par jour
+
+// Regarde s'il y a de nouveaux documents ; si oui, prépare UNE notification groupée par jour.
+// Les nouveautés de la journée s'accumulent (« vus » n'est mis à jour qu'à l'envoi).
 async function verifier(kv, origin) {
+  const { jour, heure } = maroc();
+  if (heure < HEURE_DEBUT || heure >= HEURE_FIN) return;
+  if ((await kv.get("jour_envoi")) === jour) return; // déjà une notification aujourd'hui
   const items = [];
   for (const f of ["/catalogue.json", "/extras.json"]) {
     try { const r = await fetch(origin + f, { cf: { cacheTtl: 60 } }); if (r.ok) (await r.json()).forEach((x) => x && x.url && items.push(x)); } catch (_) {}
@@ -65,17 +77,22 @@ async function verifier(kv, origin) {
   if (!vus) { await kv.put("vus", JSON.stringify(urls)); return; } // première fois : on n'envoie rien
   const S = new Set(vus), nouv = items.filter((x) => !S.has(x.url));
   if (!nouv.length) return;
+  await kv.put("jour_envoi", jour); // posé avant l'envoi : un deuxième passage le même jour ne renvoie rien
+  const niv = (x) => NIV[x.niveau] || x.niveau || "";
   let msg;
   if (nouv.length === 1) {
     const x = nouv[0];
-    msg = { titre: "Nouveau : " + x.titre, corps: [x.sousType || TYPES[x.type] || "", NIV[x.niveau] || x.niveau || "", x.unite || ""].filter(Boolean).join(" · "), url: "/?doc=" + encodeURIComponent(x.url) };
+    msg = { titre: "Nouveau document : " + x.titre, corps: [x.sousType || TYPES[x.type] || "", niv(x), x.unite || ""].filter(Boolean).join(" · "), url: "/?doc=" + encodeURIComponent(x.url) };
   } else {
-    msg = { titre: nouv.length + " nouveaux documents sur YH Physique-Chimie", corps: nouv.slice(0, 3).map((x) => "• " + x.titre).join("\n") + (nouv.length > 3 ? "\n…" : ""), url: "/" };
+    const niveaux = [...new Set(nouv.map(niv).filter(Boolean))].join(", ");
+    msg = { titre: nouv.length + " nouveaux documents" + (niveaux ? " (" + niveaux + ")" : ""),
+      corps: nouv.slice(0, 3).map((x) => x.titre).join(" – ") + (nouv.length > 3 ? " et " + (nouv.length - 3) + " autre" + (nouv.length > 4 ? "s" : "") : ""), url: "/" };
   }
+  msg.titre = msg.titre.slice(0, 80); msg.corps = msg.corps.slice(0, 180);
   msg.t = Date.now();
   await kv.put("derniere", JSON.stringify(msg));
   await kv.put("vus", JSON.stringify([...new Set([...vus, ...urls])]));
-  await kv.put("envoi", JSON.stringify({ cursor: null }));
+  await kv.put("envoi", JSON.stringify({ cursor: null, t: msg.t }));
 }
 
 export async function onRequest({ request, env, params, waitUntil }) {

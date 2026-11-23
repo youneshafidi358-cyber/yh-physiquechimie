@@ -35,9 +35,12 @@
   fab.setAttribute("aria-haspopup", "dialog");
   document.body.appendChild(fab);
 
+  var GEO = { ville: "", region: "" };
+  try { fetch("/api/geo").then(function (r) { return r.json(); }).then(function (g) { if (g) GEO = g; }).catch(function () {}); } catch (e) {}
   function send(stars, comment) {
     var body = JSON.stringify({ ev: "avis", vid: vid, src: "site", dev: /Mobi|Android|iPhone/i.test(navigator.userAgent) ? "téléphone" : "ordinateur",
-      br: "", niveau: String(stars), titre: (comment || "").slice(0, 150), type: location.pathname, canal: document.title.slice(0, 120), nouveau: 0 });
+      br: "", niveau: String(stars), titre: (comment || "").slice(0, 150), type: GEO.region || "", canal: GEO.ville || "", nouveau: 0 });
+    try { fetch("/api/avis", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ vid: vid, note: stars, c: (comment || "").slice(0, 150) }), keepalive: true }).then(function () { setTimeout(charger, 300); }).catch(function () {}); } catch (e) {}
     try { if (navigator.sendBeacon && navigator.sendBeacon(URL_SCRIPT, new Blob([body], { type: "text/plain;charset=utf-8" }))) return; } catch (e) {}
     try { fetch(URL_SCRIPT, { method: "POST", mode: "no-cors", body: body, headers: { "Content-Type": "text/plain;charset=utf-8" }, keepalive: true }); } catch (e) {}
   }
@@ -91,7 +94,7 @@
     ".av-strip{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:14px;padding:10px 16px;border-radius:14px;background:#fff;color:#0f2350;font:700 15px Inter,system-ui,sans-serif;box-shadow:0 4px 14px rgba(15,35,80,.15);width:fit-content;max-width:100%}" +
     ".av-strip .st{display:inline-flex}.av-strip .st button{border:0;background:none;padding:0 2px;font-size:30px;line-height:1;color:#c9ced8;cursor:pointer}" +
     ".av-strip .st button.on{color:#f5b400}.av-strip small{color:#565f74;font-weight:500}" +
-    "@media (max-width:700px){.av-badge small,.av-badge .t{display:none}.av-badge{margin:0 4px;padding:7px 11px}}";
+    "@media (max-width:700px){.av-badge small{display:none}.av-badge{margin:0 4px;padding:7px 10px;font-size:13px}}";
   var bs = document.createElement("style"); bs.textContent = bcss; document.head.appendChild(bs);
   var top = document.querySelector("header.top .wrap .brand"), badge = null;
   if (top) {
@@ -116,15 +119,64 @@
       x.onclick = function () { open(false, n); };
     });
   }
-  fetch("/api/note").then(function (r) { return r.json(); }).then(function (d) {
-    if (d && d.nombre) return d;
-    return fetch(URL_SCRIPT + "?note=1").then(function (r) { return r.json(); });
-  }).then(function (d) {
-    if (!d || !d.nombre) return;
-    var m = String(d.moyenne).replace(".", ","), txt = d.nombre + " avis";
-    if (badge) { badge.innerHTML = '★ ' + m + '/5 <small>(' + txt + ')</small> <span class="t">· Noter</span>'; badge.setAttribute("aria-label", "Note du site " + m + " sur 5, " + txt + ". Noter le site"); }
-    if (info) info.textContent = "Moyenne : " + m + "/5 · " + txt;
-  }).catch(function () {});
+  /* Bilan public des notes : moyenne, nombre d'avis, répartition */
+  var rc = document.createElement("style");
+  rc.textContent = ".av-sum{display:flex;gap:18px;align-items:center;flex-wrap:wrap;margin-top:10px;padding:14px 18px;border-radius:14px;background:#fff;color:#0f2350;box-shadow:0 4px 14px rgba(15,35,80,.15);width:fit-content;max-width:100%;font-family:Inter,system-ui,sans-serif}" +
+    ".av-sum .big{text-align:center;min-width:96px}.av-sum .big b{display:block;font-size:34px;line-height:1}.av-sum .big .s{color:#f5b400;font-size:17px;letter-spacing:1px}.av-sum .big small{display:block;color:#565f74;font-size:13px}" +
+    ".av-sum .bars{display:grid;gap:4px;min-width:190px;flex:1}.av-sum .r{display:grid;grid-template-columns:26px 1fr 30px;gap:8px;align-items:center;font-size:13px;font-weight:700}" +
+    ".av-sum .tr{height:9px;border-radius:9px;background:#e8ecf4;overflow:hidden}.av-sum .tr i{display:block;height:100%;background:#f5b400;border-radius:9px}.av-sum .r span:last-child{color:#565f74;text-align:right}" +
+    ".av-sum .vide{font-size:14px;color:#565f74}";
+  document.head.appendChild(rc);
+  var sum = null;
+  if (typeof strip !== "undefined" && strip) { sum = document.createElement("div"); sum.className = "av-sum"; sum.setAttribute("aria-live", "polite"); strip.insertAdjacentElement("afterend", sum); }
+  var car = null, carT = null;
+  if (sum) { car = document.createElement("div"); car.className = "av-car"; car.setAttribute("aria-live", "polite"); car.hidden = true; sum.insertAdjacentElement("afterend", car); }
+  var cc = document.createElement("style");
+  cc.textContent = ".av-car{margin-top:10px;max-width:560px;padding:14px 18px 12px;border-radius:14px;background:#fff;color:#0f2350;box-shadow:0 4px 14px rgba(15,35,80,.15);font-family:Inter,system-ui,sans-serif;position:relative;min-height:96px}" +
+    ".av-car .q{font-size:15.5px;line-height:1.5;font-style:italic;transition:opacity .45s}.av-car .q.out{opacity:0}.av-car .s{color:#f5b400;letter-spacing:1px;font-size:15px}" +
+    ".av-car .who{font-size:12.5px;color:#565f74;margin-top:4px}.av-car .dots{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:8px}.av-car .dots button{width:9px;height:9px;border-radius:50%;border:0;background:#d5dbe7;padding:0;cursor:pointer}.av-car .dots button.on{background:#f5b400}" +
+    ".av-car h4{margin:0 0 6px;font-size:13px;color:#565f74;font-weight:700;text-transform:uppercase;letter-spacing:.04em}";
+  document.head.appendChild(cc);
+  function ilya(t) { var j = Math.floor((Date.now() - t) / 864e5); return j <= 0 ? "aujourd'hui" : j === 1 ? "hier" : "il y a " + j + " jours"; }
+  function esc2(x) { return String(x).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  function carrousel(list) {
+    if (!car) return; clearInterval(carT);
+    if (!list || !list.length) { car.hidden = true; return; }
+    car.hidden = false; var i = 0;
+    car.innerHTML = '<h4>💬 Ce que disent les visiteurs</h4><div class="q"></div><div class="dots">' + list.map(function (_, k) { return '<button type="button" aria-label="Avis ' + (k + 1) + '"></button>'; }).join("") + '</div>';
+    var q = car.querySelector(".q"), ds = car.querySelectorAll(".dots button");
+    function show(k) {
+      i = (k + list.length) % list.length; var a = list[i];
+      q.classList.add("out");
+      setTimeout(function () {
+        q.innerHTML = '<span dir="auto">« ' + esc2(a.c) + ' »</span><div class="who">' + (a.t ? new Date(a.t).toLocaleDateString("fr-FR") : "") + '</div>';
+        q.classList.remove("out");
+      }, 250);
+      ds.forEach(function (d, k2) { d.classList.toggle("on", k2 === i); });
+    }
+    ds.forEach(function (d, k2) { d.onclick = function () { show(k2); clearInterval(carT); carT = setInterval(function () { show(i + 1); }, 5000); }; });
+    show(0); if (list.length > 1) carT = setInterval(function () { show(i + 1); }, 5000);
+
+  }
+  function etoiles(m) { var r = Math.round(m), o = ""; for (var i = 1; i <= 5; i++) o += i <= r ? "★" : "☆"; return o; }
+  function charger() {
+    fetch("/api/avis", { cache: "no-store" }).then(function (r) { return r.json(); }).then(function (d) {
+      d = d || {}; var n = d.nombre || 0, rep = d.repartition || {};
+      var m = String(d.moyenne || 0).replace(".", ","), txt = n + " avis";
+      if (badge) {
+        if (n) { badge.innerHTML = '★ ' + m + '/5 <small>(' + txt + ')</small> <span class="t">· Noter</span>'; badge.setAttribute("aria-label", "Note du site " + m + " sur 5, " + txt + ". Noter le site"); }
+        else { badge.innerHTML = '★ <span class="t">Noter le site</span>'; }
+      }
+      if (info) info.textContent = n ? "Moyenne : " + m + "/5 · " + txt : "";
+      carrousel(d.commentaires || []);
+      if (!sum) return;
+      if (!n) { sum.innerHTML = '<span class="vide">⭐ Aucun avis pour l\'instant : sois le premier à noter le site !</span>'; return; }
+      var bars = [5, 4, 3, 2, 1].map(function (k) { var c = +rep[k] || 0, p = Math.round(c * 100 / n);
+        return '<div class="r" aria-label="' + c + ' avis à ' + k + ' étoiles"><span>' + k + '★</span><span class="tr"><i style="width:' + p + '%"></i></span><span>' + c + '</span></div>'; }).join("");
+      sum.innerHTML = '<div class="big"><b>' + m + '<span style="font-size:17px;color:#565f74">/5</span></b><span class="s" aria-hidden="true">' + etoiles(d.moyenne) + '</span><small>' + txt + '</small></div><div class="bars">' + bars + '</div>';
+    }).catch(function () {});
+  }
+  charger();
 
   /* Temps passé sur une leçon (temps actif, onglet visible) */
   if (/^\/lecons\//.test(location.pathname)) {

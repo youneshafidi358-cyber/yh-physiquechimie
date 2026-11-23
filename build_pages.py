@@ -222,6 +222,7 @@ def _page(title, desc, canonical, body, jsonld, nav, extra_css, extra_js):
 <script>
 document.addEventListener('click',e=>{{const a=e.target.closest('a[data-ev]');if(!a)return;try{{gtag('event',a.dataset.ev,{{titre:a.dataset.t||'',lecon:document.title}})}}catch(x){{}}}});
 </script>
+<script defer src="/js/soutien.js"></script>
 <script defer src="/js/avis.js"></script>
 <script defer src="/js/suivre.js"></script>
 </body>
@@ -312,7 +313,7 @@ def level_hub(niv, lv):
             p_ds += card(f"DS{n}", f"Devoir surveillé n°{n}", f"{len(vs)} versions : {letters}", "Chaque version corrigée en détail, exercice par exercice", "Choisir la version →", f"#ds{n}", f' data-sub="dsg{n}"')
             vcards = "".join(card(f"Version {L}", E(t), f"DS{n}", E(f), "Voir la correction →", h) for L, t, h, f in vs)
             subs += f'''<section class="subp" id="dsg{n}" hidden><h3 class="sec" style="font-size:19px">📁 DS{n} – choisis ta version</h3><div class="lcards">{vcards}</div></section>'''
-    p_ex = ""
+    p_ex = '<a class="lc" href="/examens-locaux-3ac/" style="--c:#7b3fb0"><span class="lc-code">📚</span><span class="lc-t">Tous les examens locaux 3AC</span><span class="lc-m">Page dédiée · sujets + corrigés</span><span class="lc-f">Liste complète par année</span><span class="lc-go">Ouvrir →</span></a>' if niv == "3ac" else ""
     for (an, L), d in sorted(exams.items(), key=lambda x: (-int(x[0][0]), x[0][1])):
         def imgs(u):
             stem = os.path.basename(u)[:-4]
@@ -324,13 +325,17 @@ def level_hub(niv, lv):
         bt = ""
         if "sujet" in d: bt += btn(d["sujet"], "", "📄 Sujet", f"Examen local {an} – sujet {L}")
         if "corr" in d: bt += btn(d["corr"], " exc", "✅ Corrigé détaillé", f"Corrigé détaillé – sujet {L}")
-        p_ex += f'''<div class="lc exk" style="--c:{col}"><span class="lc-code">Sujet {L}</span><span class="lc-t">Examen normalisé local {an}</span><span class="lc-m">Session janvier · 1 heure</span><span class="lc-f">Énoncé + corrigé pas à pas</span><span class="exbs">{bt}</span></div>'''
+        if niv == "2bac":
+            ses = "normale" if L == "N" else "de rattrapage"
+            p_ex += f'''<div class="lc exk" style="--c:{col}"><span class="lc-code">{an} · {"Normale" if L == "N" else "Rattrapage"}</span><span class="lc-t">Examen national {an} – session {ses}</span><span class="lc-m">2BAC Sciences Mathématiques · 4 heures</span><span class="lc-f">Énoncé + corrigé détaillé</span><span class="exbs">{bt}</span></div>'''
+            continue
+        p_ex += f'''<div class="lc exk" style="--c:{col}"><span class="lc-code">Sujet {L}</span><span class="lc-t">Examen normalisé local {an}</span><span class="lc-m">{E((d.get("sujet") or d.get("corr")).get("lieu", "Session janvier"))} · 1 heure</span><span class="lc-f">Énoncé + corrigé pas à pas</span><span class="exbs">{bt}</span></div>'''
     p_ds += "</div>" + subs + '<div class="lcards" hidden>'
     cats = [("cours", "📖", "Cours", f"{len(lessons)} leçon{'s' if len(lessons) > 1 else ''}", p_cours),
             ("exercices", "✍️", "Exercices", f"{len(exos)} série{'s' if len(exos) > 1 else ''} corrigée{'s' if len(exos) > 1 else ''}", p_exos),
             ("devoirs", "📝", "Devoirs", f"{len(groups)} devoir{'s' if len(groups) > 1 else ''} corrigé{'s' if len(groups) > 1 else ''}" + (f" ({len(ds)} versions)" if len(ds) > len(groups) else ""), p_ds)]
     if exams:
-        cats.append(("examens", "🎓", "Examens", f"{len(exams)} examen{'s' if len(exams) > 1 else ''} {'locaux' if len(exams) > 1 else 'local'}{'' if len(exams) > 1 else ''} corrigé{'s' if len(exams) > 1 else ''}", p_ex))
+        cats.append(("examens", "🎓", "Examens", (f"{len(exams)} examen{'s' if len(exams) > 1 else ''} national{'aux' if len(exams) > 1 else ''} corrigé{'s' if len(exams) > 1 else ''}" if niv == "2bac" else f"{len(exams)} examen{'s' if len(exams) > 1 else ''} {'locaux' if len(exams) > 1 else 'local'} corrigé{'s' if len(exams) > 1 else ''}"), p_ex))
     top = "".join(f'''<a class="lc cat" style="--c:{col}" href="#{k}" data-cat="{k}"><span class="lc-code">{ic}</span><span class="lc-t">{t}</span><span class="lc-m">{n}</span><span class="lc-go">{'Ouvrir →' if p else 'Bientôt'}</span></a>''' for k, ic, t, n, p in cats)
     panels = "".join(f'''<section class="catp" id="{k}" hidden><h2 class="sec">{ic} {t} – {LEVELS[niv]['short']}</h2>{'<div class="lcards">' + p + '</div>' if p else '<p class="tip">Bientôt disponible.</p>'}</section>''' for k, ic, t, n, p in cats)
     js = """<script>(function(){const cs=[...document.querySelectorAll('.cat')];function show(k){document.querySelectorAll('.catp').forEach(p=>p.hidden=p.id!==k);cs.forEach(c=>c.classList.toggle('on',c.dataset.cat===k));}
@@ -509,7 +514,7 @@ def build():
     for niv in USED_LEVELS:
         lv = by_level[niv]; info = LEVELS[niv]
         url = f"{BASE}/niveau/{niv}/"
-        title = f"Physique-Chimie {info['short']} : cours, exercices et devoirs corrigés"
+        title = f"Physique-Chimie {info['short']} : cours, exercices et devoirs corrigés" if niv not in ("3ac", "2bac") else ("Physique-Chimie 3AC : cours, exercices, devoirs et examens locaux corrigés" if niv == "3ac" else "Examens nationaux Physique-Chimie 2BAC SM corrigés | Bac Sciences Maths")
         desc = (f"Physique-chimie {info['short']} ({info['long']}) : cours, simulations, exercices et devoirs corrigés, gratuits. Leçons : "
                 + ", ".join(l["unite"] for l in lv if not l["unite"].startswith(("Contrôles", "Révision"))) + ".")[:300]
         hub_html, hub_js = level_hub(niv, lv)
@@ -550,6 +555,58 @@ def build():
         d = os.path.join(SITE, "niveau", niv); os.makedirs(d, exist_ok=True)
         open(os.path.join(d, "index.html"), "w", encoding="utf-8").write(page(f"Physique-Chimie {info['short']} – bientôt | YH Physique-Chimie", f"Physique-chimie {info['long']} : bientôt disponible.", url, body,
             {"@context": "https://schema.org", "@type": "WebPage", "url": url}, niv).replace('<meta name="viewport"', '<meta name="robots" content="noindex">\n<meta name="viewport"', 1))
+
+    # Page dédiée « Examens locaux 3AC » (référencement : mots-clés recherchés par les élèves)
+    ex3 = [it for l in by_level.get("3ac", []) if l["unite"].startswith("Examens") for it in l["items"]]
+    if ex3:
+        url = f"{BASE}/examens-locaux-3ac/"
+        grp = {}
+        for it in ex3:
+            m = re.search(r"(\d{4}).*?[Ss]ujet\s+(\w)", it["titre"])
+            if m: grp.setdefault((m.group(1), m.group(2)), {})["corr" if it["type"] in ("corrige", "corr") else "sujet"] = it
+        annees = sorted({a for a, _ in grp}, reverse=True)
+        cards = ""
+        for (an, L), d in sorted(grp.items(), key=lambda x: (-int(x[0][0]), x[0][1])):
+            it0 = d.get("sujet") or d.get("corr"); lieu = it0.get("lieu", "")
+            ville = lieu.split(" · ")[0] if lieu else ""
+            bt = ""
+            if "sujet" in d: bt += f'<a class="exb" href="/?doc={E(d["sujet"]["url"])}">📄 Sujet (PDF)</a>'
+            if "corr" in d: bt += f'<a class="exb exc" href="/?doc={E(d["corr"]["url"])}">✅ Corrigé détaillé</a>'
+            cards += f'''<article class="lc exk" style="--c:#7b3fb0"><span class="lc-code">{an}</span><h3 class="lc-t" style="margin:0">Examen local Physique-Chimie 3AC {an}{(" – " + E(ville)) if ville else ""} (sujet {L})</h3><span class="lc-m">Examen normalisé local 3APIC · {E(lieu)} · 1 heure</span><span class="lc-f">Sujet + correction détaillée pas à pas</span><span class="exbs">{bt}</span></article>'''
+        title = f"Examens locaux 3AC Physique-Chimie corrigés {annees[-1]}–{annees[0]} | 3APIC"
+        desc = (f"{len(grp)} examens normalisés locaux de physique-chimie 3ème année collège (3AC / 3APIC) avec corrections détaillées : "
+                f"sujets {', '.join(annees)}, semestre 1. Gratuit, en ligne, format officiel.")
+        body = f"""<section class="head"><div class="wrap">
+  <div class="crumbs"><a href="/">Accueil</a> › <a href="/niveau/3ac/">3AC</a> › Examens locaux</div>
+  <h1>Examens locaux Physique-Chimie 3AC avec corrigés</h1>
+  <p class="ar" lang="ar-MA" dir="rtl" style="font-size:19px;margin:6px 0">الامتحان المحلي الموحد الفيزياء والكيمياء الثالثة إعدادي مع التصحيح</p>
+  <div class="tags"><span class="tag g">3AC · 3APIC</span><span class="tag">{len(grp)} examens corrigés</span><span class="tag">{annees[-1]} – {annees[0]}</span><span class="tag">Gratuit</span></div>
+</div></section>
+<main class="wrap">
+  <div class="intro"><p>Révise l'<b>examen normalisé local de physique-chimie de 3ème année collège</b> (3AC, 3APIC) avec de vrais sujets des années {', '.join(annees)}.
+  Chaque <b>examen local 3AC</b> est présenté au <b>format officiel</b> (sujet + barème), avec une <b>correction détaillée</b> : méthode, réponses encadrées et erreurs fréquentes.
+  Programme du semestre 1 : les matériaux, l'atome et les ions, l'action de l'air et des solutions acides et basiques sur les métaux, le pH, les tests d'identification des ions, la combustion des matières organiques.</p></div>
+  <h2 class="sec">📝 Sujets et corrigés des examens locaux 3AC</h2>
+  <div class="lcards">{cards}</div>
+  <h2 class="sec">Conseils pour réussir l'examen local de physique-chimie 3AC</h2>
+  <div class="intro"><ul>
+  <li>Fais d'abord le sujet seul, en <b>1 heure</b>, puis compare avec la correction détaillée.</li>
+  <li>Revois les points qui tombent souvent : formule de la rouille Fe<sub>2</sub>O<sub>3</sub>, alumine Al<sub>2</sub>O<sub>3</sub>, charge d'un ion, pH et dilution, tests des ions (Fe<sup>2+</sup>, Fe<sup>3+</sup>, Cu<sup>2+</sup>, Cl<sup>−</sup>), équations équilibrées.</li>
+  <li>Retrouve aussi les <a href="/niveau/3ac/">cours, exercices et devoirs corrigés de 3AC</a>.</li></ul></div>
+  {share_block(url, "📝 Examens locaux Physique-Chimie 3AC avec corrigés détaillés :")}
+  <div class="soutien">⭐ <b>Cours de soutien</b> 3AC (en ligne ou à domicile) pour préparer l'examen — <a href="https://wa.me/{WA}" target="_blank" rel="noopener" data-ev="clic_soutien_examens">WhatsApp 06 94 19 48 80</a></div>
+</main>"""
+        jsonld = {"@context": "https://schema.org", "@graph": [
+            {"@type": "BreadcrumbList", "itemListElement": [
+                {"@type": "ListItem", "position": 1, "name": "Accueil", "item": f"{BASE}/"},
+                {"@type": "ListItem", "position": 2, "name": "3AC", "item": f"{BASE}/niveau/3ac/"},
+                {"@type": "ListItem", "position": 3, "name": "Examens locaux", "item": url}]},
+            {"@type": "CollectionPage", "name": title, "url": url, "description": desc, "inLanguage": "fr", "isAccessibleForFree": True,
+             "about": "Physique-Chimie 3ème année collège", "educationalLevel": "3ème année collège (3APIC)",
+             "author": {"@type": "Person", "name": "Youness HAFIDI", "url": f"{BASE}/"}}]}
+        d = os.path.join(SITE, "examens-locaux-3ac"); os.makedirs(d, exist_ok=True)
+        open(os.path.join(d, "index.html"), "w", encoding="utf-8").write(page(title, desc, url, body, jsonld, "3ac", extra_css=".exbs{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.exb{flex:1;min-width:120px;text-align:center;padding:10px 12px;border-radius:10px;background:#eef2fb;color:#1f3a8a;font-weight:700;text-decoration:none}.exb.exc{background:#7b3fb0;color:#fff}.exk{cursor:default}"))
+        urls.insert(1, (url, "0.9"))
 
     # Page « toutes les leçons » (/lecons/) et page 404
     allli = ""
@@ -601,7 +658,7 @@ def build():
     ab = f"""<section class="head"><div class="wrap"><div class="crumbs"><a href="/">Accueil</a> › À propos</div><h1>À propos</h1><div class="ar" lang="ar">من أنا</div></div></section>
 <main class="wrap"><div class="intro" style="display:flex;gap:18px;align-items:center;flex-wrap:wrap"><img src="/logo.jpg" alt="Logo YH Physique-Chimie" style="width:110px;height:110px;border-radius:50%;border:3px solid var(--gold)">
 <div style="flex:1;min-width:240px"><p><b>Pr. Youness HAFIDI</b> — professeur de physique-chimie au cycle secondaire.</p>
-<p>YH Physique-Chimie rassemble mes ressources pour les élèves : séries d'exercices et corrigés, devoirs surveillés, résumés en cartes mentales, quiz et simulations interactives, du collège au tronc commun (1BAC et 2BAC bientôt).</p>
+<p>YH Physique-Chimie rassemble mes ressources pour les élèves : séries d'exercices et corrigés, devoirs surveillés, résumés en cartes mentales, quiz et simulations interactives, du collège au baccalauréat (examens nationaux 2BAC SM corrigés).</p>
 <p class="ar" lang="ar" dir="rtl">أستاذ الفيزياء والكيمياء بالسلك الثانوي. يضم هذا الموقع سلاسل تمارين مع تصحيحها، وفروضا محروسة، وملخصات، وتمارين تفاعلية، مجانا.</p></div></div>
 <h2 class="sec">Comment utiliser le site</h2>
 <div class="lcards"><a class="lc" style="--c:#1f4e9c" href="/lecons/"><span class="lc-code">01</span><span class="lc-t">📖 Lis le cours</span><span class="lc-m">Définitions, relations et simulation, directement dans la leçon.</span><span class="lc-go">Choisir une leçon →</span></a><a class="lc" style="--c:#1f4e9c" href="/lecons/"><span class="lc-code">02</span><span class="lc-t">✍️ Cherche les exercices</span><span class="lc-m">Seul, sur ta feuille, avant de regarder la correction.</span><span class="lc-go">Choisir une leçon →</span></a><a class="lc" style="--c:#1f4e9c" href="/lecons/"><span class="lc-code">03</span><span class="lc-t">✅ Vérifie</span><span class="lc-m">Clique sur « Voir la réponse » et lis l'erreur fréquente.</span><span class="lc-go">Choisir une leçon →</span></a><a class="lc" style="--c:#1f4e9c" href="/lecons/"><span class="lc-code">04</span><span class="lc-t">🎯 Teste-toi</span><span class="lc-m">Fais le quiz et les applications interactives.</span><span class="lc-go">Choisir une leçon →</span></a></div>
@@ -665,4 +722,23 @@ VIDEOS_LECON = {
         ("Situation-problème – Les trois bouteilles", "Correction_DS1_TCSF_Situation_probleme.mp4")],
 }
 USED_LEVELS = []
+
+def version_js():
+    """Ajoute ?v=<empreinte> aux scripts du site : chaque mise en ligne force les navigateurs à prendre la nouvelle version."""
+    import hashlib
+    ver = {}
+    for n in ("avis", "soutien", "suivre"):
+        f = os.path.join(SITE, "js", n + ".js")
+        if os.path.exists(f): ver[n] = hashlib.md5(open(f, "rb").read()).hexdigest()[:8]
+    pat = re.compile(r'src="/js/(avis|soutien|suivre)\.js(?:\?v=\w+)?"')
+    k = 0
+    for root, _, files in os.walk(SITE):
+        for fn in files:
+            if not fn.endswith(".html"): continue
+            fp = os.path.join(root, fn); t = open(fp, encoding="utf-8").read()
+            t2 = pat.sub(lambda m: f'src="/js/{m.group(1)}.js?v={ver.get(m.group(1), "1")}"', t)
+            if t2 != t: open(fp, "w", encoding="utf-8").write(t2); k += 1
+    print(k, "pages : scripts versionnés")
+
 build()
+version_js()

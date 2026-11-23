@@ -295,7 +295,7 @@
 
 <!--NAV--><header class="top"><div class="wrap"><a class="brand" href="/"><img src="/logo.jpg" alt="">YH Physique-Chimie</a><button class="burger" type="button" onclick="this.nextElementSibling.classList.toggle('open')">☰ Menu</button>
 <nav class="menu" aria-label="Menu principal"><a href="/" class="on">Accueil</a>
-<div class="dd"><button type="button" onclick="this.parentElement.classList.toggle('open')">Niveaux</button><div class="dm"><a class="soon" href="/niveau/1ac/">1AC <small>Bientôt</small></a><a href="/niveau/2ac/">2AC <small>2e année collège</small></a><a href="/niveau/3ac/">3AC <small>3e année collège</small></a><a href="/niveau/tc/">TCS <small>Tronc commun scientifique</small></a><a class="soon" href="/niveau/1bac/">1BAC <small>Bientôt</small></a><a class="soon" href="/niveau/2bac/">2BAC <small>Bientôt</small></a></div></div>
+<div class="dd"><button type="button" onclick="this.parentElement.classList.toggle('open')">Niveaux</button><div class="dm"><a class="soon" href="/niveau/1ac/">1AC <small>Bientôt</small></a><a href="/niveau/2ac/">2AC <small>2e année collège</small></a><a href="/niveau/3ac/">3AC <small>3e année collège</small></a><a href="/niveau/tc/">TCS <small>Tronc commun scientifique</small></a><a class="soon" href="/niveau/1bac/">1BAC <small>Bientôt</small></a><a href="/niveau/2bac/">2BAC <small>2e année Baccalauréat</small></a></div></div>
 <a href="/lecons/">Leçons</a><a href="/a-propos/">À propos</a><a href="/contact/">Contact</a></nav></div></header><!--/NAV-->
 <a class="skip" href="#niveaux">Aller au contenu</a>
 <section class="hero2" aria-labelledby="heroT">
@@ -333,10 +333,10 @@
 <!--NIVEAUX-->
 <a class="lv soon" style="--c:#0e7c86" href="/niveau/1ac/"><span class="code">1AC</span><span class="nm">1re année collège</span><span class="ct">Bientôt</span></a>
 <a class="lv" style="--c:#1f4e9c" href="/niveau/2ac/"><span class="code">2AC</span><span class="nm">2e année collège</span><span class="ct">4 leçons · 14 documents →</span></a>
-<a class="lv" style="--c:#7a3fa8" href="/niveau/3ac/"><span class="code">3AC</span><span class="nm">3e année collège</span><span class="ct">5 leçons · 12 documents →</span></a>
+<a class="lv" style="--c:#7a3fa8" href="/niveau/3ac/"><span class="code">3AC</span><span class="nm">3e année collège</span><span class="ct">5 leçons · 24 documents →</span></a>
 <a class="lv" style="--c:#c0392b" href="/niveau/tc/"><span class="code">TCS</span><span class="nm">Tronc commun scientifique</span><span class="ct">6 leçons · 12 documents →</span></a>
 <a class="lv soon" style="--c:#8a5a10" href="/niveau/1bac/"><span class="code">1BAC</span><span class="nm">1re année Baccalauréat</span><span class="ct">Bientôt</span></a>
-<a class="lv soon" style="--c:#2e7d4f" href="/niveau/2bac/"><span class="code">2BAC</span><span class="nm">2e année Baccalauréat</span><span class="ct">Bientôt</span></a>
+<a class="lv" style="--c:#2e7d4f" href="/niveau/2bac/"><span class="code">2BAC</span><span class="nm">2e année Baccalauréat</span><span class="ct">1 leçons · 4 documents →</span></a>
 <!--/NIVEAUX-->
   </div>
 </div></section>
@@ -381,7 +381,7 @@
 <div class="ix-lvl"><a class="ix-h" href="/niveau/3ac/">3AC – 3e année collège</a><div class="ix-links"><a href="/lecons/3ac-les-materiaux-dans-la-vie-quotidienne/">Les matériaux dans la vie quotidienne</a> <a href="/lecons/3ac-les-atomes-et-les-ions/">Les atomes et les ions</a> <a href="/lecons/3ac-reaction-de-quelques-materiaux-avec-l-air/">Réaction de quelques matériaux avec l&#x27;air</a> <a href="/lecons/3ac-examens-locaux-semestre-1/">Examens locaux – Semestre 1</a> <a href="/lecons/3ac-controles-surveilles-semestre-1/">Contrôles surveillés – Semestre 1</a></div></div>
 <div class="ix-lvl"><a class="ix-h" href="/niveau/tc/">TCS – Tronc commun scientifique</a><div class="ix-links"><a href="/lecons/tc-la-gravitation-universelle/">La gravitation universelle</a> <a href="/lecons/tc-exemples-d-actions-mecaniques/">Exemples d&#x27;actions mécaniques</a> <a href="/lecons/tc-les-especes-chimiques/">Les espèces chimiques</a> <a href="/lecons/tc-extraction-separation-et-identification/">Extraction, séparation et identification</a> <a href="/lecons/tc-revision-devoir-n-1/">Révision — Devoir n°1</a> <a href="/lecons/tc-controles-surveilles-semestre-1/">Contrôles surveillés – Semestre 1</a></div></div>
 <div class="ix-lvl"><span class="ix-h">1BAC – 1re année Baccalauréat</span><span class="ix-soon">Bientôt</span></div>
-<div class="ix-lvl"><span class="ix-h">2BAC – 2e année Baccalauréat</span><span class="ix-soon">Bientôt</span></div>
+<div class="ix-lvl"><a class="ix-h" href="/niveau/2bac/">2BAC – 2e année Baccalauréat</a><div class="ix-links"><a href="/lecons/2bac-examens-nationaux-2bac-sciences-mathematiques/">Examens nationaux – 2BAC Sciences Mathématiques</a></div></div>
 <!--/LECONS-->
   </section>
 </main>
@@ -514,7 +514,14 @@ const STATS = (()=>{
     try{ if(navigator.sendBeacon && navigator.sendBeacon(STATS_URL,new Blob([body],{type:"text/plain;charset=utf-8"}))) return; }catch(e){}
     try{ fetch(STATS_URL,{method:"POST",mode:"no-cors",body,headers:{"Content-Type":"text/plain;charset=utf-8"},keepalive:true}); }catch(e){}
   }
-  try{ if(!sessionStorage.getItem("yh_vu")){ sessionStorage.setItem("yh_vu","1"); send("visite"); } }catch(e){ send("visite"); }
+  /* La ville (approximative) est jointe à la visite : canal = ville, type = région */
+  function visite(){
+    let fini=false; const go=g=>{ if(fini) return; fini=true; send("visite", g&&g.ville ? {canal:g.ville, type:g.region||"", niveau:g.pays&&g.pays!=="MA"?g.pays:""} : {});
+      try{ fetch("/api/compteur",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({nouveau,src}),keepalive:true}).catch(()=>{}); }catch(e){} };
+    try{ fetch("/api/geo").then(r=>r.json()).then(go).catch(()=>go()); }catch(e){ go(); }
+    setTimeout(()=>go(), 2500);
+  }
+  try{ if(!sessionStorage.getItem("yh_vu")){ sessionStorage.setItem("yh_vu","1"); visite(); } }catch(e){ visite(); }
   return {send};
 })();
 function track(name, params){
@@ -864,7 +871,8 @@ function goSearch(q){ showRes(); q=(q||'').trim(); const i=document.getElementBy
 function setType(t){ showRes(); state.type=t; document.querySelectorAll('#typeSeg button').forEach(x=>x.setAttribute('aria-pressed', x.dataset.t===t)); renderList(); }
 start();
 </script>
-<script defer src="/js/avis.js"></script>
-<script defer src="/js/suivre.js"></script>
+<script defer src="/js/soutien.js?v=3c6d98f5"></script>
+<script defer src="/js/avis.js?v=b0ba3bbe"></script>
+<script defer src="/js/suivre.js?v=d85949f6"></script>
 </body>
 </html>
