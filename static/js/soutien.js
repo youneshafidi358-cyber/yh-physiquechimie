@@ -1,6 +1,6 @@
 /* Bandeau « Cours de soutien » en haut de toutes les pages — YH Physique-Chimie */
 (function () {
-  var WA = "212694194880";
+  var WA = "212652236922";
   var msg = "Bonjour Pr. Hafidi, je souhaite des informations sur les cours de soutien (à distance ou à domicile).\nالسلام عليكم أستاذ، أرغب في معلومات حول دروس الدعم والتقوية.";
   var url = "https://wa.me/" + WA + "?text=" + encodeURIComponent(msg);
   var css = ".sb{background:linear-gradient(90deg,#0b7a43,#12a05a);color:#fff;font-family:Inter,system-ui,sans-serif}" +

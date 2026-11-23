@@ -5,7 +5,7 @@
   var KEY = 'yh_lang';
   function get() { try { return localStorage.getItem(KEY) || 'fr'; } catch (e) { return 'fr'; } }
   function set(v) { try { localStorage.setItem(KEY, v); } catch (e) {} }
-  var WA = '<a href="https://wa.me/212694194880" target="_blank" rel="noopener">واتساب 06 94 19 48 80</a>';
+  var WA = '<a href="https://wa.me/212652236922" target="_blank" rel="noopener">واتساب 06 52 23 69 22</a>';
 
   /* 1) Libellés courts (texte exact) */
   var D = {
@@ -129,9 +129,9 @@
     [/^Page (\d+) \/ (\d+)$/, function (m, a, b) { return 'الصفحة ' + a + ' / ' + b; }], [/^Autres leçons – (\w+)$/, function (m, n) { return 'دروس أخرى – ' + n; }],
     [/^Physique-Chimie – (.+)$/, function (m, n) { return D[n] ? 'الفيزياء والكيمياء – ' + D[n] : null; }],
     [/^Que veux-tu faire \? Choisis : (.+)\.$/, function (m, l) { var a = l.split(/, | ou /).map(function (x) { return '<b>' + w(x) + '</b>'; }); return 'ماذا تريد أن تفعل ؟ اختر : ' + (a.length > 1 ? a.slice(0, -1).join('، ') + ' أو ' + a[a.length - 1] : a[0]) + '.'; }],
-    [/^⭐ Cours de soutien (\w+) \(en ligne ou à domicile\) — WhatsApp 06 94 19 48 80$/, function (m, n) { return '⭐ <b>دروس الدعم</b> ' + n + ' (عن بعد أو بالمنزل) — ' + WA; }],
-    [/^⭐ Cours de soutien (\w+) dès maintenant — WhatsApp 06 94 19 48 80$/, function (m, n) { return '⭐ <b>دروس الدعم</b> ' + n + ' متوفرة الآن — ' + WA; }],
-    [/^⭐ Cours de soutien (\w+) \(en ligne ou à domicile\) pour préparer (?:l'examen|le national) — WhatsApp 06 94 19 48 80$/, function (m, n) { return '⭐ <b>دروس الدعم</b> ' + n + ' (عن بعد أو بالمنزل) للتحضير للامتحان — ' + WA; }],
+    [/^⭐ Cours de soutien (\w+) \(en ligne ou à domicile\) — WhatsApp 06 52 23 69 22$/, function (m, n) { return '⭐ <b>دروس الدعم</b> ' + n + ' (عن بعد أو بالمنزل) — ' + WA; }],
+    [/^⭐ Cours de soutien (\w+) dès maintenant — WhatsApp 06 52 23 69 22$/, function (m, n) { return '⭐ <b>دروس الدعم</b> ' + n + ' متوفرة الآن — ' + WA; }],
+    [/^⭐ Cours de soutien (\w+) \(en ligne ou à domicile\) pour préparer (?:l'examen|le national) — WhatsApp 06 52 23 69 22$/, function (m, n) { return '⭐ <b>دروس الدعم</b> ' + n + ' (عن بعد أو بالمنزل) للتحضير للامتحان — ' + WA; }],
     [/^Examen normalisé local 3APIC · (.+) · 1 heure$/, function (m, l) { return 'الامتحان المحلي الموحد 3APIC · ' + l + ' · ساعة واحدة'; }],
     [/^(.+) · (janvier )?(\d{4}) · 1 heure$/, function (m, l, j, a) { return l + ' · ' + (j ? 'يناير ' : '') + a + ' · ساعة واحدة'; }]
   ];

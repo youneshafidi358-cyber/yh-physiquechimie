@@ -11,7 +11,7 @@ from sims import SIMS, SIM_CSS, SIM_COMMON_JS
 SITE = sys.argv[1] if len(sys.argv) > 1 else "static"
 BASE = "https://yh-physiquechimie.pages.dev"
 TODAY = datetime.date.today().isoformat()
-WA = "212694194880"
+WA = "212652236922"
 FB = "https://www.facebook.com/profile.php?id=61596309328709"
 
 LEVELS = {
@@ -216,7 +216,7 @@ def _page(title, desc, canonical, body, jsonld, nav, extra_css, extra_js):
 {body}
 <footer><div class="wrap">
   <span>© Pr. Youness HAFIDI — Physique-Chimie · Consultation en ligne uniquement</span>
-  <span>WhatsApp / Tél. : <a href="https://wa.me/{WA}" target="_blank" rel="noopener">06 94 19 48 80</a> · <a href="{FB}" target="_blank" rel="noopener">Facebook</a> · <a href="https://www.linkedin.com/in/youness-hafidi" target="_blank" rel="noopener">LinkedIn</a></span>
+  <span>WhatsApp / Tél. : <a href="https://wa.me/{WA}" target="_blank" rel="noopener">06 52 23 69 22</a> · <a href="{FB}" target="_blank" rel="noopener">Facebook</a> · <a href="https://www.linkedin.com/in/youness-hafidi" target="_blank" rel="noopener">LinkedIn</a></span>
 </div></footer>
 <a class="wa-float" href="https://wa.me/{WA}" target="_blank" rel="noopener" aria-label="Discuter sur WhatsApp">{WA_SVG.replace('18','30',2)}</a>
 {extra_js}
@@ -489,7 +489,7 @@ def build():
   <div class="grid" id="docs">{cards}</div>
   {share_block(url, share_text)}
   {f'<h2 class="sec">Autres leçons – {lv["short"]}</h2>{lesson_cards(niv, others, by_level[niv])}' if others else ''}
-  <div class="soutien">⭐ <b>Cours de soutien</b> en physique-chimie (en ligne ou à domicile) avec Pr. Hafidi — <a href="https://wa.me/{WA}?text={E('Bonjour Pr. Hafidi, je souhaite des informations sur les cours de soutien.')}" target="_blank" rel="noopener" data-ev="clic_soutien_page_lecon">réserver sur WhatsApp</a> · 06 94 19 48 80</div>
+  <div class="soutien">⭐ <b>Cours de soutien</b> en physique-chimie (en ligne ou à domicile) avec Pr. Hafidi — <a href="https://wa.me/{WA}?text={E('Bonjour Pr. Hafidi, je souhaite des informations sur les cours de soutien.')}" target="_blank" rel="noopener" data-ev="clic_soutien_page_lecon">réserver sur WhatsApp</a> · 06 52 23 69 22</div>
 </main>
 <script>
 /* Ajoute automatiquement les nouveaux documents de cette leçon ajoutés dans le Google Sheet */
@@ -545,7 +545,7 @@ def build():
   <p class="ar" lang="ar" dir="rtl">اختر الدرس لتصفح سلاسل التمارين وتصحيحها.</p></div>
   {hub_html}
   {share_block(url, f"📚 Physique-Chimie {info['short']} – séries et corrigés en ligne :")}
-  <div class="soutien">⭐ <b>Cours de soutien</b> {info['short']} (en ligne ou à domicile) — <a href="https://wa.me/{WA}" target="_blank" rel="noopener" data-ev="clic_soutien_page_niveau">WhatsApp 06 94 19 48 80</a></div>
+  <div class="soutien">⭐ <b>Cours de soutien</b> {info['short']} (en ligne ou à domicile) — <a href="https://wa.me/{WA}" target="_blank" rel="noopener" data-ev="clic_soutien_page_niveau">WhatsApp 06 52 23 69 22</a></div>
 </main>"""
         jsonld = {"@context": "https://schema.org", "@type": "CollectionPage", "name": title, "url": url, "description": desc,
                   "breadcrumb": {"@type": "BreadcrumbList", "itemListElement": [
@@ -563,7 +563,7 @@ def build():
 <h1>Physique-Chimie – {info['long']}</h1><div class="ar" lang="ar">الفيزياء والكيمياء – {info['ar']}</div></div></section>
 <main class="wrap"><div class="intro" style="text-align:center;padding:30px"><div style="font-size:40px">⏳</div><h2 style="color:var(--navy)">Bientôt disponible</h2>
 <p class="ar" lang="ar" style="font-size:22px;color:#7a5a00">قريبا بإذن الله</p><p>Les séries, corrigés et résumés de ce niveau arrivent très prochainement.</p></div>
-<div class="soutien">⭐ <b>Cours de soutien</b> {info['short']} dès maintenant — <a href="https://wa.me/{WA}" target="_blank" rel="noopener">WhatsApp 06 94 19 48 80</a></div></main>"""
+<div class="soutien">⭐ <b>Cours de soutien</b> {info['short']} dès maintenant — <a href="https://wa.me/{WA}" target="_blank" rel="noopener">WhatsApp 06 52 23 69 22</a></div></main>"""
         d = os.path.join(SITE, "niveau", niv); os.makedirs(d, exist_ok=True)
         open(os.path.join(d, "index.html"), "w", encoding="utf-8").write(page(f"Physique-Chimie {info['short']} – bientôt | YH Physique-Chimie", f"Physique-chimie {info['long']} : bientôt disponible.", url, body,
             {"@context": "https://schema.org", "@type": "WebPage", "url": url}, niv).replace('<meta name="viewport"', '<meta name="robots" content="noindex">\n<meta name="viewport"', 1))
@@ -606,7 +606,7 @@ def build():
   <li>Revois les points qui tombent souvent : formule de la rouille Fe<sub>2</sub>O<sub>3</sub>, alumine Al<sub>2</sub>O<sub>3</sub>, charge d'un ion, pH et dilution, tests des ions (Fe<sup>2+</sup>, Fe<sup>3+</sup>, Cu<sup>2+</sup>, Cl<sup>−</sup>), équations équilibrées.</li>
   <li>Retrouve aussi les <a href="/niveau/3ac/">cours, exercices et devoirs corrigés de 3AC</a>.</li></ul></div>
   {share_block(url, "📝 Examens locaux Physique-Chimie 3AC avec corrigés détaillés :")}
-  <div class="soutien">⭐ <b>Cours de soutien</b> 3AC (en ligne ou à domicile) pour préparer l'examen — <a href="https://wa.me/{WA}" target="_blank" rel="noopener" data-ev="clic_soutien_examens">WhatsApp 06 94 19 48 80</a></div>
+  <div class="soutien">⭐ <b>Cours de soutien</b> 3AC (en ligne ou à domicile) pour préparer l'examen — <a href="https://wa.me/{WA}" target="_blank" rel="noopener" data-ev="clic_soutien_examens">WhatsApp 06 52 23 69 22</a></div>
 </main>"""
         jsonld = {"@context": "https://schema.org", "@graph": [
             {"@type": "BreadcrumbList", "itemListElement": [
@@ -682,7 +682,7 @@ def build():
   {thh}
   <div class="intro" style="margin-top:18px"><p>🧮 Calcule ta moyenne générale avec le <a href="/calcul-note-bac/"><b>calculateur de note du bac</b></a>.</p></div>
   {share_block(url, "📝 Examens nationaux Physique-Chimie 2BAC avec corrigés, mode examen chronométré :")}
-  <div class="soutien">⭐ <b>Cours de soutien</b> 2BAC (en ligne ou à domicile) pour préparer le national — <a href="https://wa.me/{WA}" target="_blank" rel="noopener" data-ev="clic_soutien_examens_bac">WhatsApp 06 94 19 48 80</a></div>
+  <div class="soutien">⭐ <b>Cours de soutien</b> 2BAC (en ligne ou à domicile) pour préparer le national — <a href="https://wa.me/{WA}" target="_blank" rel="noopener" data-ev="clic_soutien_examens_bac">WhatsApp 06 52 23 69 22</a></div>
 </main>"""
         jsonld = {"@context": "https://schema.org", "@graph": [
             {"@type": "BreadcrumbList", "itemListElement": [
@@ -779,13 +779,13 @@ ids.forEach(function(i){document.getElementById(i).addEventListener('input',go);
 <p class="ar" lang="ar" dir="rtl">أستاذ الفيزياء والكيمياء بالسلك الثانوي. يضم هذا الموقع سلاسل تمارين مع تصحيحها، وفروضا محروسة، وملخصات، وتمارين تفاعلية، مجانا.</p></div></div>
 <h2 class="sec">Comment utiliser le site</h2>
 <div class="lcards"><a class="lc" style="--c:#1f4e9c" href="/lecons/"><span class="lc-code">01</span><span class="lc-t">📖 Lis le cours</span><span class="lc-m">Définitions, relations et simulation, directement dans la leçon.</span><span class="lc-go">Choisir une leçon →</span></a><a class="lc" style="--c:#1f4e9c" href="/lecons/"><span class="lc-code">02</span><span class="lc-t">✍️ Cherche les exercices</span><span class="lc-m">Seul, sur ta feuille, avant de regarder la correction.</span><span class="lc-go">Choisir une leçon →</span></a><a class="lc" style="--c:#1f4e9c" href="/lecons/"><span class="lc-code">03</span><span class="lc-t">✅ Vérifie</span><span class="lc-m">Clique sur « Voir la réponse » et lis l'erreur fréquente.</span><span class="lc-go">Choisir une leçon →</span></a><a class="lc" style="--c:#1f4e9c" href="/lecons/"><span class="lc-code">04</span><span class="lc-t">🎯 Teste-toi</span><span class="lc-m">Fais le quiz et les applications interactives.</span><span class="lc-go">Choisir une leçon →</span></a></div>
-<div class="soutien">⭐ <b>Cours de soutien</b> (en ligne ou à domicile) : <a href="https://wa.me/{WA}" target="_blank" rel="noopener">WhatsApp 06 94 19 48 80</a></div></main>"""
+<div class="soutien">⭐ <b>Cours de soutien</b> (en ligne ou à domicile) : <a href="https://wa.me/{WA}" target="_blank" rel="noopener">WhatsApp 06 52 23 69 22</a></div></main>"""
     os.makedirs(os.path.join(SITE, "a-propos"), exist_ok=True)
     open(os.path.join(SITE, "a-propos", "index.html"), "w", encoding="utf-8").write(page("À propos – Pr. Youness HAFIDI | YH Physique-Chimie", "Pr. Youness HAFIDI, professeur de physique-chimie au cycle secondaire : ressources gratuites pour les élèves.", f"{BASE}/a-propos/", ab,
         {"@context": "https://schema.org", "@type": "AboutPage", "url": f"{BASE}/a-propos/"}, "apropos"))
     ct = f"""<section class="head"><div class="wrap"><div class="crumbs"><a href="/">Accueil</a> › Contact</div><h1>Contact</h1><div class="ar" lang="ar">تواصل معي</div></div></section>
 <main class="wrap"><div class="intro"><p>Une question sur un exercice, une remarque, ou un cours de soutien ? Écris-moi :</p></div>
-<div class="share"><a class="btn wa" href="https://wa.me/{WA}?text={E('Bonjour Pr. Hafidi,')}" target="_blank" rel="noopener" data-ev="clic_contact_page">{WA_SVG} WhatsApp : 06 94 19 48 80</a>
+<div class="share"><a class="btn wa" href="https://wa.me/{WA}?text={E('Bonjour Pr. Hafidi,')}" target="_blank" rel="noopener" data-ev="clic_contact_page">{WA_SVG} WhatsApp : 06 52 23 69 22</a>
 <a class="btn" href="tel:+{WA}">📞 Appeler</a><a class="btn fb" href="{FB}" target="_blank" rel="noopener">{FB_SVG} Facebook</a>
 <a class="btn" href="https://www.linkedin.com/in/youness-hafidi" target="_blank" rel="noopener">in LinkedIn</a></div>
 <h2 class="sec">Envoyer un message rapide</h2>
@@ -793,7 +793,7 @@ ids.forEach(function(i){document.getElementById(i).addEventListener('input',go);
 <textarea id="ms" rows="4" placeholder="Ton message…" style="width:100%;padding:10px;border:1px solid var(--line);border-radius:10px;font:inherit"></textarea></p>
 <p><button class="btn wa" type="button" onclick="location.href='https://wa.me/{WA}?text='+encodeURIComponent('Bonjour Pr. Hafidi, je suis '+document.getElementById('nm').value+'.\\n'+document.getElementById('ms').value)">Envoyer sur WhatsApp</button></p></div></main>"""
     os.makedirs(os.path.join(SITE, "contact"), exist_ok=True)
-    open(os.path.join(SITE, "contact", "index.html"), "w", encoding="utf-8").write(page("Contact – Pr. Youness HAFIDI | YH Physique-Chimie", "Contacter Pr. Youness HAFIDI : WhatsApp 06 94 19 48 80, Facebook, LinkedIn.", f"{BASE}/contact/", ct,
+    open(os.path.join(SITE, "contact", "index.html"), "w", encoding="utf-8").write(page("Contact – Pr. Youness HAFIDI | YH Physique-Chimie", "Contacter Pr. Youness HAFIDI : WhatsApp 06 52 23 69 22, Facebook, LinkedIn.", f"{BASE}/contact/", ct,
         {"@context": "https://schema.org", "@type": "ContactPage", "url": f"{BASE}/contact/"}, "contact"))
     urls += [(f"{BASE}/a-propos/", "0.5"), (f"{BASE}/contact/", "0.5")]
 
