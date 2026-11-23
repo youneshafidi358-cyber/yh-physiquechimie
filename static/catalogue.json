@@ -734,5 +734,31 @@
   "ordre": 1897,
   "lieu": "session normale",
   "description": "Corrigé détaillé : méthodes, réponses encadrées, erreurs fréquentes."
+ },
+ {
+  "niveau": "2bac",
+  "matiere": "pc",
+  "unite": "Examens nationaux – 2BAC Sciences Mathématiques",
+  "type": "controle",
+  "sousType": "Examen national",
+  "titre": "Examen national du bac 2026 Physique-Chimie 2BAC SM – session de rattrapage – Sujet R",
+  "url": "cours/Sujet_Bac_2BAC_SM_2026_Rattrapage.pdf",
+  "id": "bsm2026Rs",
+  "ordre": 1898,
+  "lieu": "session de rattrapage",
+  "description": "Examen national du baccalauréat 2026 (session de rattrapage), 2BAC Sciences Mathématiques A et B, option française. Énoncé retapé."
+ },
+ {
+  "niveau": "2bac",
+  "matiere": "pc",
+  "unite": "Examens nationaux – 2BAC Sciences Mathématiques",
+  "type": "corrige",
+  "sousType": "Corrigé détaillé",
+  "titre": "Corrigé examen national 2026 Physique-Chimie 2BAC SM – session de rattrapage – Sujet R",
+  "url": "cours/Corrige_Bac_2BAC_SM_2026_Rattrapage.pdf",
+  "id": "bsm2026Rc",
+  "ordre": 1899,
+  "lieu": "session de rattrapage",
+  "description": "Corrigé détaillé : méthodes, réponses encadrées, erreurs fréquentes."
  }
 ]
