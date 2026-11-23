@@ -200,7 +200,7 @@ def _page(title, desc, canonical, body, jsonld, nav, extra_css, extra_js):
 <meta property="og:title" content="{E(title)}">
 <meta property="og:description" content="{E(desc)}">
 <meta property="og:url" content="{canonical}">
-<meta property="og:image" content="{BASE}/banniere.jpg">
+<meta property="og:image" content="{BASE}/banniere-yh.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,800&family=Inter:wght@400;500;600;700&family=Noto+Naskh+Arabic:wght@500;700&display=swap" rel="stylesheet">
