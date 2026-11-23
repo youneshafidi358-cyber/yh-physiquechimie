@@ -325,13 +325,17 @@ def level_hub(niv, lv):
         bt = ""
         if "sujet" in d: bt += btn(d["sujet"], "", "📄 Sujet", f"Examen local {an} – sujet {L}")
         if "corr" in d: bt += btn(d["corr"], " exc", "✅ Corrigé détaillé", f"Corrigé détaillé – sujet {L}")
+        if niv == "2bac":
+            ses = "normale" if L == "N" else "de rattrapage"
+            p_ex += f'''<div class="lc exk" style="--c:{col}"><span class="lc-code">{an} · {"Normale" if L == "N" else "Rattrapage"}</span><span class="lc-t">Examen national {an} – session {ses}</span><span class="lc-m">2BAC Sciences Mathématiques · 4 heures</span><span class="lc-f">Énoncé + corrigé détaillé</span><span class="exbs">{bt}</span></div>'''
+            continue
         p_ex += f'''<div class="lc exk" style="--c:{col}"><span class="lc-code">Sujet {L}</span><span class="lc-t">Examen normalisé local {an}</span><span class="lc-m">{E((d.get("sujet") or d.get("corr")).get("lieu", "Session janvier"))} · 1 heure</span><span class="lc-f">Énoncé + corrigé pas à pas</span><span class="exbs">{bt}</span></div>'''
     p_ds += "</div>" + subs + '<div class="lcards" hidden>'
     cats = [("cours", "📖", "Cours", f"{len(lessons)} leçon{'s' if len(lessons) > 1 else ''}", p_cours),
             ("exercices", "✍️", "Exercices", f"{len(exos)} série{'s' if len(exos) > 1 else ''} corrigée{'s' if len(exos) > 1 else ''}", p_exos),
             ("devoirs", "📝", "Devoirs", f"{len(groups)} devoir{'s' if len(groups) > 1 else ''} corrigé{'s' if len(groups) > 1 else ''}" + (f" ({len(ds)} versions)" if len(ds) > len(groups) else ""), p_ds)]
     if exams:
-        cats.append(("examens", "🎓", "Examens", f"{len(exams)} examen{'s' if len(exams) > 1 else ''} {'locaux' if len(exams) > 1 else 'local'}{'' if len(exams) > 1 else ''} corrigé{'s' if len(exams) > 1 else ''}", p_ex))
+        cats.append(("examens", "🎓", "Examens", (f"{len(exams)} examen{'s' if len(exams) > 1 else ''} national{'aux' if len(exams) > 1 else ''} corrigé{'s' if len(exams) > 1 else ''}" if niv == "2bac" else f"{len(exams)} examen{'s' if len(exams) > 1 else ''} {'locaux' if len(exams) > 1 else 'local'} corrigé{'s' if len(exams) > 1 else ''}"), p_ex))
     top = "".join(f'''<a class="lc cat" style="--c:{col}" href="#{k}" data-cat="{k}"><span class="lc-code">{ic}</span><span class="lc-t">{t}</span><span class="lc-m">{n}</span><span class="lc-go">{'Ouvrir →' if p else 'Bientôt'}</span></a>''' for k, ic, t, n, p in cats)
     panels = "".join(f'''<section class="catp" id="{k}" hidden><h2 class="sec">{ic} {t} – {LEVELS[niv]['short']}</h2>{'<div class="lcards">' + p + '</div>' if p else '<p class="tip">Bientôt disponible.</p>'}</section>''' for k, ic, t, n, p in cats)
     js = """<script>(function(){const cs=[...document.querySelectorAll('.cat')];function show(k){document.querySelectorAll('.catp').forEach(p=>p.hidden=p.id!==k);cs.forEach(c=>c.classList.toggle('on',c.dataset.cat===k));}
@@ -510,7 +514,7 @@ def build():
     for niv in USED_LEVELS:
         lv = by_level[niv]; info = LEVELS[niv]
         url = f"{BASE}/niveau/{niv}/"
-        title = f"Physique-Chimie {info['short']} : cours, exercices et devoirs corrigés" if niv != "3ac" else "Physique-Chimie 3AC : cours, exercices, devoirs et examens locaux corrigés"
+        title = f"Physique-Chimie {info['short']} : cours, exercices et devoirs corrigés" if niv not in ("3ac", "2bac") else ("Physique-Chimie 3AC : cours, exercices, devoirs et examens locaux corrigés" if niv == "3ac" else "Examens nationaux Physique-Chimie 2BAC SM corrigés | Bac Sciences Maths")
         desc = (f"Physique-chimie {info['short']} ({info['long']}) : cours, simulations, exercices et devoirs corrigés, gratuits. Leçons : "
                 + ", ".join(l["unite"] for l in lv if not l["unite"].startswith(("Contrôles", "Révision"))) + ".")[:300]
         hub_html, hub_js = level_hub(niv, lv)
@@ -654,7 +658,7 @@ def build():
     ab = f"""<section class="head"><div class="wrap"><div class="crumbs"><a href="/">Accueil</a> › À propos</div><h1>À propos</h1><div class="ar" lang="ar">من أنا</div></div></section>
 <main class="wrap"><div class="intro" style="display:flex;gap:18px;align-items:center;flex-wrap:wrap"><img src="/logo.jpg" alt="Logo YH Physique-Chimie" style="width:110px;height:110px;border-radius:50%;border:3px solid var(--gold)">
 <div style="flex:1;min-width:240px"><p><b>Pr. Youness HAFIDI</b> — professeur de physique-chimie au cycle secondaire.</p>
-<p>YH Physique-Chimie rassemble mes ressources pour les élèves : séries d'exercices et corrigés, devoirs surveillés, résumés en cartes mentales, quiz et simulations interactives, du collège au tronc commun (1BAC et 2BAC bientôt).</p>
+<p>YH Physique-Chimie rassemble mes ressources pour les élèves : séries d'exercices et corrigés, devoirs surveillés, résumés en cartes mentales, quiz et simulations interactives, du collège au baccalauréat (examens nationaux 2BAC SM corrigés).</p>
 <p class="ar" lang="ar" dir="rtl">أستاذ الفيزياء والكيمياء بالسلك الثانوي. يضم هذا الموقع سلاسل تمارين مع تصحيحها، وفروضا محروسة، وملخصات، وتمارين تفاعلية، مجانا.</p></div></div>
 <h2 class="sec">Comment utiliser le site</h2>
 <div class="lcards"><a class="lc" style="--c:#1f4e9c" href="/lecons/"><span class="lc-code">01</span><span class="lc-t">📖 Lis le cours</span><span class="lc-m">Définitions, relations et simulation, directement dans la leçon.</span><span class="lc-go">Choisir une leçon →</span></a><a class="lc" style="--c:#1f4e9c" href="/lecons/"><span class="lc-code">02</span><span class="lc-t">✍️ Cherche les exercices</span><span class="lc-m">Seul, sur ta feuille, avant de regarder la correction.</span><span class="lc-go">Choisir une leçon →</span></a><a class="lc" style="--c:#1f4e9c" href="/lecons/"><span class="lc-code">03</span><span class="lc-t">✅ Vérifie</span><span class="lc-m">Clique sur « Voir la réponse » et lis l'erreur fréquente.</span><span class="lc-go">Choisir une leçon →</span></a><a class="lc" style="--c:#1f4e9c" href="/lecons/"><span class="lc-code">04</span><span class="lc-t">🎯 Teste-toi</span><span class="lc-m">Fais le quiz et les applications interactives.</span><span class="lc-go">Choisir une leçon →</span></a></div>
