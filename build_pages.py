@@ -320,7 +320,7 @@ def level_hub(niv, lv):
         def imgs(u):
             stem = os.path.basename(u)[:-4]
             fs = sorted(glob.glob(os.path.join(SITE, "docimg", stem + "-*.webp")), key=lambda f: int(re.search(r"-(\d+)\.webp$", f).group(1)))
-            return ",".join("/docimg/" + os.path.basename(f) for f in fs)
+            return ",".join("/docimg/" + os.path.basename(f) + "?v=" + hashlib.md5(open(f, "rb").read()).hexdigest()[:8] for f in fs)
         def btn(it, cls, lab, tt):
             im = imgs(it["url"])
             return f'<a class="exb{cls}" href="/?doc={E(it["url"])}"' + (f' data-imgs="{im}" data-t="{E(tt)}"' if im else "") + f'>{lab}</a>'
