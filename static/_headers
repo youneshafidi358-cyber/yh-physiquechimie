@@ -16,3 +16,7 @@
 
 /docimg/*
   Cache-Control: public, max-age=604800
+
+/linkedin/*
+  Access-Control-Allow-Origin: *
+  X-Robots-Tag: noindex
