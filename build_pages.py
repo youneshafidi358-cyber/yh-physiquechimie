@@ -287,7 +287,8 @@ def level_hub(niv, lv):
         if l["unite"].startswith("Examens"):
             for it in l["items"]:
                 m = re.search(r"(\d{4}).*?[Ss]ujet\s+(\w)", it["titre"])
-                if m: exams.setdefault((m.group(1), m.group(2)), {})["corr" if it["type"] in ("corrige", "corr") else "sujet"] = it
+                fil = "PC" if ("Physiques" in l["unite"] or " PC" in l["unite"]) else "SM"
+                if m: exams.setdefault((fil, m.group(1), m.group(2)), {})["corr" if it["type"] in ("corrige", "corr") else "sujet"] = it
     ds = []
     for l in lv:
         if l["unite"].startswith("Contrôles"):
@@ -314,7 +315,8 @@ def level_hub(niv, lv):
             vcards = "".join(card(f"Version {L}", E(t), f"DS{n}", E(f), "Voir la correction →", h) for L, t, h, f in vs)
             subs += f'''<section class="subp" id="dsg{n}" hidden><h3 class="sec" style="font-size:19px">📁 DS{n} – choisis ta version</h3><div class="lcards">{vcards}</div></section>'''
     p_ex = '<a class="lc" href="/examens-locaux-3ac/" style="--c:#7b3fb0"><span class="lc-code">📚</span><span class="lc-t">Tous les examens locaux 3AC</span><span class="lc-m">Page dédiée · sujets + corrigés</span><span class="lc-f">Liste complète par année</span><span class="lc-go">Ouvrir →</span></a>' if niv == "3ac" else ""
-    for (an, L), d in sorted(exams.items(), key=lambda x: (-int(x[0][0]), x[0][1])):
+    ex_fil = {"SM": "", "PC": ""}
+    for (fil, an, L), d in sorted(exams.items(), key=lambda x: (x[0][0], -int(x[0][1]), x[0][2])):
         def imgs(u):
             stem = os.path.basename(u)[:-4]
             fs = sorted(glob.glob(os.path.join(SITE, "docimg", stem + "-*.webp")), key=lambda f: int(re.search(r"-(\d+)\.webp$", f).group(1)))
@@ -327,9 +329,13 @@ def level_hub(niv, lv):
         if "corr" in d: bt += btn(d["corr"], " exc", "✅ Corrigé détaillé", f"Corrigé détaillé – sujet {L}")
         if niv == "2bac":
             ses = "normale" if L == "N" else "de rattrapage"
-            p_ex += f'''<div class="lc exk" style="--c:{col}"><span class="lc-code">{an} · {"Normale" if L == "N" else "Rattrapage"}</span><span class="lc-t">Examen national {an} – session {ses}</span><span class="lc-m">2BAC Sciences Mathématiques · 4 heures</span><span class="lc-f">Énoncé + corrigé détaillé</span><span class="exbs">{bt}</span></div>'''
+            ex_fil[fil] += f'''<div class="lc exk" style="--c:{col}"><span class="lc-code">{an} · {"Normale" if L == "N" else "Rattrapage"}</span><span class="lc-t">Examen national {an} – session {ses}</span><span class="lc-m">{"2BAC Sciences Mathématiques · 4 heures" if fil == "SM" else "2BAC Sciences Physiques · 3 heures"}</span><span class="lc-f">Énoncé + corrigé détaillé</span><span class="exbs">{bt}</span></div>'''
             continue
         p_ex += f'''<div class="lc exk" style="--c:{col}"><span class="lc-code">Sujet {L}</span><span class="lc-t">Examen normalisé local {an}</span><span class="lc-m">{E((d.get("sujet") or d.get("corr")).get("lieu", "Session janvier"))} · 1 heure</span><span class="lc-f">Énoncé + corrigé pas à pas</span><span class="exbs">{bt}</span></div>'''
+    if niv == "2bac":
+        hs = 'style="grid-column:1/-1;margin:14px 0 2px;font-size:19px"'
+        p_ex = f'<h3 class="sec" {hs}>📐 Sciences Mathématiques (SM A et B)</h3>' + (ex_fil["SM"] or '<p class="tip" style="grid-column:1/-1">Bientôt disponible.</p>') \
+             + f'<h3 class="sec" {hs}>🔬 Sciences Physiques (PC)</h3>' + (ex_fil["PC"] or '<p class="tip" style="grid-column:1/-1">Bientôt disponible.</p>')
     p_ds += "</div>" + subs + '<div class="lcards" hidden>'
     cats = [("cours", "📖", "Cours", f"{len(lessons)} leçon{'s' if len(lessons) > 1 else ''}", p_cours),
             ("exercices", "✍️", "Exercices", f"{len(exos)} série{'s' if len(exos) > 1 else ''} corrigée{'s' if len(exos) > 1 else ''}", p_exos),
