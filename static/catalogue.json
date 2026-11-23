@@ -760,5 +760,31 @@
   "ordre": 1903,
   "lieu": "session de rattrapage",
   "description": "Corrigé détaillé : méthodes, réponses encadrées, erreurs fréquentes."
+ },
+ {
+  "niveau": "2bac",
+  "matiere": "pc",
+  "unite": "Examens nationaux – 2BAC Sciences Mathématiques",
+  "type": "controle",
+  "sousType": "Examen national",
+  "titre": "Examen national du bac 2024 Physique-Chimie 2BAC SM – session normale – Sujet N",
+  "url": "cours/Sujet_Bac_2BAC_SM_2024_Normale.pdf",
+  "id": "bsm2024Ns",
+  "ordre": 1904,
+  "lieu": "session normale",
+  "description": "Examen national du baccalauréat 2024 (session normale), 2BAC Sciences Mathématiques A et B, option française. Énoncé retapé."
+ },
+ {
+  "niveau": "2bac",
+  "matiere": "pc",
+  "unite": "Examens nationaux – 2BAC Sciences Mathématiques",
+  "type": "corrige",
+  "sousType": "Corrigé détaillé",
+  "titre": "Corrigé examen national 2024 Physique-Chimie 2BAC SM – session normale – Sujet N",
+  "url": "cours/Corrige_Bac_2BAC_SM_2024_Normale.pdf",
+  "id": "bsm2024Nc",
+  "ordre": 1905,
+  "lieu": "session normale",
+  "description": "Corrigé détaillé : méthodes, réponses encadrées, erreurs fréquentes."
  }
 ]
