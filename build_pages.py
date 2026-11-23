@@ -340,7 +340,7 @@ def level_hub(niv, lv):
             return card(ic, t, (f"{n} examen{'s' if n > 1 else ''} corrigé{'s' if n > 1 else ''}" if n else "Bientôt disponible"), "Sessions normale et rattrapage · sujet + corrigé", "Voir les examens →" if n else "Bientôt", f"#ex{f.lower()}", f' data-sub="ex{f.lower()}"')
         def fsec(f, ic, t):
             return f'''<section class="subp" id="ex{f.lower()}" hidden><h3 class="sec" style="font-size:19px">{ic} {t} – examens nationaux</h3>''' + (f'<div class="lcards">{ex_fil[f]}</div>' if ex_fil[f] else '<p class="tip">Bientôt disponible.</p>') + "</section>"
-        p_ex = fcard("SM", "📐", "Sciences Mathématiques (SM A et B)") + fcard("PC", "🔬", "Sciences Physiques (PC)") \
+        p_ex = card("⏱", "Examens nationaux : tableau, mode examen et mes notes", "Tous les examens SM et PC", "Chronomètre 4 h / 3 h · exercices par thème · calcul de la note du bac", "Ouvrir →", "/examens-nationaux-2bac/") + fcard("SM", "📐", "Sciences Mathématiques (SM A et B)") + fcard("PC", "🔬", "Sciences Physiques (PC)") \
              + "</div>" + fsec("SM", "📐", "Sciences Mathématiques") + fsec("PC", "🔬", "Sciences Physiques") + '<div class="lcards" hidden>'
     p_ds += "</div>" + subs + '<div class="lcards" hidden>'
     cats = [("cours", "📖", "Cours", f"{len(lessons)} leçon{'s' if len(lessons) > 1 else ''}", p_cours),
@@ -620,6 +620,111 @@ def build():
         open(os.path.join(d, "index.html"), "w", encoding="utf-8").write(page(title, desc, url, body, jsonld, "3ac", extra_css=".exbs{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.exb{flex:1;min-width:120px;text-align:center;padding:10px 12px;border-radius:10px;background:#eef2fb;color:#1f3a8a;font-weight:700;text-decoration:none}.exb.exc{background:#7b3fb0;color:#fff}.exk{cursor:default}"))
         urls.insert(1, (url, "0.9"))
 
+    # Page « Examens nationaux 2BAC » (tableau, mode examen chronométré, mes notes, exercices par thème) + calculateur de note du bac
+    exn = [(l, it) for l in by_level.get("2bac", []) if l["unite"].startswith("Examens") for it in l["items"]]
+    if exn:
+        def imgs_of(u):
+            stem = os.path.basename(u)[:-4]
+            fs = sorted(glob.glob(os.path.join(SITE, "docimg", stem + "-*.webp")), key=lambda f: int(re.search(r"-(\d+)\.webp$", f).group(1)))
+            return ",".join("/docimg/" + os.path.basename(f) + "?v=" + hashlib.md5(open(f, "rb").read()).hexdigest()[:8] for f in fs)
+        tab = {"SM": {}, "PC": {}}
+        for l, it in exn:
+            fil = "PC" if ("Physiques" in l["unite"] or " PC" in l["unite"]) else "SM"
+            m = re.search(r"(\d{4}).*?[Ss]ujet\s+(\w)", it["titre"])
+            if m: tab[fil].setdefault((m.group(1), m.group(2)), {})["c" if it["type"] in ("corrige", "corr") else "s"] = it
+        FN = {"SM": ("Sciences Mathématiques (A et B)", 240, "4 h"), "PC": ("Sciences Physiques (PC)", 180, "3 h")}
+        panes = ""; nb = 0
+        for fil, (fnom, dur, dtxt) in FN.items():
+            rows = ""
+            for (an, L), d in sorted(tab[fil].items(), key=lambda x: (-int(x[0][0]), x[0][1])):
+                k = f"{fil}-{an}-{L}"; ses = "Normale" if L == "N" else "Rattrapage"; nb += 1
+                tt = f"Examen national {an} – session {ses.lower()} – 2BAC {fil}"
+                bs = f'<a class="xb xs" href="/?doc={E(d["s"]["url"])}" data-imgs="{imgs_of(d["s"]["url"])}" data-t="{E(tt)}">📄 Sujet</a>' if "s" in d else "—"
+                bc = f'<a class="xb xc" href="/?doc={E(d["c"]["url"])}" data-imgs="{imgs_of(d["c"]["url"])}" data-t="{E("Corrigé – " + tt)}">✅ Corrigé</a>' if "c" in d else "—"
+                rows += f'<tr data-k="{k}" data-dur="{dur}"><td data-l="Année"><b>{an}</b></td><td data-l="Session">{ses}</td><td>{bs}</td><td>{bc}</td><td><button type="button" class="xb xt" data-k="{k}">⏱ Mode examen</button></td><td data-l="Ma note"><input class="xn" type="number" min="0" max="20" step="0.25" inputmode="decimal" placeholder="—" aria-label="Ma note sur 20"> /20</td></tr>'
+            panes += f'''<div class="xfil" id="fil-{fil.lower()}"{"" if fil == "SM" else " hidden"}>''' + (f'''<table class="xtab"><thead><tr><th>Année</th><th>Session</th><th>Sujet</th><th>Corrigé</th><th>S'entraîner ({dtxt})</th><th>Ma note</th></tr></thead><tbody>{rows}</tbody></table>''' if rows else '<p class="tip">Les examens nationaux de la filière Sciences Physiques arrivent bientôt.</p>') + "</div>"
+        th = json.load(open(os.path.join(SITE, "bac_themes.json"), encoding="utf-8"))
+        thh = ""
+        for tk, tnom in th["themes"].items():
+            its = [i for i in th["items"] if i["th"] == tk]
+            if not its: continue
+            li = "".join(f'''<li><span><b>{i["an"]} {"N" if i["s"] == "N" else "R"}</b> · Ex. {i["ex"]}{(" – " + i["part"]) if i["part"] else ""} : {E(i["t"])}</span><span class="thb"><a href="#" class="xth" data-k="{i["fil"]}-{i["an"]}-{i["s"]}" data-w="s" data-p="{i["ps"]}" data-t="{E(i["t"])} – sujet {i["an"]}">Sujet</a><a href="#" class="xth thc" data-k="{i["fil"]}-{i["an"]}-{i["s"]}" data-w="c" data-p="{i["pc"]}" data-t="{E(i["t"])} – corrigé">Corrigé</a></span></li>''' for i in sorted(its, key=lambda i: (-int(i["an"]), i["s"], i["ex"])))
+            thh += f'<details class="thm"><summary>{E(tnom)} <small>{len(its)} exercice{"s" if len(its) > 1 else ""}</small></summary><ul>{li}</ul></details>'
+        css = """.xtabs{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 12px}.xtabs button{border:2px solid #2e7d4f;background:#fff;color:#2e7d4f;border-radius:99px;padding:9px 16px;font-weight:800;cursor:pointer;font-size:15px}.xtabs button.on{background:#2e7d4f;color:#fff}
+.xtab{width:100%;border-collapse:collapse;background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 2px 10px rgba(15,35,80,.08)}.xtab th{background:#0f2350;color:#fff;padding:10px 8px;font-size:14px;text-align:center}.xtab td{padding:9px 8px;border-top:1px solid #e6eaf2;text-align:center;font-size:15px}
+.xb{display:inline-block;padding:8px 12px;border-radius:10px;background:#eef2fb;color:#1f3a8a;font-weight:700;text-decoration:none;border:0;cursor:pointer;font-size:14px;white-space:nowrap}.xb.xc{background:#2e7d4f;color:#fff}.xb.xt{background:#fff4d6;color:#7a5a00}.xn{width:64px;padding:6px;border:1px solid #c9d2e3;border-radius:8px;font-size:15px;text-align:center}
+@media(max-width:720px){.xtab thead{display:none}.xtab tr{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:10px;border-top:1px solid #e6eaf2}.xtab td{border:0;padding:2px}.xtab td[data-l]:before{content:attr(data-l)" : ";color:#6b7488;font-size:13px}.xb{width:100%}}
+.mr{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:10px}.mr div{background:#fff;border-radius:12px;padding:12px;text-align:center;box-shadow:0 2px 8px rgba(15,35,80,.07)}.mr b{display:block;font-size:26px;color:#0f2350}.mr span{font-size:13px;color:#6b7488}
+.mrl{list-style:none;padding:0;margin:0}.mrl li{display:grid;grid-template-columns:170px 1fr 60px;gap:8px;align-items:center;margin:6px 0;font-size:14px}.mrl i{display:block;height:10px;border-radius:9px;background:linear-gradient(90deg,#2e7d4f,#7cc49a)}
+.thm{background:#fff;border-radius:12px;margin:8px 0;box-shadow:0 2px 8px rgba(15,35,80,.07)}.thm summary{padding:12px 14px;font-weight:800;color:#0f2350;cursor:pointer}.thm summary small{font-weight:600;color:#6b7488;margin-left:6px}.thm ul{list-style:none;margin:0;padding:0 12px 10px}.thm li{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:7px 0;border-top:1px solid #eef1f6;font-size:14px}.thb{display:flex;gap:6px;flex-shrink:0}.thb a{padding:5px 10px;border-radius:8px;background:#eef2fb;color:#1f3a8a;font-weight:700;text-decoration:none;font-size:13px}.thb a.thc{background:#2e7d4f;color:#fff}
+.dv{position:fixed;inset:0;z-index:80;background:#0e1424;display:flex;flex-direction:column}.dv[hidden]{display:none}.dv-bar{display:flex;align-items:center;gap:8px;padding:10px 12px;background:#0f2350;color:#fff}.dv-t{flex:1;font-size:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.dv-tm{font:800 18px/1 Inter,monospace;background:#fff4d6;color:#7a5a00;padding:7px 10px;border-radius:9px}.dv-tm.dv-warn{background:#ffd9d9;color:#a40000}.dv-end{border:0;background:#ffcc4d;color:#0f2350;border-radius:10px;padding:9px 12px;font-weight:800;cursor:pointer}.dv-x{border:0;background:#fff;color:#0f2350;border-radius:10px;width:42px;height:38px;font-size:18px;font-weight:800;cursor:pointer}
+.dv-fin{background:#e9f7ef;color:#0f2350;padding:10px 14px;font-size:15px}.dv-fr{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:8px}.dv-fr button{border:0;border-radius:9px;padding:8px 12px;font-weight:800;cursor:pointer;background:#2e7d4f;color:#fff}.dv-fr .dv-s{background:#0f2350}.dv-n{width:70px;padding:6px;border-radius:8px;border:1px solid #9fb3c8;font-size:15px}
+.dv-pages{flex:1;overflow:auto;padding:12px 8px;-webkit-overflow-scrolling:touch}.dv-p{position:relative;max-width:960px;margin:0 auto 12px;background:#fff;box-shadow:0 4px 18px rgba(0,0,0,.4);aspect-ratio:210/297}.dv-p img{display:block;width:100%;height:100%;object-fit:contain;user-select:none;pointer-events:none}.dv-wm{position:absolute;right:10px;bottom:8px;font:600 11px Inter,sans-serif;color:rgba(15,35,80,.35)}"""
+        url = f"{BASE}/examens-nationaux-2bac/"
+        title = "Examens nationaux Physique-Chimie 2BAC corrigés 2025–2026 | Bac SM et PC"
+        desc = "Examens nationaux de physique-chimie du bac marocain (2BAC Sciences Maths et Sciences Physiques) avec corrections détaillées vérifiées : mode examen chronométré, suivi de tes notes et exercices classés par thème."
+        body = f"""<section class="head"><div class="wrap">
+  <div class="crumbs"><a href="/">Accueil</a> › <a href="/niveau/2bac/">2BAC</a> › Examens nationaux</div>
+  <h1>Examens nationaux Physique-Chimie 2BAC avec corrigés</h1>
+  <p class="ar" lang="ar-MA" dir="rtl" style="font-size:19px;margin:6px 0">الامتحانات الوطنية في الفيزياء والكيمياء – الثانية بكالوريا مع التصحيح</p>
+  <div class="tags"><span class="tag g">Bac SM · PC</span><span class="tag">{nb} examens corrigés</span><span class="tag">Format officiel</span><span class="tag">Gratuit</span></div>
+</div></section>
+<main class="wrap">
+  <div class="intro"><p>Entraîne-toi avec les <b>examens nationaux du baccalauréat</b> : sujet au <b>format officiel</b> et <b>corrigé détaillé</b> vérifié avec la grille du ministère.
+  Lance le <b>⏱ mode examen</b> pour composer en temps réel (4 h en SM, 3 h en PC) : le corrigé s'ouvre quand tu termines, puis tu notes ta copie pour suivre ta progression.</p></div>
+  <h2 class="sec">📝 Sujets et corrigés</h2>
+  <div class="xtabs"><button type="button" class="on" data-fil="sm">📐 Sciences Maths</button><button type="button" data-fil="pc">🔬 Sciences Physiques</button></div>
+  {panes}
+  <h2 class="sec">📊 Mes résultats</h2>
+  <div id="mesres"></div>
+  <h2 class="sec">📚 Exercices par thème</h2>
+  <p class="tip">Révise un chapitre précis : chaque lien ouvre directement l'exercice dans le sujet ou dans le corrigé.</p>
+  {thh}
+  <div class="intro" style="margin-top:18px"><p>🧮 Calcule ta moyenne générale avec le <a href="/calcul-note-bac/"><b>calculateur de note du bac</b></a>.</p></div>
+  {share_block(url, "📝 Examens nationaux Physique-Chimie 2BAC avec corrigés, mode examen chronométré :")}
+  <div class="soutien">⭐ <b>Cours de soutien</b> 2BAC (en ligne ou à domicile) pour préparer le national — <a href="https://wa.me/{WA}" target="_blank" rel="noopener" data-ev="clic_soutien_examens_bac">WhatsApp 06 94 19 48 80</a></div>
+</main>"""
+        jsonld = {"@context": "https://schema.org", "@graph": [
+            {"@type": "BreadcrumbList", "itemListElement": [
+                {"@type": "ListItem", "position": 1, "name": "Accueil", "item": f"{BASE}/"},
+                {"@type": "ListItem", "position": 2, "name": "2BAC", "item": f"{BASE}/niveau/2bac/"},
+                {"@type": "ListItem", "position": 3, "name": "Examens nationaux", "item": url}]},
+            {"@type": "CollectionPage", "name": title, "url": url, "description": desc, "inLanguage": "fr", "isAccessibleForFree": True,
+             "educationalLevel": "2ème année baccalauréat", "author": {"@type": "Person", "name": "Youness HAFIDI", "url": f"{BASE}/"}}]}
+        d = os.path.join(SITE, "examens-nationaux-2bac"); os.makedirs(d, exist_ok=True)
+        open(os.path.join(d, "index.html"), "w", encoding="utf-8").write(page(title, desc, url, body, jsonld, "2bac", extra_css=css, extra_js='<script src="/js/examens.js" defer></script>'))
+        urls.insert(1, (url, "0.9"))
+
+    # Calculateur de la note du bac (formule officielle : 25 % CC + 25 % régional + 50 % national)
+    url = f"{BASE}/calcul-note-bac/"
+    title = "Calcul note bac Maroc : moyenne générale et note nationale nécessaire | 2BAC"
+    desc = "Calculateur gratuit de la moyenne du bac marocain : 25 % contrôle continu, 25 % examen régional, 50 % examen national. Mention obtenue et note nationale nécessaire pour réussir ou avoir une mention."
+    body = f"""<section class="head"><div class="wrap"><div class="crumbs"><a href="/">Accueil</a> › <a href="/niveau/2bac/">2BAC</a> › Calcul de la note du bac</div>
+<h1>Calcul de la note du bac (Maroc)</h1><p class="ar" lang="ar-MA" dir="rtl" style="font-size:19px;margin:6px 0">حساب معدل البكالوريا</p></div></section>
+<main class="wrap"><div class="intro calc">
+<p>Formule officielle : <b>Moyenne = 25 % contrôle continu + 25 % examen régional + 50 % examen national</b>.</p>
+<label>Contrôle continu (2BAC) <input id="cc" type="number" min="0" max="20" step="0.01" inputmode="decimal"></label>
+<label>Examen régional (1BAC) <input id="rg" type="number" min="0" max="20" step="0.01" inputmode="decimal"></label>
+<label>Examen national <small>(laisse vide pour savoir la note nécessaire)</small> <input id="nt" type="number" min="0" max="20" step="0.01" inputmode="decimal"></label>
+<div id="res" class="cres"></div></div>
+<div class="intro"><p>Mentions : <b>Passable</b> de 10 à 12, <b>Assez bien</b> de 12 à 14, <b>Bien</b> de 14 à 16, <b>Très bien</b> à partir de 16.</p>
+<p>Prépare l'examen national avec les <a href="/examens-nationaux-2bac/"><b>examens nationaux corrigés</b></a> et le mode examen chronométré.</p></div>
+{share_block(url, "🧮 Calcule ta moyenne du bac :")}</main>"""
+    calc_css = ".calc label{display:block;margin:10px 0;font-weight:700;color:#0f2350}.calc input{display:block;width:100%;max-width:240px;margin-top:4px;padding:10px;font-size:17px;border:1px solid #c9d2e3;border-radius:10px}.cres{margin-top:14px;padding:14px;border-radius:12px;background:#eef2fb;font-size:16px;line-height:1.6}.cres b.big{font-size:30px;color:#0f2350}"
+    calc_js = """<script>(function(){var ids=['cc','rg','nt'],f=function(i){var v=parseFloat((document.getElementById(i).value||'').replace(',','.'));return isNaN(v)?null:Math.max(0,Math.min(20,v));};
+function men(m){return m>=16?'Très bien':m>=14?'Bien':m>=12?'Assez bien':m>=10?'Passable':'Non admis (rattrapage si ≥ 9 selon le règlement)';}
+function n2(x){return x.toFixed(2).replace('.',',');}
+function go(){var cc=f('cc'),rg=f('rg'),nt=f('nt'),r=document.getElementById('res');try{localStorage.setItem('yh_calc',JSON.stringify([cc,rg,nt]));}catch(e){}
+if(cc==null||rg==null){r.innerHTML='Écris ta note de contrôle continu et ta note régionale.';return;}
+if(nt!=null){var m=0.25*cc+0.25*rg+0.5*nt;r.innerHTML='Moyenne générale : <b class="big">'+n2(m)+'</b> /20<br>Mention : <b>'+men(m)+'</b>';return;}
+var s=[[10,'réussir'],[12,'Assez bien'],[14,'Bien'],[16,'Très bien']].map(function(p){var n=(p[0]-0.25*cc-0.25*rg)/0.5;return '<li>Pour <b>'+p[1]+'</b> ('+p[0]+'/20) : '+(n<=0?'déjà assuré':n>20?'impossible':'il te faut <b>'+n2(n)+'</b> au national')+'</li>';}).join('');
+r.innerHTML='Note nationale nécessaire :<ul>'+s+'</ul>';}
+try{var s=JSON.parse(localStorage.getItem('yh_calc')||'[]');ids.forEach(function(i,k){if(s[k]!=null)document.getElementById(i).value=s[k];});}catch(e){}
+ids.forEach(function(i){document.getElementById(i).addEventListener('input',go);});go();})();</script>"""
+    d = os.path.join(SITE, "calcul-note-bac"); os.makedirs(d, exist_ok=True)
+    open(os.path.join(d, "index.html"), "w", encoding="utf-8").write(page(title, desc, url, body, {"@context": "https://schema.org", "@type": "WebApplication", "name": title, "url": url, "applicationCategory": "EducationalApplication", "isAccessibleForFree": True}, "2bac", extra_css=calc_css, extra_js=calc_js))
+    urls.insert(1, (url, "0.8"))
+
     # Page « toutes les leçons » (/lecons/) et page 404
     allli = ""
     for niv in USED_LEVELS:
@@ -739,10 +844,10 @@ def version_js():
     """Ajoute ?v=<empreinte> aux scripts du site : chaque mise en ligne force les navigateurs à prendre la nouvelle version."""
     import hashlib
     ver = {}
-    for n in ("avis", "soutien", "suivre"):
+    for n in ("avis", "soutien", "suivre", "examens"):
         f = os.path.join(SITE, "js", n + ".js")
         if os.path.exists(f): ver[n] = hashlib.md5(open(f, "rb").read()).hexdigest()[:8]
-    pat = re.compile(r'src="/js/(avis|soutien|suivre)\.js(?:\?v=\w+)?"')
+    pat = re.compile(r'src="/js/(avis|soutien|suivre|examens)\.js(?:\?v=\w+)?"')
     k = 0
     for root, _, files in os.walk(SITE):
         for fn in files:
