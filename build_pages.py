@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Génère une page par leçon + une page par niveau + sitemap, à partir de catalogue.json.
 Usage : python3 build_pages.py <dossier_site>"""
+import hashlib
 import glob, json, sys, re, unicodedata, html, datetime, os
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "interactif"))
 import interactive as IX
