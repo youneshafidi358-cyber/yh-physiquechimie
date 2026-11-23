@@ -399,6 +399,83 @@
   },
   {
    "fil": "SM",
+   "an": "2023",
+   "s": "N",
+   "ex": 1,
+   "part": "Partie 1",
+   "th": "acide",
+   "t": "Dosage de l'acide propanoïque d'un médicament",
+   "ps": 1,
+   "pc": 1
+  },
+  {
+   "fil": "SM",
+   "an": "2023",
+   "s": "N",
+   "ex": 1,
+   "part": "Partie 2",
+   "th": "redox",
+   "t": "Pile plomb-étain",
+   "ps": 1,
+   "pc": 1
+  },
+  {
+   "fil": "SM",
+   "an": "2023",
+   "s": "N",
+   "ex": 2,
+   "part": "",
+   "th": "ondes",
+   "t": "Ondes à la surface de l'eau d'une piscine, diffraction",
+   "ps": 3,
+   "pc": 3
+  },
+  {
+   "fil": "SM",
+   "an": "2023",
+   "s": "N",
+   "ex": 3,
+   "part": "Partie 1",
+   "th": "rcrl",
+   "t": "Condensateur réel : charge et résistance de fuite",
+   "ps": 4,
+   "pc": 3
+  },
+  {
+   "fil": "SM",
+   "an": "2023",
+   "s": "N",
+   "ex": 3,
+   "part": "Partie 2",
+   "th": "modu",
+   "t": "Réception d'une onde modulée en amplitude",
+   "ps": 5,
+   "pc": 3
+  },
+  {
+   "fil": "SM",
+   "an": "2023",
+   "s": "N",
+   "ex": 4,
+   "part": "Partie 1",
+   "th": "newton",
+   "t": "Projectile : mesure de l'intensité de pesanteur",
+   "ps": 5,
+   "pc": 4
+  },
+  {
+   "fil": "SM",
+   "an": "2023",
+   "s": "N",
+   "ex": 4,
+   "part": "Partie 2",
+   "th": "oscm",
+   "t": "Pendule élastique horizontal, énergie potentielle",
+   "ps": 5,
+   "pc": 4
+  },
+  {
+   "fil": "SM",
    "an": "2026",
    "s": "R",
    "ex": 1,
