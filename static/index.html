@@ -28,7 +28,10 @@
 <meta name="description" content="Cours, séries d'exercices, corrigés et vidéos de physique-chimie (2AC, 3AC, Tronc commun) par Pr. Youness HAFIDI.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700;9..144,800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<script src="/js/pdf.min.js"></script>
+<script>/* Lien direct vers un PDF (?doc=…) : on télécharge le PDF et pdf.js tout de suite, en parallèle, sans attendre le reste de la page */
+(function(){var d=new URLSearchParams(location.search).get("doc");if(!d||!/\.pdf$/i.test(d))return;var u=/^(https?:|\/)/.test(d)?d:"/"+d;
+window.__PREF={u:u,p:fetch(u).then(function(r){if(!r.ok)throw new Error("http "+r.status);return r.arrayBuffer();})};window.__PREF.p.catch(function(){});
+var s=document.createElement("script");s.src="/js/pdf.min.js";s.async=true;s.onload=function(){try{if(!window.__PDFW){pdfjsLib.GlobalWorkerOptions.workerSrc="/js/pdf.worker.min.js";window.__PDFW=new pdfjsLib.PDFWorker();}}catch(e){}};document.head.appendChild(s);})();</script>
 <style>
   :root{
     --navy:#0f2350; --navy2:#1a3a7c; --ink:#14213d; --ink2:#3d4a66; --muted:#565f74;
@@ -419,7 +422,7 @@
 <section class="soutien" id="soutien">
   <div class="wrap s-grid">
     <div>
-      <div class="flyer"><img id="flyerImg" src="/soutien-fr-v3.jpg" alt="Affiche des cours de soutien en physique-chimie"></div>
+      <div class="flyer"><img id="flyerImg" src="/soutien-fr-v3.jpg" loading="lazy" decoding="async" alt="Affiche des cours de soutien en physique-chimie"></div>
       <div class="langs" role="group" aria-label="Langue de l'affiche">
         <button data-l="fr" aria-pressed="true">Affiche en français</button>
         <button data-l="ar" aria-pressed="false">Affiche en arabe</button>
@@ -689,6 +692,20 @@ function durFlush(){
 }
 document.addEventListener("visibilitychange", ()=>{ document.hidden ? durPause() : durResume(); });
 window.addEventListener("pagehide", durFlush);
+/* pdf.js n'est plus chargé au démarrage de la page (320 Ko) : seulement quand on ouvre un PDF */
+function pdfLib(){
+  if(window.pdfjsLib) return Promise.resolve(window.pdfjsLib);
+  if(!window.__PDFP) window.__PDFP = new Promise((ok, ko)=>{
+    let s = document.querySelector('script[src^="/js/pdf.min.js"]');
+    if(!s){ s = document.createElement("script"); s.src = "/js/pdf.min.js"; s.async = true; document.head.appendChild(s); }
+    s.addEventListener("load", ()=>{ const lib = window.pdfjsLib; if(!lib) return ko(new Error("pdf.js"));
+      /* le moteur PDF (worker) démarre tout de suite, pendant que le PDF se télécharge */
+      try{ if(!window.__PDFW){ lib.GlobalWorkerOptions.workerSrc = "/js/pdf.worker.min.js"; window.__PDFW = new lib.PDFWorker(); } }catch(e){}
+      ok(lib); });
+    s.addEventListener("error", ()=>{ window.__PDFP = null; ko(new Error("pdf.js")); });
+  });
+  return window.__PDFP;
+}
 async function openViewer(it){
   const token = ++renderToken;
   durFlush(); DUR = {it, ms:0, since:Date.now()};
@@ -711,9 +728,9 @@ async function openViewer(it){
     return;
   }
   try{
-    const res = await fetch(u);
-    if(!res.ok) throw new Error("http "+res.status);
     if(it.type==="video"){
+      const res = await fetch(u);
+      if(!res.ok) throw new Error("http "+res.status);
       const blob = await res.blob();
       if(token!==renderToken) return;
       blobUrl = URL.createObjectURL(blob);
@@ -726,12 +743,17 @@ async function openViewer(it){
       v.src = blobUrl;
       box.append(v, wm()); body.appendChild(box);
     } else {
-      const buf = await res.arrayBuffer();
+      /* PDF et pdf.js chargés en parallèle (le PDF est souvent déjà en route depuis le haut de la page) */
+      let bufP;
+      if(window.__PREF && window.__PREF.u===u){ bufP = window.__PREF.p; window.__PREF = null; }
+      else bufP = fetch(u).then(r=>{ if(!r.ok) throw new Error("http "+r.status); return r.arrayBuffer(); });
+      const [buf, lib] = await Promise.all([bufP, pdfLib()]);
       if(token!==renderToken) return;
-      const lib = window.pdfjsLib;
       if(!lib) throw new Error("pdf.js");
       lib.GlobalWorkerOptions.workerSrc = "/js/pdf.worker.min.js";
-      const pdf = await lib.getDocument({data:buf, isEvalSupported:false}).promise;
+      const opts = {data:buf, isEvalSupported:false};
+      if(window.__PDFW && !window.__PDFW.destroyed) opts.worker = window.__PDFW;
+      const pdf = await lib.getDocument(opts).promise;
       body.innerHTML = "";
       const wrap = document.createElement("div"); wrap.className="pages"; body.appendChild(wrap);
       const width = Math.min(960, body.clientWidth - 24);
