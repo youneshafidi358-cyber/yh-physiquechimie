@@ -564,6 +564,83 @@
   },
   {
    "fil": "SM",
+   "an": "2023",
+   "s": "R",
+   "ex": 1,
+   "part": "Partie 1",
+   "th": "acide",
+   "t": "Acide méthanoïque : dosage, pourcentage massique",
+   "ps": 1,
+   "pc": 1
+  },
+  {
+   "fil": "SM",
+   "an": "2023",
+   "s": "R",
+   "ex": 1,
+   "part": "Partie 2",
+   "th": "ester",
+   "t": "Synthèse d'un ester, rendement et constante d'équilibre",
+   "ps": 2,
+   "pc": 1
+  },
+  {
+   "fil": "SM",
+   "an": "2023",
+   "s": "R",
+   "ex": 2,
+   "part": "",
+   "th": "nucl",
+   "t": "Datation rubidium-strontium",
+   "ps": 2,
+   "pc": 3
+  },
+  {
+   "fil": "SM",
+   "an": "2023",
+   "s": "R",
+   "ex": 3,
+   "part": "Partie 1",
+   "th": "rcrl",
+   "t": "Réponse d'un dipôle RL à un échelon de tension",
+   "ps": 4,
+   "pc": 3
+  },
+  {
+   "fil": "SM",
+   "an": "2023",
+   "s": "R",
+   "ex": 3,
+   "part": "Partie 2",
+   "th": "rlc",
+   "t": "RLC libre (énergie) et forcé (oscilloscope)",
+   "ps": 4,
+   "pc": 3
+  },
+  {
+   "fil": "SM",
+   "an": "2023",
+   "s": "R",
+   "ex": 4,
+   "part": "Partie 1",
+   "th": "newton",
+   "t": "Skieur sur un plan incliné, frottements",
+   "ps": 6,
+   "pc": 4
+  },
+  {
+   "fil": "SM",
+   "an": "2023",
+   "s": "R",
+   "ex": 4,
+   "part": "Partie 2",
+   "th": "newton",
+   "t": "Spectrographe de masse : séparation isotopique",
+   "ps": 7,
+   "pc": 4
+  },
+  {
+   "fil": "SM",
    "an": "2026",
    "s": "R",
    "ex": 1,
