@@ -704,6 +704,160 @@
    "t": "Oscillateur avec ressort et poulie, résonance",
    "ps": 5,
    "pc": 4
+  },
+  {
+   "fil": "PC",
+   "an": "2026",
+   "s": "N",
+   "ex": 1,
+   "part": "",
+   "th": "acide",
+   "t": "Acide butanoïque : pKA et taux d'avancement",
+   "ps": 1,
+   "pc": 1
+  },
+  {
+   "fil": "PC",
+   "an": "2026",
+   "s": "N",
+   "ex": 1,
+   "part": "",
+   "th": "ester",
+   "t": "Estérification acide butanoïque / méthanol, dosage, rendement",
+   "ps": 1,
+   "pc": 1
+  },
+  {
+   "fil": "PC",
+   "an": "2026",
+   "s": "N",
+   "ex": 2,
+   "part": "",
+   "th": "nucl",
+   "t": "Désintégration du soufre 35",
+   "ps": 2,
+   "pc": 2
+  },
+  {
+   "fil": "PC",
+   "an": "2026",
+   "s": "N",
+   "ex": 3,
+   "part": "Partie I",
+   "th": "rcrl",
+   "t": "Réponse d'un dipôle RL à un échelon de tension",
+   "ps": 3,
+   "pc": 2
+  },
+  {
+   "fil": "PC",
+   "an": "2026",
+   "s": "N",
+   "ex": 3,
+   "part": "Partie II",
+   "th": "modu",
+   "t": "Transmission et réception d'un signal modulé",
+   "ps": 3,
+   "pc": 2
+  },
+  {
+   "fil": "PC",
+   "an": "2026",
+   "s": "N",
+   "ex": 4,
+   "part": "Partie I",
+   "th": "newton",
+   "t": "Saut sans parachute : chute libre, frottements, Euler",
+   "ps": 4,
+   "pc": 3
+  },
+  {
+   "fil": "PC",
+   "an": "2026",
+   "s": "N",
+   "ex": 4,
+   "part": "Partie II",
+   "th": "oscm",
+   "t": "Énergie d'un pendule élastique",
+   "ps": 5,
+   "pc": 3
+  },
+  {
+   "fil": "PC",
+   "an": "2026",
+   "s": "R",
+   "ex": 1,
+   "part": "Partie I",
+   "th": "redox",
+   "t": "Nickelage d'une lame d'aluminium par électrolyse",
+   "ps": 1,
+   "pc": 1
+  },
+  {
+   "fil": "PC",
+   "an": "2026",
+   "s": "R",
+   "ex": 1,
+   "part": "Partie II",
+   "th": "acide",
+   "t": "Dilution d'un acide AH, pKA",
+   "ps": 1,
+   "pc": 1
+  },
+  {
+   "fil": "PC",
+   "an": "2026",
+   "s": "R",
+   "ex": 2,
+   "part": "",
+   "th": "nucl",
+   "t": "Fission de l'uranium 235",
+   "ps": 2,
+   "pc": 2
+  },
+  {
+   "fil": "PC",
+   "an": "2026",
+   "s": "R",
+   "ex": 3,
+   "part": "",
+   "th": "rcrl",
+   "t": "Charge d'un condensateur",
+   "ps": 4,
+   "pc": 3
+  },
+  {
+   "fil": "PC",
+   "an": "2026",
+   "s": "R",
+   "ex": 3,
+   "part": "",
+   "th": "modu",
+   "t": "Réception d'un signal modulé en amplitude",
+   "ps": 4,
+   "pc": 3
+  },
+  {
+   "fil": "PC",
+   "an": "2026",
+   "s": "R",
+   "ex": 4,
+   "part": "Partie I",
+   "th": "newton",
+   "t": "Chute verticale d'une balle avec frottement, Euler",
+   "ps": 6,
+   "pc": 4
+  },
+  {
+   "fil": "PC",
+   "an": "2026",
+   "s": "R",
+   "ex": 4,
+   "part": "Partie II",
+   "th": "oscm",
+   "t": "Énergie d'un pendule élastique horizontal",
+   "ps": 6,
+   "pc": 4
   }
  ]
 }

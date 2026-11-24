@@ -1176,5 +1176,57 @@
   "ordre": 369,
   "lieu": "Elaraki (Casablanca) · janvier 2021",
   "description": "Corrigé détaillé pas à pas : méthodes, réponses encadrées, erreurs fréquentes."
+ },
+ {
+  "niveau": "2bac",
+  "matiere": "pc",
+  "unite": "Examens nationaux – 2BAC Sciences Physiques (PC)",
+  "type": "controle",
+  "sousType": "Examen national",
+  "titre": "Examen national du bac 2026 Physique-Chimie 2BAC PC – session de rattrapage – Sujet R",
+  "url": "cours/Sujet_Bac_2BAC_PC_2026_Rattrapage.pdf",
+  "id": "bpc2026Rs",
+  "ordre": 1898,
+  "lieu": "session de rattrapage",
+  "description": "Examen national du baccalauréat 2026 (session de rattrapage), 2BAC Sciences Physiques (PC), option française. Énoncé retapé."
+ },
+ {
+  "niveau": "2bac",
+  "matiere": "pc",
+  "unite": "Examens nationaux – 2BAC Sciences Physiques (PC)",
+  "type": "corrige",
+  "sousType": "Corrigé détaillé",
+  "titre": "Corrigé examen national 2026 Physique-Chimie 2BAC PC – session de rattrapage – Sujet R",
+  "url": "cours/Corrige_Bac_2BAC_PC_2026_Rattrapage.pdf",
+  "id": "bpc2026Rc",
+  "ordre": 1899,
+  "lieu": "session de rattrapage",
+  "description": "Corrigé détaillé : méthodes, réponses encadrées, erreurs fréquentes."
+ },
+ {
+  "niveau": "2bac",
+  "matiere": "pc",
+  "unite": "Examens nationaux – 2BAC Sciences Physiques (PC)",
+  "type": "controle",
+  "sousType": "Examen national",
+  "titre": "Examen national du bac 2026 Physique-Chimie 2BAC PC – session normale – Sujet N",
+  "url": "cours/Sujet_Bac_2BAC_PC_2026_Normale.pdf",
+  "id": "bpc2026Ns",
+  "ordre": 1896,
+  "lieu": "session normale",
+  "description": "Examen national du baccalauréat 2026 (session normale), 2BAC Sciences Physiques (PC), option française. Énoncé retapé."
+ },
+ {
+  "niveau": "2bac",
+  "matiere": "pc",
+  "unite": "Examens nationaux – 2BAC Sciences Physiques (PC)",
+  "type": "corrige",
+  "sousType": "Corrigé détaillé",
+  "titre": "Corrigé examen national 2026 Physique-Chimie 2BAC PC – session normale – Sujet N",
+  "url": "cours/Corrige_Bac_2BAC_PC_2026_Normale.pdf",
+  "id": "bpc2026Nc",
+  "ordre": 1897,
+  "lieu": "session normale",
+  "description": "Corrigé détaillé : méthodes, réponses encadrées, erreurs fréquentes."
  }
 ]
