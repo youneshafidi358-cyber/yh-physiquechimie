@@ -29,9 +29,12 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700;9..144,800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script>/* Lien direct vers un PDF (?doc=…) : on télécharge le PDF et pdf.js tout de suite, en parallèle, sans attendre le reste de la page */
+window.__DOCIMG=fetch("/docimg/index.json").then(function(r){return r.ok?r.json():{};}).catch(function(){return {};});
 (function(){var d=new URLSearchParams(location.search).get("doc");if(!d||!/\.pdf$/i.test(d))return;var u=/^(https?:|\/)/.test(d)?d:"/"+d;
+/* Le PDF existe en images (pages pré-rendues) : on précharge les 2 premières pages, pas besoin de pdf.js */
+window.__DOCIMG.then(function(m){var l=m[u.replace(/^\//,"")];if(l){l.slice(0,2).forEach(function(x){var i=new Image();i.fetchPriority="high";i.src=x;});return;}
 window.__PREF={u:u,p:fetch(u).then(function(r){if(!r.ok)throw new Error("http "+r.status);return r.arrayBuffer();})};window.__PREF.p.catch(function(){});
-var s=document.createElement("script");s.src="/js/pdf.min.js";s.async=true;s.onload=function(){try{if(!window.__PDFW){pdfjsLib.GlobalWorkerOptions.workerSrc="/js/pdf.worker.min.js";window.__PDFW=new pdfjsLib.PDFWorker();}}catch(e){}};document.head.appendChild(s);})();</script>
+var s=document.createElement("script");s.src="/js/pdf.min.js";s.async=true;s.onload=function(){try{if(!window.__PDFW){pdfjsLib.GlobalWorkerOptions.workerSrc="/js/pdf.worker.min.js";window.__PDFW=new pdfjsLib.PDFWorker();}}catch(e){}};document.head.appendChild(s);});})();</script>
 <style>
   :root{
     --navy:#0f2350; --navy2:#1a3a7c; --ink:#14213d; --ink2:#3d4a66; --muted:#565f74;
@@ -275,6 +278,8 @@ var s=document.createElement("script");s.src="/js/pdf.min.js";s.async=true;s.onl
   .pages{max-width:960px;margin:0 auto;padding:18px 12px 40px;display:flex;flex-direction:column;gap:14px;align-items:center}
   .pagebox{position:relative;background:#fff;box-shadow:0 4px 20px rgba(0,0,0,.35);width:100%}
   .pagebox canvas{display:block;width:100%;height:auto;pointer-events:none}
+  .pagebox img{display:block;width:100%;height:auto;pointer-events:none;user-select:none;-webkit-user-drag:none;min-height:240px}
+  .pagebox img.ld{min-height:0}
   .wm{position:absolute;inset:0;pointer-events:none;overflow:hidden;display:flex;align-items:center;justify-content:center}
   .wm span{transform:rotate(-30deg);font-family:Fraunces,serif;font-size:clamp(18px,4vw,34px);color:rgba(31,78,156,.10);white-space:nowrap;font-weight:700}
   .vidbox{max-width:1000px;margin:0 auto;padding:20px 12px;position:relative}
@@ -743,6 +748,19 @@ async function openViewer(it){
       v.src = blobUrl;
       box.append(v, wm()); body.appendChild(box);
     } else {
+      /* Version images du PDF (pages pré-rendues, ~150 Ko/page) : affichage immédiat, sans pdf.js */
+      const imgs = (await (window.__DOCIMG || Promise.resolve({})))[u.replace(/^\//,"")];
+      if(token!==renderToken) return;
+      if(imgs && imgs.length){
+        body.innerHTML = "";
+        const wrap = document.createElement("div"); wrap.className="pages"; body.appendChild(wrap);
+        imgs.forEach((x,i)=>{ const box = document.createElement("div"); box.className="pagebox";
+          const im = document.createElement("img"); im.alt = "Page "+(i+1); im.draggable = false; im.decoding = "async";
+          if(i<2) im.fetchPriority = "high"; else im.loading = "lazy";
+          im.onload = ()=> im.classList.add("ld"); im.src = x;
+          box.append(im, wm()); wrap.appendChild(box); });
+        return;
+      }
       /* PDF et pdf.js chargés en parallèle (le PDF est souvent déjà en route depuis le haut de la page) */
       let bufP;
       if(window.__PREF && window.__PREF.u===u){ bufP = window.__PREF.p; window.__PREF = null; }

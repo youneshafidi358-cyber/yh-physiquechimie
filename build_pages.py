@@ -830,6 +830,14 @@ ids.forEach(function(i){document.getElementById(i).addEventListener('input',go);
     ix = re.sub(r"<!--LECONS-->.*?<!--/LECONS-->", "<!--LECONS-->\n" + blk + "<!--/LECONS-->", ix, flags=re.S)
     open(os.path.join(SITE, "index.html"), "w", encoding="utf-8").write(strip_ar(ix))
     print(len(urls), "URL dans le sitemap")
+    # Pages des PDF pré-rendues en images (docimg/<nom>-<n>.webp) : l'accueil les affiche à la place du PDF (ouverture rapide)
+    dm = {}
+    for f in sorted(glob.glob(os.path.join(SITE, "cours", "*.pdf"))):
+        stem = os.path.splitext(os.path.basename(f))[0]
+        fs = sorted(glob.glob(os.path.join(SITE, "docimg", glob.escape(stem) + "-*.webp")), key=lambda x: int(re.search(r"-(\d+)\.webp$", x).group(1)))
+        if fs: dm["cours/" + os.path.basename(f)] = ["/docimg/" + os.path.basename(x) + "?v=" + hashlib.md5(open(x, "rb").read()).hexdigest()[:8] for x in fs]
+    open(os.path.join(SITE, "docimg", "index.json"), "w", encoding="utf-8").write(json.dumps(dm, ensure_ascii=False, separators=(",", ":")))
+    print(len(dm), "PDF disponibles en images")
 
 VIDEOS_LECON = {
     ("tc", "Contrôles surveillés – Semestre 1"): [
