@@ -150,6 +150,21 @@ footer .wrap{display:flex;gap:14px;flex-wrap:wrap;justify-content:space-between}
 .ex.err .errbox{display:block}
 .wmk{position:absolute;inset:0;pointer-events:none;display:flex;align-items:center;justify-content:center;overflow:hidden}
 .wmk span{transform:rotate(-25deg);font-family:Fraunces,serif;font-size:22px;color:rgba(31,78,156,.09);white-space:nowrap;font-weight:700}
+.zb{position:absolute;top:6px;right:10px;z-index:3;border:1px solid var(--line);background:#fff;color:var(--navy);border-radius:99px;padding:4px 10px;font:inherit;font-size:12.5px;font-weight:700;cursor:pointer;box-shadow:0 1px 4px rgba(15,35,80,.12)}
+.zb:hover{background:var(--blue-soft)}
+.ex:not(.shown) .cor .zb{display:none}
+.zv{position:fixed;inset:0;z-index:9999;background:rgba(10,18,40,.94);display:none;flex-direction:column}
+.zv.on{display:flex}
+.zv-h{display:flex;align-items:center;gap:8px;padding:10px 12px;color:#fff;flex-wrap:wrap}
+.zv-h b{font-family:Fraunces,serif;font-size:16px;margin-right:auto}
+.zv-h button{border:0;background:#fff;color:var(--navy);border-radius:10px;min-width:40px;height:40px;padding:0 12px;font:inherit;font-size:18px;font-weight:800;cursor:pointer}
+.zv-h .pc{min-width:58px;text-align:center;font-weight:700}
+.zv-h .x{background:var(--red);color:#fff}
+.zv-s{flex:1;overflow:auto;-webkit-overflow-scrolling:touch;padding:10px}
+.zv-in{position:relative;margin:0 auto;background:#fff;border-radius:8px;padding:6px}
+.zv-in img{display:block;width:100%;height:auto;-webkit-user-drag:none;user-select:none;pointer-events:none}
+.zv-in img+img{margin-top:6px}
+body.zv-open{overflow:hidden}
 @media(max-width:820px){.ex-b{grid-template-columns:1fr}.ex-b .cor{border-left:0;border-top:1px dashed var(--line)}}
 /* Quiz */
 .qz{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px}
@@ -403,7 +418,27 @@ footer .wrap{display:flex;gap:14px;flex-wrap:wrap;justify-content:space-between}
    const s=document.getElementById('qscore'); s.textContent='Score : '+ok+' / '+qs.length+(done===qs.length?(ok===qs.length?' — Parfait ! 🎉':ok>=qs.length/2?' — Bien, continue !':' — Relis le résumé et réessaie.'):'');
    if(done===qs.length){ try{gtag('event','quiz_termine',{lecon:document.title,score:ok})}catch(x){} } }); });
  const rq=document.getElementById('qreset'); if(rq) rq.onclick=()=>{ ok=0;done=0; qs.forEach(q=>{q.classList.remove('done');q.querySelectorAll('button').forEach(b=>b.classList.remove('good','bad'))}); document.getElementById('qscore').textContent='Score : 0 / '+qs.length; };
- ['contextmenu','dragstart'].forEach(ev=>document.addEventListener(ev,e=>{ if(e.target.closest('.ex-b')) e.preventDefault(); }));
+ // Zoom : énoncé ou correction, chacun séparément
+ const zv=document.createElement('div'); zv.className='zv'; zv.setAttribute('role','dialog'); zv.setAttribute('aria-modal','true');
+ zv.innerHTML='<div class="zv-h"><b></b><button type="button" class="m" aria-label="Dézoomer">−</button><span class="pc">100 %</span><button type="button" class="p" aria-label="Zoomer">+</button><button type="button" class="x" aria-label="Fermer">✕</button></div><div class="zv-s"><div class="zv-in"></div></div>';
+ document.body.appendChild(zv);
+ const zin=zv.querySelector('.zv-in'), zs=zv.querySelector('.zv-s'), zpc=zv.querySelector('.pc'); let zk=1, zbase=0;
+ function zset(k){ zk=Math.max(1,Math.min(4,Math.round(k*4)/4)); zin.style.width=Math.round(zbase*zk)+'px'; zpc.textContent=Math.round(zk*100)+' %'; }
+ function zopen(box,title){ zin.innerHTML=''; box.querySelectorAll('img').forEach(i=>{const c=i.cloneNode(); c.loading='eager'; zin.appendChild(c);});
+  const w=document.createElement('div'); w.className='wmk'; w.setAttribute('aria-hidden','true'); w.innerHTML='<span>Pr. Youness HAFIDI</span>'; zin.appendChild(w);
+  zv.querySelector('.zv-h b').textContent=title; zv.classList.add('on'); document.body.classList.add('zv-open');
+  zbase=Math.min(zs.clientWidth-20,1000); zset(zv.dataset.k?+zv.dataset.k:(innerWidth<700?1.5:1)); zs.scrollTop=0; zs.scrollLeft=0; zv.querySelector('.x').focus();
+  try{gtag('event','zoom_exercice',{lecon:document.title,partie:title})}catch(x){} }
+ function zclose(){ zv.classList.remove('on'); document.body.classList.remove('zv-open'); zin.innerHTML=''; }
+ zv.querySelector('.p').onclick=()=>zset(zk+.25); zv.querySelector('.m').onclick=()=>zset(zk-.25); zv.querySelector('.x').onclick=zclose;
+ zs.addEventListener('dblclick',()=>zset(zk<2?2:1));
+ zs.addEventListener('wheel',e=>{ if(e.ctrlKey){ e.preventDefault(); zset(zk+(e.deltaY<0?.25:-.25)); } },{passive:false});
+ addEventListener('keydown',e=>{ if(!zv.classList.contains('on')) return; if(e.key==='Escape') zclose(); else if(e.key==='+'||e.key==='=') zset(zk+.25); else if(e.key==='-') zset(zk-.25); });
+ addEventListener('resize',()=>{ if(zv.classList.contains('on')){ zbase=Math.min(zs.clientWidth-20,1000); zset(zk); } });
+ document.querySelectorAll('.ex').forEach(ex=>{ ex.querySelectorAll('.ex-b>div').forEach(box=>{ if(!box.querySelector('img')) return;
+  const cor=box.classList.contains('cor'), b=document.createElement('button'); b.type='button'; b.className='zb'; b.textContent='🔍 Zoom';
+  const t=(cor?'Correction':'Énoncé')+' – Exercice '+(ex.dataset.n||''); b.setAttribute('aria-label','Agrandir : '+t); b.onclick=()=>zopen(box,t); box.appendChild(b); }); });
+ ['contextmenu','dragstart'].forEach(ev=>document.addEventListener(ev,e=>{ if(e.target.closest('.ex-b,.zv')) e.preventDefault(); }));
 })();
 </script>
 <link rel="stylesheet" href="/js/katex/katex.min.css">
