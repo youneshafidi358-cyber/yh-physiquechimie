@@ -423,6 +423,9 @@ def build():
         elif _u in CO.COURS:
             title = f"{_u} – {lv['short']} : cours et exercices corrigés"
             desc = f"{_u} ({MAT.get(L['mat'],'Physique-Chimie')}, {lv['long']}) : cours résumé, simulation interactive, exercices corrigés et quiz. Gratuit, par Pr. Youness HAFIDI."
+        elif _u.startswith("Examens nationaux"):
+            title = f"{_u} corrigés"
+            desc = f"{_u} : sujets officiels du bac de physique-chimie avec corrigés détaillés. Gratuit, par Pr. Youness HAFIDI."
         else:
             title = f"{_u} – {lv['short']} : exercices corrigés"
             desc = f"{_u} ({lv['long']}) : séries d'exercices et corrigés en ligne. Gratuit, par Pr. Youness HAFIDI."
@@ -526,7 +529,7 @@ def build():
     for niv in USED_LEVELS:
         lv = by_level[niv]; info = LEVELS[niv]
         url = f"{BASE}/niveau/{niv}/"
-        title = f"Physique-Chimie {info['short']} : cours, exercices et devoirs corrigés" if niv not in ("3ac", "2bac") else ("Physique-Chimie 3AC : cours, exercices, devoirs et examens locaux corrigés" if niv == "3ac" else "Examens nationaux Physique-Chimie 2BAC SM corrigés | Bac Sciences Maths")
+        title = f"Physique-Chimie {info['short']} : cours, exercices et devoirs corrigés" if niv not in ("3ac", "2bac") else ("Physique-Chimie 3AC : cours, exercices, devoirs et examens locaux corrigés" if niv == "3ac" else "Examens nationaux Physique-Chimie 2BAC SM et PC corrigés")
         desc = (f"Physique-chimie {info['short']} ({info['long']}) : cours, simulations, exercices et devoirs corrigés, gratuits. Leçons : "
                 + ", ".join(l["unite"] for l in lv if not l["unite"].startswith(("Contrôles", "Révision"))) + ".")[:300]
         hub_html, hub_js = level_hub(niv, lv)
@@ -775,7 +778,7 @@ ids.forEach(function(i){document.getElementById(i).addEventListener('input',go);
     ab = f"""<section class="head"><div class="wrap"><div class="crumbs"><a href="/">Accueil</a> › À propos</div><h1>À propos</h1><div class="ar" lang="ar">من أنا</div></div></section>
 <main class="wrap"><div class="intro" style="display:flex;gap:22px;align-items:center;flex-wrap:wrap"><div style="position:relative;flex-shrink:0;margin:auto"><img src="/prof-lg.webp" alt="Pr. Youness HAFIDI, professeur de physique-chimie" width="220" height="239" style="width:220px;height:239px;object-fit:cover;border-radius:18px;border:3px solid var(--gold);display:block"><img src="/logo.jpg" alt="Logo YH Physique-Chimie" style="position:absolute;right:-12px;bottom:-12px;width:64px;height:64px;border-radius:50%;border:3px solid var(--gold);background:#fff"></div>
 <div style="flex:1;min-width:240px"><p><b>Pr. Youness HAFIDI</b> — professeur de physique-chimie au cycle secondaire.</p>
-<p>YH Physique-Chimie rassemble mes ressources pour les élèves : séries d'exercices et corrigés, devoirs surveillés, résumés en cartes mentales, quiz et simulations interactives, du collège au baccalauréat (examens nationaux 2BAC SM corrigés).</p>
+<p>YH Physique-Chimie rassemble mes ressources pour les élèves : séries d'exercices et corrigés, devoirs surveillés, résumés en cartes mentales, quiz et simulations interactives, du collège au baccalauréat (examens nationaux 2BAC SM et PC corrigés).</p>
 <p class="ar" lang="ar" dir="rtl">أستاذ الفيزياء والكيمياء بالسلك الثانوي. يضم هذا الموقع سلاسل تمارين مع تصحيحها، وفروضا محروسة، وملخصات، وتمارين تفاعلية، مجانا.</p></div></div>
 <h2 class="sec">Comment utiliser le site</h2>
 <div class="lcards"><a class="lc" style="--c:#1f4e9c" href="/lecons/"><span class="lc-code">01</span><span class="lc-t">📖 Lis le cours</span><span class="lc-m">Définitions, relations et simulation, directement dans la leçon.</span><span class="lc-go">Choisir une leçon →</span></a><a class="lc" style="--c:#1f4e9c" href="/lecons/"><span class="lc-code">02</span><span class="lc-t">✍️ Cherche les exercices</span><span class="lc-m">Seul, sur ta feuille, avant de regarder la correction.</span><span class="lc-go">Choisir une leçon →</span></a><a class="lc" style="--c:#1f4e9c" href="/lecons/"><span class="lc-code">03</span><span class="lc-t">✅ Vérifie</span><span class="lc-m">Clique sur « Voir la réponse » et lis l'erreur fréquente.</span><span class="lc-go">Choisir une leçon →</span></a><a class="lc" style="--c:#1f4e9c" href="/lecons/"><span class="lc-code">04</span><span class="lc-t">🎯 Teste-toi</span><span class="lc-m">Fais le quiz et les applications interactives.</span><span class="lc-go">Choisir une leçon →</span></a></div>
@@ -867,5 +870,27 @@ def version_js():
             if t2 != t: open(fp, "w", encoding="utf-8").write(t2); k += 1
     print(k, "pages : scripts versionnés")
 
+def sitemap_lastmod():
+    """Date réelle de dernière modification de chaque page dans le sitemap.
+    lastmod.json garde l'empreinte de chaque page : la date ne change que si le contenu de la page change."""
+    fmap = os.path.join(os.path.dirname(os.path.abspath(__file__)), "lastmod.json")
+    try: known = json.load(open(fmap, encoding="utf-8"))
+    except Exception: known = {}
+    fsm = os.path.join(SITE, "sitemap.xml"); sm = open(fsm, encoding="utf-8").read()
+    def fix(m):
+        u = m.group(1); path = u[len(BASE):].lstrip("/")
+        f = os.path.join(SITE, path, "index.html")
+        if not os.path.exists(f): return m.group(0)
+        t = re.sub(r"\?v=\w+", "", open(f, encoding="utf-8").read())
+        h = hashlib.md5(t.encode("utf-8")).hexdigest()
+        old = known.get(u)
+        if not old or old.get("h") != h: known[u] = old = {"h": h, "d": TODAY}
+        return f"<loc>{u}</loc><lastmod>{old['d']}</lastmod>"
+    sm = re.sub(r"<loc>([^<]+)</loc><lastmod>[^<]*</lastmod>", fix, sm)
+    open(fsm, "w", encoding="utf-8").write(sm)
+    try: json.dump(known, open(fmap, "w", encoding="utf-8"), indent=1, sort_keys=True)
+    except Exception: pass
+
 build()
 version_js()
+sitemap_lastmod()
