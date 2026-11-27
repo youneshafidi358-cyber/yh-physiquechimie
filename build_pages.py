@@ -131,6 +131,9 @@ h2.sec::before{content:"";width:6px;height:20px;border-radius:3px;background:var
 .list{list-style:none;padding:0;margin:0;display:grid;gap:8px}
 .list a{display:flex;justify-content:space-between;gap:10px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:11px 14px;text-decoration:none;font-weight:600}
 .list a:hover{border-color:var(--blue)}.list a span{font-weight:500;color:var(--muted);font-size:13px;white-space:nowrap}
+.lnav{display:flex;gap:12px;margin:18px 0;flex-wrap:wrap}.lnav .ln{flex:1 1 240px;display:flex;flex-direction:column;gap:2px;padding:12px 16px;border:1px solid var(--line);border-radius:14px;background:#fff;text-decoration:none;min-height:44px}
+.lnav .ln:hover{border-color:#123c8c;box-shadow:0 2px 10px rgba(18,60,140,.12)}.lnav .ln-next{text-align:right;background:#123c8c;border-color:#123c8c}.lnav .ln-next .ln-k,.lnav .ln-next .ln-t{color:#fff}
+.lnav .ln-k{font-size:13px;font-weight:700;color:#b42318;text-transform:uppercase;letter-spacing:.03em}.lnav .ln-t{font-weight:700;color:#0f2350;font-size:16px}
 .soutien{background:var(--gold-soft);border:1px solid #efd99a;border-radius:var(--r);padding:16px 18px;margin-top:28px}
 .soutien b{color:#7a5a00}
 footer{background:#0a1838;color:#9fb0d4;padding:22px 0;font-size:14px}
@@ -446,6 +449,14 @@ def build():
   <div><h3>{E(it['titre'])}</h3><div class="sub">{E(it.get('sousType') or TYPES.get(it['type'],''))}</div><div class="go">Ouvrir en ligne →</div></div>
 </a>"""
         others = [o for o in by_level[niv] if o is not L]
+        _seq = by_level[niv]; _i = _seq.index(L)
+        def _lk(o, cls, lab):
+            return f'<a class="ln {cls}" href="/lecons/{lesson_slug(niv, o["unite"])}/"><span class="ln-k">{lab}</span><span class="ln-t">{E(o["unite"])}</span></a>'
+        _allk = f'<a class="ln ln-all" href="/niveau/{niv}/"><span class="ln-k">Toutes les leçons</span><span class="ln-t">{lv["short"]}</span></a>'
+        lnav = ('<nav class="lnav" aria-label="Leçon précédente et suivante">'
+                + (_lk(_seq[_i-1], "ln-prev", "← Leçon précédente") if _i > 0 else _allk)
+                + (_lk(_seq[_i+1], "ln-next", "Leçon suivante →") if _i < len(_seq) - 1 else _allk.replace("ln ln-all", "ln ln-all ln-next"))
+                + '</nav>')
         olist = "".join(
             f'<li><a href="/lecons/{lesson_slug(niv,o["unite"])}/">{E(o["unite"])}<span>{E(MAT.get(o["mat"],""))}</span></a></li>'
             for o in others)
@@ -481,6 +492,7 @@ def build():
     <p>{'Lis le cours, manipule la simulation, puis entraîne-toi avec les exercices corrigés et le quiz.' if cbody else 'Retrouve ici les documents de Pr. Youness HAFIDI : à faire seul, puis à vérifier avec le corrigé.'}</p>
     {f'<p class="ar" lang="ar" dir="rtl">{E(ar)} – {lv["ar"]} : {'فروض محروسة مع تصحيحها المفصل تمرينا تمرينا' if L['unite'].startswith('Contrôles') else 'سلاسل تمارين مع تصحيحها'}، مجانا وعبر الإنترنت.</p>' if ar else ''}
   </div>
+  {lnav}
   {pills}
   {cours_block}
   {f'<h2 class="sec" id="resume">🧠 Résumé de la leçon (carte mentale)</h2>{rz}' if rz else ''}
@@ -490,6 +502,7 @@ def build():
   {vids}
   <h2 class="sec" id="docs-h">{'Les devoirs et leurs corrigés (PDF)' if L['unite'].startswith('Contrôles') else '📄 Série et corrigé (PDF)'}</h2>
   <div class="grid" id="docs">{cards}</div>
+  {lnav}
   {share_block(url, share_text)}
   {f'<h2 class="sec">Autres leçons – {lv["short"]}</h2>{lesson_cards(niv, others, by_level[niv])}' if others else ''}
   <div class="soutien">⭐ <b>Cours de soutien</b> en physique-chimie (en ligne ou à domicile) avec Pr. Hafidi — <a href="https://wa.me/{WA}?text={E('Bonjour Pr. Hafidi, je souhaite des informations sur les cours de soutien.')}" target="_blank" rel="noopener" data-ev="clic_soutien_page_lecon">réserver sur WhatsApp</a> · 06 52 23 69 22</div>

@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 330" font-family="Kalam, 'Comic Neue', sans-serif">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0" stop-color="#8ec5ff"/><stop offset=".45" stop-color="#3f7fd6"/><stop offset=".8" stop-color="#1a2f6e"/><stop offset="1" stop-color="#0b1233"/>
+    </linearGradient>
+  </defs>
+  <rect x="0" y="0" width="520" height="300" fill="url(#sky)" rx="14"/>
+  <path d="M0 300 Q260 270 520 300 L520 330 L0 330 Z" fill="#3a8f4a"/>
+  <path d="M60 300 l40 -38 l22 20 l26 -30 l40 48 Z" fill="#6d5b4b"/>
+  <g stroke="#fff" stroke-width="1.5" stroke-dasharray="6 5" opacity=".85">
+    <line x1="0" y1="240" x2="520" y2="240"/><line x1="0" y1="180" x2="520" y2="180"/>
+    <line x1="0" y1="120" x2="520" y2="120"/><line x1="0" y1="60" x2="520" y2="60"/>
+  </g>
+  <rect x="0" y="196" width="520" height="12" fill="#ffd84d" opacity=".55"/>
+  <g fill="#fff" font-size="19" font-weight="700">
+    <text x="210" y="276">Troposphère</text>
+    <text x="210" y="222">Stratosphère</text>
+    <text x="210" y="157">Mésosphère</text>
+    <text x="210" y="97">Thermosphère</text>
+    <text x="210" y="38">Exosphère</text>
+  </g>
+  <g fill="#ffe9a8" font-size="15">
+    <text x="12" y="276">0 – 15 km</text>
+    <text x="12" y="222">15 – 50 km</text>
+    <text x="12" y="157">50 – 80 km</text>
+    <text x="12" y="97">80 – 800 km</text>
+    <text x="12" y="38">au-delà de 800 km</text>
+  </g>
+  <g fill="#fff" font-size="13.5">
+    <text x="372" y="276">nuages, météo</text>
+    <text x="372" y="207" fill="#1a2f6e" font-weight="700">couche d'ozone</text>
+    <text x="372" y="157">la plus froide</text>
+    <text x="372" y="97">très peu d'air</text>
+    <text x="372" y="38">satellites</text>
+  </g>
+</svg>
