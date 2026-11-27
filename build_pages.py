@@ -460,7 +460,7 @@ def build():
         sim_html = (f'''<div class="labin" id="lab"><p class="lab-k">🧪 Simulation : à toi de manipuler !</p><p class="tip" style="margin:0 0 8px">{E(smo['intro'])}</p>
 <div class="lab"><div class="labhead"><img src="/logo.jpg" alt=""><div><b>Labo YH Physique-Chimie</b><span>{E(smo['title'])}</span></div><div class="sig">Pr. Youness HAFIDI</div></div>
 {('<div class="labbody">' + smo['body'] + '</div>') if not smo['body'].lstrip().startswith('<div class="tabs') else smo['body']}</div></div>''') if smo else ""
-        toc, cbody = CO.render(L["unite"], sim_html)
+        toc, cbody = CO.render(L["unite"], sim_html, lv["short"])
         if not cbody and sim_html:
             cbody = sim_html
         pl = [("#cours", "📖 Cours", cbody), ("#resume", "🧠 Résumé", rz), ("#exercices", "✍️ Exercices corrigés", exh or L["unite"].startswith("Contrôles")), ("#quiz", "✅ Quiz", qz), ("#docs-h", "📄 PDF", True), ("#videos", "🎬 Vidéos", VIDEOS_LECON.get((niv, L["unite"])) and not CTRL.get(f"{niv}|{L['unite']}"))]

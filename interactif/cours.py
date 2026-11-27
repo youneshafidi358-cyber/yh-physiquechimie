@@ -24,7 +24,7 @@ def _slug(s):
 def _sid(t):
     return "c-" + _slug(t)[:40]
 
-def render(unite, sim_html=""):
+def render(unite, sim_html="", niveau=""):
     """Renvoie (sommaire, corps) ou ('','') si pas de cours."""
     if unite not in COURS:
         return "", ""
@@ -45,7 +45,10 @@ def render(unite, sim_html=""):
                + (f'<a class="pnext" href="#{_sid(secs[k][1])}" data-p="{k+1}">Page {k+1} : {E(secs[k][1])} →</a>' if k < N else '<a class="pnext" href="#resume">Résumé et exercices →</a>')
                + '</nav>')
         body.append(f'<section class="csec page" id="{sid}" data-p="{k}"><div class="phead">Page {k} / {N}</div><h3 class="cs"><span>{E(num)}</span>{E(title)}</h3>{html}{nav}</section>')
-    return "<ol>" + "".join(toc) + "</ol>", "".join(body)
+    head = (f'<div class="chead"><span class="ch-b"><img src="/logo.jpg" alt="" width="34" height="34">'
+            f'<span><b>YH Physique-Chimie</b><i>Pr. Youness HAFIDI</i></span></span>'
+            f'<span class="ch-t">{E(unite)}</span>' + (f'<span class="ch-n">{E(niveau)}</span>' if niveau else '') + '</div>')
+    return "<ol>" + "".join(toc) + "</ol>", head + "".join(body)
 
 CSS = r"""
 .cbody.cahier{position:relative;background-image:linear-gradient(90deg,transparent 46px,#f2b8b8 46px,#f2b8b8 48px,transparent 48px),repeating-linear-gradient(#fff 0 31px,#dfe8f5 31px 32px);padding-left:66px!important;box-shadow:0 2px 0 #e8e2d4,0 4px 14px rgba(20,33,61,.06)}
@@ -120,6 +123,63 @@ CSS = r"""
  .cbody{padding:4px 14px 14px;font-size:16px}.cs{font-size:19px}}
 """
 
+CSS += r"""
+/* ===== Style « cahier » : papier quadrillé, titres manuscrits, relations encadrées ===== */
+@font-face{font-family:Kalam;font-style:normal;font-weight:400;font-display:swap;src:url(/fonts/kalam-latin-400-normal.woff2) format("woff2")}
+@font-face{font-family:"Comic Neue";font-style:normal;font-weight:400;font-display:swap;src:url(/fonts/comic-neue-latin-400-normal.woff2) format("woff2")}
+@font-face{font-family:"Comic Neue";font-style:normal;font-weight:700;font-display:swap;src:url(/fonts/comic-neue-latin-700-normal.woff2) format("woff2")}
+@font-face{font-family:Kalam;font-style:normal;font-weight:700;font-display:swap;src:url(/fonts/kalam-latin-700-normal.woff2) format("woff2")}
+.cbody.cahier{--ink:#16306e;--red:#e04848;--grn:#1f8a3b;--blu:#1f4e9c;color:var(--ink);background-color:#fff;
+ background-image:linear-gradient(90deg,transparent 44px,#f08a8a 44px,#f08a8a 46px,transparent 46px,transparent 49px,#f08a8a 49px,#f08a8a 50px,transparent 50px),
+ linear-gradient(#dbe6f7 1px,transparent 1px),linear-gradient(90deg,#dbe6f7 1px,transparent 1px);
+ background-size:100% 100%,22px 22px,22px 22px;padding-left:66px!important;border-radius:6px 16px 16px 6px}
+.cahier .chead{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:12px 0 6px;padding-bottom:8px;border-bottom:2px solid #f0b400}
+.cahier .ch-b{display:flex;align-items:center;gap:8px;font-family:Kalam,cursive;line-height:1.1}
+.cahier .ch-b img{width:34px;height:34px;border-radius:50%;border:2px solid #f0b400}
+.cahier .ch-b b{display:block;color:var(--blu);font-size:17px}.cahier .ch-b i{display:block;font-style:normal;font-size:13.5px;color:#5b6475}
+.cahier .ch-t{flex:1;text-align:center;font-family:Kalam,cursive;font-weight:700;font-size:21px;color:var(--ink);border:2px solid var(--red);border-radius:999px;padding:2px 18px;background:#fff;min-width:0}
+.cahier .ch-n{font-family:Kalam,cursive;font-weight:700;font-size:16px;color:var(--ink);background:#ffe9b8;border:2px solid #f0a020;border-radius:12px;padding:0 12px}
+.cahier .cs{font-family:Kalam,cursive;font-weight:700;color:var(--ink);font-size:22px;border:2px solid #e3a300;border-bottom-width:2px;background:linear-gradient(#fff3a8,#ffd84d);border-radius:12px 999px 999px 12px;padding:3px 22px 3px 12px;display:inline-flex;width:auto;max-width:100%;margin:14px 0 10px;box-shadow:0 2px 0 rgba(224,160,0,.25)}
+.cahier .cs>span:first-child{background:none;color:var(--ink);padding:0;min-width:0;font-size:inherit}.cahier .cs>span:first-child::after{content:"."}
+.cahier .cs.cont::after{color:#7a6a20}
+.cahier h4{font-family:Kalam,cursive;font-weight:700;color:var(--blu);font-size:19.5px;display:inline-block;border:2px solid var(--blu);background:#eef4ff;border-radius:10px 999px 999px 10px;padding:1px 22px 1px 12px;margin:14px 0 6px}
+.cahier h5{font-family:Kalam,cursive;font-weight:700;color:var(--grn);font-size:17.5px;text-decoration:underline;text-underline-offset:3px}
+.cahier .bx-b,.cahier .screens p,.cahier p,.cahier li,.js-cahier .cahier .enclair,.cahier .enclair{font-family:"Comic Neue",Inter,sans-serif;font-size:17.5px;line-height:1.5}.cahier b,.cahier strong{font-weight:700}
+.js-cahier .cbody.cahier{font-size:17.5px}.js-cahier .cahier .cs{font-size:22px}
+.cahier ul{list-style:none;padding-left:4px}.cahier ul>li{position:relative;padding-left:22px}
+.cahier ul>li::before{content:"";position:absolute;left:4px;top:.62em;width:9px;height:9px;border-radius:50%;background:var(--red)}
+.cahier ul ul>li::before{content:"➜";background:none;width:auto;height:auto;top:0;left:0;color:var(--red);font-size:.95em}
+.cahier .bx{border:2px solid;border-radius:14px;background:rgba(255,255,255,.92);overflow:visible}
+.cahier .bx-t{display:inline-block;background:none!important;font-family:Kalam,cursive;font-size:17px;font-weight:700;padding:6px 14px 0}
+.cahier .bx-t>span{display:none}
+.cahier .bx-b{padding:4px 14px 10px}
+.cahier .k-def{border-color:#9fb8e6}.cahier .k-def .bx-t{color:var(--blu)}.cahier .k-def .bx-t::after{content:" :"}
+.cahier .k-ret{border:2px dashed #3aa356;background:rgba(240,251,242,.95)}.cahier .k-ret .bx-t{color:var(--grn);text-decoration:underline;text-underline-offset:3px}.cahier .k-ret .bx-t::after{content:" !"}
+.cahier .k-conc{border-color:#3aa356;background:rgba(240,251,242,.95)}.cahier .k-conc .bx-t{color:var(--grn)}
+.cahier .k-rule{border:2px dashed var(--red);background:rgba(255,244,244,.95)}.cahier .k-rule .bx-t{color:#b42318}
+.cahier .k-rem{border:2px dashed #e98a8a;background:rgba(255,250,240,.95)}.cahier .k-rem .bx-t{color:#b45309}
+.cahier .k-meth{border-color:#7cc3c9}.cahier .k-meth .bx-t{color:#0e6b74}
+.cahier .k-ex{border:0;background:transparent;border-left:3px solid #f3a0a0;border-radius:0}.cahier .k-ex .bx-t{color:#c0262d;background:#ffe1e1!important;border-radius:6px;padding:0 8px;margin:6px 0 0 10px}.cahier .k-ex .bx-t::after{content:" :"}
+.cahier .k-app{border-color:#b9c0f0;background:rgba(247,248,255,.95)}.cahier .k-app .bx-t{color:#3949ab}
+.cahier .k-act,.cahier .k-obs,.cahier .k-sit{background:rgba(255,255,255,.92)}.cahier .k-act .bx-t{color:#6b3fa0}.cahier .k-obs .bx-t{color:#2b6cb0}.cahier .k-sit .bx-t{color:#c47f00}
+.cahier .katex-display{width:fit-content;max-width:100%;margin:10px auto;padding:6px 18px;border:2px solid var(--red);border-radius:14px;background:#fff;box-shadow:0 2px 0 rgba(224,72,72,.15)}
+.cahier .katex{color:#10285f}
+.cahier .pie ul>li{padding-left:0}.cahier .pie ul>li::before{display:none}
+@media (max-width:600px){.cahier .chead{flex-wrap:nowrap;gap:8px}.cahier .ch-b span{display:none}.cahier .ch-t{order:0;flex:1 1 auto;font-size:16px;padding:2px 10px}.cahier .ch-n{margin-left:0;font-size:14px;padding:0 8px}}
+.cahier .enclair{background:rgba(255,251,233,.95);border-left:0;border:2px dashed #e0b100;border-radius:12px}
+.cahier .ctab table{border:2px solid var(--blu);border-radius:10px;border-collapse:separate;border-spacing:0;overflow:hidden;font-family:"Comic Neue",Inter,sans-serif;font-size:16.5px}
+.cahier .ctab th{background:#dbe7fb;color:var(--ink);font-weight:700;text-align:center;border-bottom:2px solid var(--blu)}
+.cahier .ctab td{text-align:center;border-bottom:1px solid #b8c9ea;border-right:1px solid #d3def3}.cahier .ctab td:last-child{border-right:0}
+.cahier .ctab tr:nth-child(even) td{background:#f7faff}
+.cahier .qa,.cahier .qcm{background:rgba(255,255,255,.95);border:2px dashed #9fb8e6;border-radius:12px}
+.cahier .qa-q{font-family:"Comic Neue",Inter,sans-serif;font-weight:700}
+.cahier .cfig img{border:2px solid #dbe6f7}
+.cahier .phead{font-family:Kalam,cursive}
+@media (max-width:900px){.cbody.cahier{background-image:linear-gradient(90deg,transparent 16px,#f08a8a 16px,#f08a8a 18px,transparent 18px),linear-gradient(#dbe6f7 1px,transparent 1px),linear-gradient(90deg,#dbe6f7 1px,transparent 1px);padding-left:28px!important}
+ .cahier .ch-t{order:3;flex:1 1 100%;font-size:18px}.cahier .ch-n{margin-left:auto}.cahier .cs{font-size:19px!important}.cahier h4{font-size:17.5px}
+ .cahier .bx-b,.cahier p,.cahier li,.js-cahier .cahier .enclair,.cahier .enclair{font-size:16.5px}}
+"""
+
 JS = r"""
 <link rel="stylesheet" href="/js/katex/katex.min.css">
 <script defer src="/js/katex/katex.min.js"></script>
@@ -128,14 +188,14 @@ JS = r"""
 (()=>{const cb=document.querySelector('.cbody.cahier');if(!cb)return;document.documentElement.classList.add('js-cahier');
 const secs=[...cb.querySelectorAll('section.page')];const toc=[...document.querySelectorAll('.ctoc a')];
 const blocks=[];secs.forEach((s,si)=>{const h=s.querySelector('h3.cs');[...s.children].forEach(c=>{if(c.matches('.phead,.pnav,h3.cs'))return;blocks.push({el:c,si,sec:s,h});});});
-const stage=document.createElement('div');stage.className='screens';cb.appendChild(stage);secs.forEach(s=>s.style.display='none');
+const chd=cb.querySelector(':scope>.chead');if(chd)chd.remove();const stage=document.createElement('div');stage.className='screens';cb.appendChild(stage);secs.forEach(s=>s.style.display='none');
 let screens=[];
 function build(){const keep=blocks.map(b=>b.el);stage.innerHTML='';screens=[];
  const H=Math.max(360,window.innerHeight-(window.innerWidth<900?190:210));let cur=null,curSi=-1;
- function newScreen(si,cont){const d=document.createElement('div');d.className='scr';d.dataset.si=si;const h=blocks.find(b=>b.si===si).h.cloneNode(true);if(cont)h.classList.add('cont');d.appendChild(h);stage.appendChild(d);screens.push(d);return d;}
+ function newScreen(si,cont){const d=document.createElement('div');d.className='scr';d.dataset.si=si;if(chd)d.appendChild(chd.cloneNode(true));const h=blocks.find(b=>b.si===si).h.cloneNode(true);if(cont)h.classList.add('cont');d.appendChild(h);stage.appendChild(d);screens.push(d);return d;}
  stage.classList.add('measuring');
  blocks.forEach(b=>{if(b.si!==curSi){cur=newScreen(b.si,false);curSi=b.si;}
-  cur.appendChild(b.el);if(cur.scrollHeight>H&&cur.children.length>2){cur.removeChild(b.el);cur=newScreen(b.si,true);cur.appendChild(b.el);}});
+  cur.appendChild(b.el);if(cur.scrollHeight>H&&cur.children.length>(chd?3:2)){cur.removeChild(b.el);cur=newScreen(b.si,true);cur.appendChild(b.el);}});
  stage.classList.remove('measuring');
  screens.forEach((d,i)=>{const n=document.createElement('nav');n.className='pnav';n.setAttribute('aria-label','Pages du cours');
   n.innerHTML=(i>0?'<button type="button" class="pprev" data-go="'+(i-1)+'">← Précédent</button>':'<span></span>')+'<span class="pnum">Page '+(i+1)+' / '+screens.length+'</span>'+(i<screens.length-1?'<button type="button" class="pnext" data-go="'+(i+1)+'">Suivant →</button>':'<a class="pnext" href="#resume">Résumé et exercices →</a>');d.appendChild(n);});
@@ -149,7 +209,7 @@ document.addEventListener('click',e=>{const a=e.target.closest('[data-go]');if(!
 const h=location.hash.slice(1);let st=0;const si0=secs.findIndex(s=>s.id===h);if(si0>=0)st=screens.findIndex(d=>+d.dataset.si===si0);
 const lab=document.getElementById('lab');if(h==='lab'&&lab){st=screens.findIndex(d=>d.contains(lab));}
 go(Math.max(0,st),false);if(h==='lab'&&lab)setTimeout(()=>lab.scrollIntoView(),60);
-let rt;window.addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{const el=screens[at]&&screens[at].children[1];build();let k=screens.findIndex(d=>el&&d.contains(el));go(k<0?0:k,false);},300);});
+let rt;window.addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{const el=screens[at]&&screens[at].querySelector(':scope>:not(.chead):not(h3)');build();let k=screens.findIndex(d=>el&&d.contains(el));go(k<0?0:k,false);},300);});
 document.addEventListener('keydown',e=>{if(e.target.closest('input,textarea,select'))return;if(e.key==='ArrowRight')go(at+1,true);if(e.key==='ArrowLeft')go(at-1,true);});
 let x0=null;cb.addEventListener('touchstart',e=>{x0=e.touches[0].clientX},{passive:true});cb.addEventListener('touchend',e=>{if(x0===null)return;const dx=e.changedTouches[0].clientX-x0;if(Math.abs(dx)>70&&!e.target.closest('input,.lab,.ctab,.katex-display'))go(at+(dx<0?1:-1),true);x0=null;},{passive:true});})();
 document.addEventListener('click',e=>{const o=e.target.closest('.qcm-o button');if(o){const q=o.closest('.qcm');q.querySelectorAll('button').forEach(x=>{x.classList.remove('good','bad');if(x.dataset.ok=='1'&&o.dataset.ok=='1')x.classList.add('good')});o.classList.add(o.dataset.ok=='1'?'good':'bad');const ex=q.querySelector('.qcm-e');if(o.dataset.ok=='1'){ex.hidden=false}else{ex.hidden=true}return;}
